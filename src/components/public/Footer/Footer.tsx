@@ -14,8 +14,6 @@ const navigation = [
   { label: "Nosotros", href: "/nosotros" },
   { label: "Cursos", href: "/cursos" },
   { label: "Proceso", href: "/proceso" },
-  { label: "Equipo", href: "/equipo" },
-  { label: "Instalaciones", href: "/instalaciones" },
   { label: "Contacto", href: "/contacto" },
 ];
 

@@ -39,14 +39,6 @@ const navigation = [
     label: "Proceso",
     href: "/proceso",
   },
-  {
-    label: "Equipo",
-    href: "/equipo",
-  },
-  {
-    label: "Instalaciones",
-    href: "/instalaciones",
-  },
 ];
 
 export function Header() {
