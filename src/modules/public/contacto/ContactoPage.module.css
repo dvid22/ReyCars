@@ -1,7 +1,1743 @@
 .page {
-  min-height: 70vh;
-  padding: clamp(70px, 9vw, 120px) clamp(20px, 5vw, 80px);
+  --cyan: var(--reycars-cyan, #59c5d3);
+  --cyan-dark: var(--reycars-cyan-dark, #209aaa);
+  --ink: #171c1f;
+  --muted: #6f7e84;
+  --line: rgba(18, 48, 56, 0.09);
+
+  width: 100%;
+
+  min-height: 100svh;
+
+  color: var(--ink);
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #fbfdfd 100%
+    );
+
+  container-type: inline-size;
+  container-name: contacto-page;
 }
-.eyebrow { color: var(--reycars-cyan-dark); font-size: 11px; font-weight: 600; letter-spacing: .12em; }
-.page h1 { max-width: 900px; margin: 14px 0 0; font-size: clamp(42px, 6vw, 76px); line-height: .98; letter-spacing: -.055em; }
-.page p { color: var(--reycars-muted); }
+
+.page,
+.page :where(*) {
+  box-sizing: border-box;
+}
+
+.container {
+  width:
+    min(
+      100% - clamp(1.25rem, 4vw, 4rem),
+      92rem
+    );
+
+  margin-inline: auto;
+
+  padding-block:
+    clamp(1.15rem, 2vw, 1.75rem)
+    clamp(2rem, 4vw, 3.4rem);
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero {
+  min-height:
+    clamp(
+      18rem,
+      31vw,
+      27rem
+    );
+
+  position: relative;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(20rem, 0.82fr)
+    minmax(0, 1.18fr);
+
+  overflow: hidden;
+
+  border:
+    1px solid
+      rgba(18, 48, 56, 0.055);
+
+  border-radius:
+    clamp(1rem, 1.7vw, 1.55rem);
+
+  background: #ffffff;
+
+  box-shadow:
+    0 1rem 2.7rem
+      rgba(21, 55, 64, 0.045);
+}
+
+.heroCopy {
+  min-width: 0;
+
+  position: relative;
+  z-index: 3;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding:
+    clamp(1.6rem, 3vw, 2.7rem)
+    clamp(1.6rem, 3.2vw, 3.1rem);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+
+  gap: 0.55rem;
+
+  margin-bottom:
+    clamp(1.4rem, 2.5vw, 2.2rem);
+
+  color:
+    #87959a;
+
+  font-size:
+    clamp(0.54rem, 0.58vw, 0.62rem);
+
+  font-weight: 500;
+
+  text-transform: uppercase;
+}
+
+.breadcrumb a {
+  color:
+    var(--cyan-dark);
+}
+
+.breadcrumb strong {
+  color:
+    #68787e;
+
+  font-weight: 500;
+}
+
+.eyebrow {
+  display: block;
+
+  margin-bottom:
+    clamp(0.65rem, 1vw, 0.9rem);
+
+  color:
+    var(--cyan-dark);
+
+  font-size:
+    clamp(0.7rem, 0.76vw, 0.8rem);
+
+  font-weight: 600;
+
+  text-transform: uppercase;
+}
+
+.heroCopy h1 {
+  width:
+    min(
+      100%,
+      34rem
+    );
+
+  margin: 0;
+
+  color:
+    var(--ink);
+
+  font-size:
+    clamp(
+      2.35rem,
+      1.3rem + 2.65vw,
+      3.55rem
+    );
+
+  font-weight: 600;
+
+  line-height: 1.03;
+
+  letter-spacing:
+    -0.048em;
+
+  text-wrap: balance;
+}
+
+.heroCopy h1 strong {
+  color:
+    var(--cyan-dark);
+
+  font-weight: 600;
+}
+
+.heroCopy > p {
+  width:
+    min(
+      100%,
+      30rem
+    );
+
+  margin:
+    clamp(1rem, 1.6vw, 1.35rem)
+    0
+    0;
+
+  color:
+    var(--muted);
+
+  font-size:
+    clamp(0.72rem, 0.76vw, 0.82rem);
+
+  line-height: 1.62;
+}
+
+.heroVisual {
+  min-width: 0;
+
+  position: relative;
+
+  overflow: hidden;
+
+  background:
+    #eef4f5;
+}
+
+.heroImage {
+  object-fit: cover;
+
+  object-position:
+    50% center;
+}
+
+.heroVisual::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 2;
+
+  background:
+    linear-gradient(
+      90deg,
+      #ffffff 0%,
+      rgba(255, 255, 255, 0.96) 3%,
+      rgba(255, 255, 255, 0.78) 7%,
+      rgba(255, 255, 255, 0.46) 12%,
+      rgba(255, 255, 255, 0.18) 18%,
+      transparent 27%
+    ),
+    linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.34) 0%,
+      rgba(255, 255, 255, 0.12) 7%,
+      transparent 16%
+    );
+
+  pointer-events: none;
+}
+
+.heroVisual::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 2;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      transparent 10%,
+      transparent 86%,
+      rgba(255, 255, 255, 0.12) 100%
+    );
+
+  pointer-events: none;
+}
+
+.heroDots {
+  width:
+    clamp(4rem, 6vw, 6rem);
+
+  aspect-ratio: 1;
+
+  position: absolute;
+
+  top: 14%;
+  left: 3%;
+
+  z-index: 3;
+
+  opacity: 0.32;
+
+  background-image:
+    radial-gradient(
+      circle,
+      var(--cyan-dark) 1.15px,
+      transparent 1.35px
+    );
+
+  background-size:
+    0.62rem
+    0.62rem;
+}
+
+.heroCorner {
+  width:
+    clamp(5rem, 7vw, 7rem);
+
+  aspect-ratio: 1;
+
+  position: absolute;
+
+  right: -2.1rem;
+  bottom: -2.3rem;
+
+  z-index: 3;
+
+  transform:
+    rotate(45deg);
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--cyan),
+      var(--cyan-dark)
+    );
+}
+
+
+/* =========================================================
+   PANEL PRINCIPAL
+   ========================================================= */
+
+.contactPanel {
+  width:
+    min(
+      calc(100% - clamp(1rem, 4vw, 4rem)),
+      84rem
+    );
+
+  position: relative;
+
+  z-index: 8;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(15rem, 0.82fr)
+    minmax(12rem, 0.58fr)
+    minmax(24rem, 1.42fr);
+
+  margin:
+    clamp(-3.6rem, -4vw, -2.5rem)
+    auto
+    0;
+
+  overflow: hidden;
+
+  border:
+    1px solid
+      rgba(18, 48, 56, 0.07);
+
+  border-radius:
+    clamp(1rem, 1.4vw, 1.35rem);
+
+  background:
+    rgba(255, 255, 255, 0.985);
+
+  box-shadow:
+    0 1.35rem 3.2rem
+      rgba(21, 55, 64, 0.08);
+
+  backdrop-filter:
+    blur(12px);
+}
+
+.infoColumn,
+.scheduleColumn,
+.formColumn {
+  min-width: 0;
+
+  padding:
+    clamp(1.35rem, 2.2vw, 2rem);
+}
+
+.infoColumn,
+.scheduleColumn {
+  border-right:
+    1px solid var(--line);
+}
+
+.infoColumn h2,
+.scheduleColumn h2,
+.formColumn h2 {
+  margin: 0;
+
+  color:
+    #253238;
+
+  font-size:
+    clamp(0.9rem, 1vw, 1.05rem);
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   CONTACT INFO
+   ========================================================= */
+
+.contactList {
+  display: grid;
+
+  margin-top:
+    clamp(1rem, 1.5vw, 1.3rem);
+}
+
+.contactItem {
+  min-width: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    auto
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap:
+    clamp(0.65rem, 1vw, 0.85rem);
+
+  padding:
+    clamp(0.75rem, 1vw, 0.95rem)
+    0;
+
+  border-bottom:
+    1px solid var(--line);
+}
+
+.contactIcon {
+  width:
+    clamp(2.35rem, 3vw, 2.8rem);
+
+  aspect-ratio: 1;
+
+  display: grid;
+  place-items: center;
+
+  color:
+    var(--cyan-dark);
+
+  border:
+    1px solid
+      rgba(32, 154, 170, 0.22);
+
+  border-radius: 50%;
+
+  background:
+    rgba(89, 197, 211, 0.045);
+}
+
+.contactItem > div {
+  min-width: 0;
+
+  display: grid;
+
+  gap: 0.12rem;
+}
+
+.contactItem strong {
+  color:
+    #26343a;
+
+  font-size:
+    clamp(0.68rem, 0.73vw, 0.78rem);
+
+  font-weight: 600;
+}
+
+.contactItem small {
+  color:
+    #89969b;
+
+  font-size:
+    clamp(0.52rem, 0.56vw, 0.61rem);
+}
+
+.contactItem b {
+  color:
+    var(--cyan-dark);
+
+  font-size:
+    clamp(0.62rem, 0.68vw, 0.74rem);
+
+  font-weight: 500;
+
+  line-height: 1.38;
+}
+
+.contactItem > i {
+  width: 1.9rem;
+  aspect-ratio: 1;
+
+  display: grid;
+  place-items: center;
+
+  color:
+    var(--cyan-dark);
+
+  border-radius: 50%;
+
+  background:
+    rgba(89, 197, 211, 0.11);
+
+  font-style: normal;
+
+  transition:
+    transform 0.24s ease,
+    background 0.24s ease;
+}
+
+.contactItem:hover > i {
+  transform:
+    translateX(3px);
+
+  background:
+    rgba(89, 197, 211, 0.18);
+}
+
+.socialBlock {
+  display: grid;
+
+  gap: 0.75rem;
+
+  padding-top:
+    clamp(1rem, 1.5vw, 1.25rem);
+}
+
+.socialBlock > strong {
+  color:
+    #253238;
+
+  font-size:
+    clamp(0.66rem, 0.7vw, 0.75rem);
+
+  font-weight: 600;
+}
+
+.socials {
+  display: flex;
+  align-items: center;
+
+  gap: 0.55rem;
+}
+
+.socials a {
+  width:
+    clamp(2rem, 2.4vw, 2.3rem);
+
+  aspect-ratio: 1;
+
+  display: grid;
+  place-items: center;
+
+  color:
+    var(--cyan-dark);
+
+  border:
+    1px solid
+      rgba(32, 154, 170, 0.28);
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  transition:
+    color 0.22s ease,
+    background 0.22s ease,
+    transform 0.22s ease;
+}
+
+.socials svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.socials a:hover {
+  color: #ffffff;
+
+  background:
+    var(--cyan-dark);
+
+  transform:
+    translateY(-2px);
+}
+
+
+/* =========================================================
+   SCHEDULE
+   ========================================================= */
+
+.scheduleColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.scheduleHeading {
+  display: flex;
+  align-items: center;
+
+  gap: 0.55rem;
+
+  color:
+    var(--cyan-dark);
+}
+
+.scheduleHeading h2 {
+  color:
+    #253238;
+}
+
+.scheduleList {
+  display: grid;
+
+  gap:
+    clamp(1rem, 1.6vw, 1.35rem);
+
+  margin-top:
+    clamp(1.2rem, 1.8vw, 1.5rem);
+}
+
+.scheduleList > div {
+  display: grid;
+
+  gap: 0.32rem;
+}
+
+.scheduleList strong {
+  color:
+    #243136;
+
+  font-size:
+    clamp(0.62rem, 0.68vw, 0.73rem);
+
+  font-weight: 600;
+}
+
+.scheduleList span {
+  color:
+    var(--muted);
+
+  font-size:
+    clamp(0.58rem, 0.63vw, 0.68rem);
+
+  line-height: 1.45;
+}
+
+.scheduleHelp {
+  width: fit-content;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.4rem;
+
+  margin-top: auto;
+  padding-top: 1.2rem;
+
+  color:
+    var(--cyan-dark);
+
+  font-size:
+    clamp(0.56rem, 0.6vw, 0.65rem);
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.formColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.formGrid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap:
+    clamp(0.55rem, 0.85vw, 0.75rem);
+
+  margin-top:
+    clamp(1rem, 1.5vw, 1.25rem);
+}
+
+.field,
+.messageField {
+  min-width: 0;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.55rem;
+
+  border:
+    1px solid
+      rgba(18, 48, 56, 0.11);
+
+  border-radius:
+    clamp(0.55rem, 0.75vw, 0.68rem);
+
+  background:
+    #ffffff;
+
+  transition:
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.field {
+  min-height:
+    clamp(2.55rem, 3.1vw, 2.9rem);
+
+  padding-inline:
+    clamp(0.7rem, 1vw, 0.9rem);
+}
+
+.fieldWide {
+  grid-column:
+    1 / -1;
+}
+
+.field > svg,
+.messageField > span {
+  flex: 0 0 auto;
+
+  color:
+    var(--cyan-dark);
+}
+
+.field input,
+.messageField textarea {
+  width: 100%;
+
+  min-width: 0;
+
+  color:
+    #2b383d;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  font: inherit;
+
+  font-size:
+    clamp(0.62rem, 0.67vw, 0.72rem);
+}
+
+.field input::placeholder,
+.messageField textarea::placeholder {
+  color:
+    #9aa6aa;
+}
+
+/* =========================================================
+   SELECTOR DE CURSOS · CUSTOM
+   ========================================================= */
+
+.courseSelect {
+  min-width: 0;
+
+  position: relative;
+
+  z-index: 20;
+}
+
+.courseSelectOpen {
+  z-index: 40;
+}
+
+.courseSelectTrigger {
+  width: 100%;
+
+  min-height:
+    clamp(
+      2.55rem,
+      3.1vw,
+      2.9rem
+    );
+
+  display: grid;
+
+  grid-template-columns:
+    auto
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: 0.55rem;
+
+  padding:
+    0
+    clamp(
+      0.7rem,
+      1vw,
+      0.9rem
+    );
+
+  color:
+    #2b383d;
+
+  border:
+    1px solid
+      rgba(18, 48, 56, 0.11);
+
+  border-radius:
+    clamp(
+      0.55rem,
+      0.75vw,
+      0.68rem
+    );
+
+  outline: 0;
+
+  background:
+    #ffffff;
+
+  box-shadow:
+    0 0 0 0
+      rgba(89, 197, 211, 0);
+
+  font: inherit;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    transform 0.22s ease;
+}
+
+.courseSelectTrigger:hover {
+  border-color:
+    rgba(32, 154, 170, 0.24);
+}
+
+.courseSelectOpen
+.courseSelectTrigger {
+  border-color:
+    rgba(32, 154, 170, 0.48);
+
+  box-shadow:
+    0 0 0 3px
+      rgba(89, 197, 211, 0.09);
+}
+
+.courseSelectTrigger > svg:first-child {
+  color:
+    var(--cyan-dark);
+}
+
+.courseSelectValue,
+.courseSelectPlaceholder {
+  min-width: 0;
+
+  overflow: hidden;
+
+  font-size:
+    clamp(
+      0.62rem,
+      0.67vw,
+      0.72rem
+    );
+
+  line-height: 1.2;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.courseSelectValue {
+  color:
+    #2b383d;
+}
+
+.courseSelectPlaceholder {
+  color:
+    #9aa6aa;
+}
+
+.courseSelectChevron {
+  color:
+    var(--cyan-dark);
+
+  transition:
+    transform 0.28s
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
+}
+
+.courseSelectOpen
+.courseSelectChevron {
+  transform:
+    rotate(180deg);
+}
+
+.courseSelectMenu {
+  width: 100%;
+
+  position: absolute;
+
+  top:
+    calc(100% + 0.45rem);
+
+  left: 0;
+
+  z-index: 60;
+
+  overflow: hidden;
+
+  padding: 0.38rem;
+
+  border:
+    1px solid
+      rgba(18, 48, 56, 0.09);
+
+  border-radius:
+    clamp(
+      0.7rem,
+      0.9vw,
+      0.85rem
+    );
+
+  background:
+    rgba(255, 255, 255, 0.985);
+
+  box-shadow:
+    0 1rem 2.5rem
+      rgba(21, 55, 64, 0.14);
+
+  backdrop-filter:
+    blur(16px);
+
+  transform-origin:
+    top center;
+}
+
+.courseSelectMenuInner {
+  max-height:
+    clamp(
+      12.5rem,
+      20vw,
+      16rem
+    );
+
+  display: grid;
+
+  gap: 0.18rem;
+
+  overflow-y: auto;
+
+  padding-right: 0.1rem;
+
+  scrollbar-width: thin;
+
+  scrollbar-color:
+    rgba(32, 154, 170, 0.28)
+    transparent;
+}
+
+.courseSelectMenuInner::-webkit-scrollbar {
+  width: 5px;
+}
+
+.courseSelectMenuInner::-webkit-scrollbar-track {
+  background:
+    transparent;
+}
+
+.courseSelectMenuInner::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+
+  background:
+    rgba(32, 154, 170, 0.24);
+}
+
+.courseSelectOption {
+  width: 100%;
+
+  min-height:
+    clamp(
+      2rem,
+      2.55vw,
+      2.3rem
+    );
+
+  display: flex;
+  align-items: center;
+  justify-content:
+    space-between;
+
+  gap: 0.8rem;
+
+  padding:
+    0.5rem
+    0.72rem;
+
+  color:
+    #405057;
+
+  border: 0;
+
+  border-radius:
+    0.55rem;
+
+  background:
+    transparent;
+
+  font: inherit;
+
+  font-size:
+    clamp(
+      0.59rem,
+      0.64vw,
+      0.69rem
+    );
+
+  font-weight: 500;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.courseSelectOption:hover {
+  color:
+    var(--cyan-dark);
+
+  background:
+    rgba(89, 197, 211, 0.085);
+
+  transform:
+    translateX(2px);
+}
+
+.courseSelectOptionActive {
+  color:
+    var(--cyan-dark);
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(89, 197, 211, 0.13),
+      rgba(89, 197, 211, 0.055)
+    );
+
+  font-weight: 600;
+}
+
+.courseSelectOption i {
+  width: 0.42rem;
+  height: 0.42rem;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+
+  background:
+    var(--cyan-dark);
+
+  box-shadow:
+    0 0 0 4px
+      rgba(89, 197, 211, 0.1);
+}
+
+
+.messageField {
+  align-items: flex-start;
+
+  min-height:
+    clamp(5.3rem, 6.6vw, 6.6rem);
+
+  padding:
+    clamp(0.7rem, 1vw, 0.9rem);
+}
+
+.messageField textarea {
+  resize: none;
+
+  line-height: 1.5;
+}
+
+.field:focus-within,
+.messageField:focus-within {
+  border-color:
+    rgba(32, 154, 170, 0.42);
+
+  box-shadow:
+    0 0 0 3px
+      rgba(89, 197, 211, 0.09);
+}
+
+.submitButton {
+  width: 100%;
+
+  min-height:
+    clamp(2.55rem, 3.2vw, 2.95rem);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.7rem;
+
+  margin-top:
+    clamp(0.65rem, 1vw, 0.9rem);
+
+  color:
+    #ffffff;
+
+  border: 0;
+
+  border-radius:
+    clamp(0.55rem, 0.75vw, 0.68rem);
+
+  background:
+    linear-gradient(
+      135deg,
+      #26b8c7,
+      #1697a7
+    );
+
+  box-shadow:
+    0 0.7rem 1.6rem
+      rgba(32, 154, 170, 0.17);
+
+  font: inherit;
+
+  font-size:
+    clamp(0.68rem, 0.75vw, 0.8rem);
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.submitButton:hover {
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 0.95rem 2rem
+      rgba(32, 154, 170, 0.22);
+}
+
+.formPrivacy {
+  display: flex;
+  align-items: center;
+
+  gap: 0.45rem;
+
+  margin-top: 0.75rem;
+
+  color:
+    #9aa6aa;
+
+  font-size:
+    clamp(0.5rem, 0.55vw, 0.6rem);
+
+  line-height: 1.4;
+}
+
+.formPrivacy svg {
+  flex: 0 0 auto;
+
+  color:
+    var(--cyan-dark);
+}
+
+
+/* =========================================================
+   MAP
+   ========================================================= */
+
+.mapSection {
+  width:
+    min(
+      calc(100% - clamp(1rem, 4vw, 4rem)),
+      84rem
+    );
+
+  min-height:
+    clamp(12rem, 18vw, 17rem);
+
+  position: relative;
+
+  margin:
+    clamp(0.9rem, 1.4vw, 1.2rem)
+    auto
+    0;
+
+  overflow: hidden;
+
+  border:
+    1px solid var(--line);
+
+  border-radius:
+    clamp(1rem, 1.4vw, 1.35rem);
+
+  background:
+    #eef3f4;
+
+  box-shadow:
+    0 1rem 2.4rem
+      rgba(21, 55, 64, 0.045);
+}
+
+.mapFrame {
+  width: 100%;
+  height: 100%;
+
+  min-height:
+    inherit;
+
+  border: 0;
+
+  filter:
+    saturate(0.72)
+    contrast(0.96);
+}
+
+.mapCard {
+  width:
+    clamp(12rem, 19vw, 16rem);
+
+  position: absolute;
+
+  left:
+    clamp(1rem, 2vw, 1.6rem);
+
+  top: 50%;
+
+  display: grid;
+
+  grid-template-columns:
+    auto
+    minmax(0, 1fr);
+
+  align-items: start;
+
+  gap:
+    0.65rem;
+
+  padding:
+    clamp(0.9rem, 1.4vw, 1.2rem);
+
+  transform:
+    translateY(-50%);
+
+  border:
+    1px solid
+      rgba(18, 48, 56, 0.08);
+
+  border-radius:
+    clamp(0.8rem, 1vw, 1rem);
+
+  background:
+    rgba(255, 255, 255, 0.96);
+
+  box-shadow:
+    0 1rem 2.4rem
+      rgba(21, 55, 64, 0.11);
+
+  backdrop-filter:
+    blur(10px);
+}
+
+.mapIcon {
+  color:
+    var(--cyan-dark);
+}
+
+.mapCard > div {
+  min-width: 0;
+
+  display: grid;
+
+  gap: 0.35rem;
+}
+
+.mapCard strong {
+  color:
+    #26343a;
+
+  font-size:
+    clamp(0.68rem, 0.74vw, 0.8rem);
+
+  font-weight: 600;
+}
+
+.mapCard p {
+  margin: 0;
+
+  color:
+    var(--muted);
+
+  font-size:
+    clamp(0.56rem, 0.61vw, 0.66rem);
+
+  line-height: 1.45;
+}
+
+.mapCard a {
+  grid-column:
+    1 / -1;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 0.65rem;
+
+  margin-top: 0.45rem;
+
+  padding:
+    0.55rem
+    0.8rem;
+
+  color:
+    var(--cyan-dark);
+
+  border:
+    1px solid
+      rgba(32, 154, 170, 0.33);
+
+  border-radius: 999px;
+
+  font-size:
+    clamp(0.56rem, 0.6vw, 0.64rem);
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   BOTTOM CTA
+   ========================================================= */
+
+.bottomCta {
+  width:
+    min(
+      calc(100% - clamp(1rem, 4vw, 4rem)),
+      84rem
+    );
+
+  display: grid;
+
+  grid-template-columns:
+    auto
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap:
+    clamp(0.9rem, 1.5vw, 1.3rem);
+
+  margin:
+    clamp(0.9rem, 1.4vw, 1.2rem)
+    auto
+    0;
+
+  padding:
+    clamp(0.85rem, 1.3vw, 1.1rem)
+    clamp(1rem, 1.8vw, 1.5rem);
+
+  border:
+    1px solid
+      rgba(18, 48, 56, 0.07);
+
+  border-radius:
+    clamp(1rem, 1.4vw, 1.35rem);
+
+  background:
+    linear-gradient(
+      135deg,
+      #fbfefe,
+      #f2f9fa
+    );
+
+  box-shadow:
+    0 0.9rem 2.2rem
+      rgba(21, 55, 64, 0.04);
+}
+
+.bottomCtaIcon {
+  width:
+    clamp(2.7rem, 3.5vw, 3.2rem);
+
+  aspect-ratio: 1;
+
+  display: grid;
+  place-items: center;
+
+  color:
+    #ffffff;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      145deg,
+      var(--cyan),
+      var(--cyan-dark)
+    );
+}
+
+.bottomCtaCopy {
+  min-width: 0;
+
+  display: grid;
+
+  gap: 0.15rem;
+}
+
+.bottomCtaCopy strong {
+  color:
+    #233137;
+
+  font-size:
+    clamp(0.8rem, 0.9vw, 0.98rem);
+
+  font-weight: 600;
+}
+
+.bottomCtaCopy strong b {
+  color:
+    var(--cyan-dark);
+
+  font-weight: 600;
+}
+
+.bottomCtaCopy p {
+  margin: 0;
+
+  color:
+    var(--muted);
+
+  font-size:
+    clamp(0.56rem, 0.61vw, 0.67rem);
+}
+
+.bottomCtaActions {
+  display: flex;
+  align-items: center;
+
+  gap:
+    clamp(0.55rem, 0.9vw, 0.8rem);
+}
+
+.primaryCta,
+.secondaryCta {
+  min-height:
+    clamp(2.2rem, 2.8vw, 2.55rem);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.65rem;
+
+  padding:
+    0.55rem
+    clamp(1rem, 1.8vw, 1.5rem);
+
+  border-radius:
+    0.58rem;
+
+  font-size:
+    clamp(0.6rem, 0.66vw, 0.72rem);
+
+  font-weight: 600;
+}
+
+.primaryCta {
+  color: #ffffff;
+
+  background:
+    var(--cyan-dark);
+}
+
+.secondaryCta {
+  color:
+    var(--cyan-dark);
+
+  border:
+    1px solid
+      rgba(32, 154, 170, 0.35);
+
+  background:
+    #ffffff;
+}
+
+
+/* =========================================================
+   RESPONSIVE · CAMBIO ESTRUCTURAL REAL
+   ========================================================= */
+
+@container contacto-page (max-width: 58rem) {
+  .container {
+    width:
+      min(
+        100% - clamp(1rem, 5vw, 1.5rem),
+        46rem
+      );
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+
+    min-height: 0;
+  }
+
+  .heroCopy {
+    padding:
+      clamp(1.4rem, 5vw, 2rem)
+      clamp(1rem, 4vw, 1.5rem);
+  }
+
+  .breadcrumb {
+    margin-bottom:
+      clamp(1rem, 4vw, 1.4rem);
+  }
+
+  .heroCopy h1 {
+    font-size:
+      clamp(
+        2rem,
+        1.25rem + 5cqi,
+        3rem
+      );
+  }
+
+  .heroVisual {
+    aspect-ratio:
+      1.65;
+  }
+
+  .heroDots {
+    display: none;
+  }
+
+  .contactPanel {
+    width:
+      calc(100% - clamp(0.5rem, 2vw, 0.8rem));
+
+    grid-template-columns: 1fr;
+
+    margin-top:
+      clamp(-1.4rem, -3vw, -0.8rem);
+  }
+
+  .infoColumn,
+  .scheduleColumn,
+  .formColumn {
+    padding:
+      clamp(1rem, 4vw, 1.35rem);
+  }
+
+  .infoColumn,
+  .scheduleColumn {
+    border-right: 0;
+
+    border-bottom:
+      1px solid var(--line);
+  }
+
+  .contactItem {
+    padding-block:
+      clamp(0.65rem, 2.5vw, 0.8rem);
+  }
+
+  .scheduleColumn {
+    gap: 0;
+  }
+
+  .scheduleList {
+    grid-template-columns:
+      repeat(
+        3,
+        minmax(0, 1fr)
+      );
+
+    gap:
+      clamp(0.6rem, 3vw, 1rem);
+  }
+
+  .scheduleHelp {
+    margin-top: 1rem;
+  }
+
+  .mapSection,
+  .bottomCta {
+    width:
+      calc(100% - clamp(0.5rem, 2vw, 0.8rem));
+  }
+
+  .mapSection {
+    min-height:
+      clamp(13rem, 48cqi, 18rem);
+  }
+
+  .mapCard {
+    width:
+      min(
+        13rem,
+        47cqi
+      );
+
+    left:
+      clamp(0.7rem, 3vw, 1rem);
+  }
+
+  .bottomCta {
+    grid-template-columns:
+      auto
+      minmax(0, 1fr);
+  }
+
+  .bottomCtaActions {
+    grid-column:
+      1 / -1;
+
+    display: grid;
+
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+}
+
+@container contacto-page (max-width: 34rem) {
+  .heroVisual {
+    aspect-ratio:
+      1.3;
+  }
+
+  .contactPanel {
+    border-radius:
+      1rem;
+  }
+
+  .scheduleList {
+    grid-template-columns: 1fr;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .field,
+  .fieldWide,
+  .messageField,
+  .courseSelect {
+    grid-column:
+      1 / -1;
+  }
+
+  .courseSelectMenu {
+    position: absolute;
+  }
+
+  .mapSection {
+    min-height:
+      17rem;
+  }
+
+  .mapCard {
+    width:
+      calc(100% - 1.4rem);
+
+    top: auto;
+    left: 0.7rem;
+    right: 0.7rem;
+    bottom: 0.7rem;
+
+    transform: none;
+  }
+
+  .bottomCta {
+    grid-template-columns:
+      auto
+      minmax(0, 1fr);
+  }
+
+  .bottomCtaActions {
+    grid-template-columns: 1fr;
+  }
+
+  .primaryCta,
+  .secondaryCta {
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .contactItem > i,
+  .socials a,
+  .submitButton,
+  .courseSelectTrigger,
+  .courseSelectChevron,
+  .courseSelectOption {
+    transition: none;
+  }
+}
