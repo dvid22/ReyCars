@@ -1,0 +1,153 @@
+.button {
+  width:
+    clamp(
+      48px,
+      4vw,
+      56px
+    );
+
+  aspect-ratio: 1;
+
+  position: fixed;
+
+  right:
+    clamp(
+      14px,
+      1.5vw,
+      22px
+    );
+
+  bottom:
+    clamp(
+      14px,
+      1.5vw,
+      22px
+    );
+
+  z-index: 1500;
+
+  display: grid;
+  place-items: center;
+
+  color: #ffffff;
+
+  border:
+    1px solid
+      rgba(
+        255,
+        255,
+        255,
+        0.18
+      );
+
+  border-radius: 50%;
+
+  background:
+    #25d366;
+
+  box-shadow:
+    0 16px 34px
+      rgba(
+        37,
+        211,
+        102,
+        0.26
+      );
+
+  transition:
+    transform 0.28s
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    box-shadow 0.28s ease,
+    background 0.28s ease;
+}
+
+.button:hover {
+  transform:
+    translateY(-3px)
+    scale(1.045);
+
+  background:
+    #20c95d;
+
+  box-shadow:
+    0 20px 42px
+      rgba(
+        37,
+        211,
+        102,
+        0.34
+      );
+}
+
+.button:active {
+  transform:
+    scale(0.96);
+}
+
+.icon {
+  width:
+    clamp(
+      24px,
+      2vw,
+      29px
+    );
+
+  height: auto;
+
+  display: block;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 680px) {
+  .button {
+    width: 50px;
+
+    right: 14px;
+    bottom: 14px;
+  }
+
+  .icon {
+    width: 25px;
+  }
+}
+
+
+/* =========================================================
+   EXTRA SMALL
+   ========================================================= */
+
+@media (max-width: 380px) {
+  .button {
+    width: 46px;
+
+    right: 12px;
+    bottom: 12px;
+  }
+
+  .icon {
+    width: 23px;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .button {
+    transition: none;
+  }
+}

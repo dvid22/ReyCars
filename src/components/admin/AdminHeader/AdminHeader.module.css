@@ -1,0 +1,12 @@
+.header {
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  border-bottom: 1px solid rgba(23,25,27,.08);
+  background: #fff;
+}
+.header > div { display: flex; gap: 7px; align-items: baseline; }
+.header > div span { color: var(--reycars-cyan-dark); font-size: 10px; font-weight: 600; }
+.user { color: var(--reycars-muted); font-size: 12px; }

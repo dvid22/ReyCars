@@ -1,0 +1,45 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  color: #17191b;
+  background: #ffffff;
+  font-family: var(--font-poppins), Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+:root {
+  --reycars-cyan: #59c5d3;
+  --reycars-cyan-dark: #209aaa;
+  --reycars-black: #17191b;
+  --reycars-white: #ffffff;
+  --reycars-surface: #f5f7f8;
+  --reycars-muted: #667078;
+}

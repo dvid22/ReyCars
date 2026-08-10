@@ -1,0 +1,39 @@
+.layout {
+  --public-header-height: 74px;
+
+  width: 100%;
+  min-height: 100dvh;
+
+  display: flex;
+  flex-direction: column;
+
+  margin: 0;
+  padding: 0;
+
+  overflow-x: clip;
+
+  background: #ffffff;
+}
+
+.main {
+  width: 100%;
+
+  flex: 1 0 auto;
+
+  margin: 0;
+
+  padding-top:
+    var(--public-header-height);
+}
+
+@media (max-width: 980px) {
+  .layout {
+    --public-header-height: 68px;
+  }
+}
+
+@media (max-width: 680px) {
+  .layout {
+    --public-header-height: 64px;
+  }
+}

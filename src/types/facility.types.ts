@@ -1,0 +1,3 @@
+export interface Facility {
+  id: string; title: string; description: string; imageUrl: string; active: boolean; order: number;
+}

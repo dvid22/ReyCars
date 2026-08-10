@@ -1,0 +1,11 @@
+.sidebar {
+  min-height: 100vh;
+  padding: 24px 18px;
+  color: #fff;
+  background: #17191b;
+}
+.brand { display: block; margin-bottom: 28px; color: var(--reycars-cyan); }
+.nav { display: grid; gap: 6px; }
+.nav a { padding: 11px 12px; border-radius: 10px; color: rgba(255,255,255,.72); font-size: 13px; }
+.nav a:hover { color: #fff; background: rgba(255,255,255,.06); }
+@media (max-width: 900px) { .sidebar { display: none; } }
