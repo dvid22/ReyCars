@@ -21,6 +21,10 @@ import {
   useAboutContent,
 } from "@/hooks/useAboutContent";
 
+import {
+  useTeam,
+} from "@/hooks/useTeam";
+
 import type {
   AboutGalleryAlbum,
   AboutIconName,
@@ -29,40 +33,7 @@ import type {
 
 import styles from "./NosotrosPage.module.css";
 
-const teamMembers = [
-  {
-    id: "instructor-01",
-    name: "Carlos Ramírez",
-    role: "Instructor de conducción",
-    description:
-      "Acompañamiento práctico con claridad, paciencia y enfoque responsable.",
-    image: "/assets/images/equipo/instructor-01.png",
-  },
-  {
-    id: "instructor-02",
-    name: "Mariana López",
-    role: "Coordinación académica",
-    description:
-      "Organización y acompañamiento durante cada etapa del proceso de formación.",
-    image: "/assets/images/equipo/instructor-02.png",
-  },
-  {
-    id: "instructor-03",
-    name: "Valentina Torres",
-    role: "Atención al estudiante",
-    description:
-      "Orientación cercana para resolver dudas y acompañar el recorrido del estudiante.",
-    image: "/assets/images/equipo/instructor-03.png",
-  },
-  {
-    id: "instructor-04",
-    name: "Andrés Mejía",
-    role: "Acompañamiento práctico",
-    description:
-      "Guía en la experiencia de conducción con atención y responsabilidad.",
-    image: "/assets/images/equipo/instructor-04.png",
-  },
-];
+
 
 
 function AboutIcon({
@@ -187,6 +158,20 @@ export function NosotrosPage() {
     content,
     isLoading,
   } = useAboutContent();
+
+
+  const {
+    members:
+      teamMembers,
+    isLoading:
+      isTeamLoading,
+  } = useTeam();
+
+  const visibleTeam =
+    teamMembers.filter(
+      (member) =>
+        member.active
+    );
 
   const storyItems =
     content?.story ?? [];
@@ -701,6 +686,8 @@ export function NosotrosPage() {
         {/* =====================================================
             NUESTRO EQUIPO
             ===================================================== */}
+        {!isTeamLoading &&
+        visibleTeam.length > 0 ? (
         <section
           className={styles.teamSection}
           aria-labelledby="nosotros-team-title"
@@ -747,7 +734,7 @@ export function NosotrosPage() {
           </motion.div>
 
           <div className={styles.teamGrid}>
-            {teamMembers.map((member, index) => (
+            {visibleTeam.map((member, index) => (
               <motion.article
                 key={member.id}
                 className={styles.teamProfile}
@@ -776,8 +763,8 @@ export function NosotrosPage() {
                 <div className={styles.teamPhotoRing}>
                   <div className={styles.teamPhoto}>
                     <Image
-                      src={member.image}
-                      alt={member.name}
+                      src={member.imageUrl}
+                      alt={member.imageAlt || member.name}
                       fill
                       sizes="(max-width: 900px) 42vw, 16vw"
                       className={styles.teamPhotoMedia}
@@ -826,6 +813,8 @@ export function NosotrosPage() {
             <i aria-hidden="true" />
           </motion.div>
         </section>
+
+        ) : null}
 
         {/* =====================================================
             GALERÍA REYCARS · ÁLBUM DINÁMICO
