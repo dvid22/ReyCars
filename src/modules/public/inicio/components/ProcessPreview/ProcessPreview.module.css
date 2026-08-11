@@ -389,8 +389,15 @@
 
   grid-template-columns:
     repeat(
-      5,
-      minmax(0, 1fr)
+      auto-fit,
+      minmax(
+        clamp(
+          8.5rem,
+          10vw,
+          10.5rem
+        ),
+        1fr
+      )
     );
 
   gap:
@@ -662,6 +669,41 @@
 
   background:
     rgba(89, 197, 211, 0.09);
+}
+
+
+
+
+/* =========================================================
+   MÁS DE 5 ETAPAS
+   ========================================================= */
+
+.timelineDense .timelineLine {
+  display: none;
+}
+
+.timelineDense .steps {
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(
+        clamp(
+          9rem,
+          11vw,
+          11rem
+        ),
+        1fr
+      )
+    );
+}
+
+.timelineDense .step {
+  min-height:
+    clamp(
+      12.5rem,
+      15vw,
+      14.5rem
+    );
 }
 
 

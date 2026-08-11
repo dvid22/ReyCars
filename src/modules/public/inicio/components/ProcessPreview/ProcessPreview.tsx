@@ -3,12 +3,7 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  BookOpen,
-  Car,
   CheckCircle2,
-  ClipboardCheck,
-  FileText,
-  IdCard,
 } from "lucide-react";
 import {
   motion,
@@ -16,63 +11,81 @@ import {
 } from "motion/react";
 
 import { useHomeContent } from "@/hooks/useHomeContent";
+import { useProcessContent } from "@/hooks/useProcessContent";
+import {
+  ProcessIconGlyph,
+} from "@/components/process/ProcessIcon";
 
 import styles from "./ProcessPreview.module.css";
 
-const steps = [
-  {
-    number: "01",
-    icon: FileText,
-    title: "Inicia tu proceso",
-    description:
-      "Elige tu curso y comienza tu recorrido con ReyCars.",
-  },
-  {
-    number: "02",
-    icon: BookOpen,
-    title: "Formación teórica",
-    description:
-      "Aprende los conceptos necesarios para comprender la vía.",
-  },
-  {
-    number: "03",
-    icon: Car,
-    title: "Prácticas de conducción",
-    description:
-      "Desarrolla experiencia y confianza con acompañamiento.",
-  },
-  {
-    number: "04",
-    icon: ClipboardCheck,
-    title: "Evaluación",
-    description:
-      "Completa las etapas requeridas dentro de tu proceso.",
-  },
-  {
-    number: "05",
-    icon: IdCard,
-    title: "Completa tu recorrido",
-    description:
-      "Finaliza tu formación y continúa con el trámite correspondiente.",
-  },
-];
+function renderHighlightedTitle(
+  title: string,
+  highlighted: string
+) {
+  if (
+    !highlighted ||
+    !title.includes(highlighted)
+  ) {
+    return title;
+  }
+
+  const index =
+    title.indexOf(highlighted);
+
+  return (
+    <>
+      {title.slice(0, index)}
+      <strong>{highlighted}</strong>
+      {title.slice(
+        index + highlighted.length
+      )}
+    </>
+  );
+}
 
 export function ProcessPreview() {
-  const reduceMotion = useReducedMotion();
-  const { content, isLoading } = useHomeContent();
+  const reduceMotion =
+    useReducedMotion();
 
-  if (isLoading || !content) {
+  const {
+    content: homeContent,
+    isLoading: homeLoading,
+  } = useHomeContent();
+
+  const {
+    content: processContent,
+    isLoading: processLoading,
+  } = useProcessContent();
+
+  if (
+    homeLoading ||
+    processLoading ||
+    !homeContent ||
+    !processContent
+  ) {
     return null;
   }
 
-  const sectionContent = content.processSection;
+  const sectionContent =
+    homeContent.processSection;
+
+  const steps =
+    processContent.steps
+      .filter((step) => step.active);
+
+  if (steps.length === 0) {
+    return null;
+  }
 
   return (
     <section
       className={styles.section}
       aria-labelledby="process-preview-title"
     >
-      <div className={styles.backgroundGlow} aria-hidden="true" />
+      <div
+        className={styles.backgroundGlow}
+        aria-hidden="true"
+      />
 
       <div className={styles.container}>
         <motion.div
@@ -105,13 +118,10 @@ export function ProcessPreview() {
           </span>
 
           <h2 id="process-preview-title">
-            {sectionContent.title.replace(
-              sectionContent.highlightedText,
-              ""
+            {renderHighlightedTitle(
+              sectionContent.title,
+              sectionContent.highlightedText
             )}
-            <strong>
-              {sectionContent.highlightedText}
-            </strong>
           </h2>
 
           <p>
@@ -123,7 +133,8 @@ export function ProcessPreview() {
             className={styles.cta}
           >
             <span>
-              {sectionContent.ctaLabel || "Conocer el proceso"}
+              {sectionContent.ctaLabel ||
+                "Conocer el proceso"}
             </span>
 
             <ArrowRight
@@ -133,96 +144,91 @@ export function ProcessPreview() {
           </Link>
         </motion.div>
 
-        <div className={styles.timelineWrap}>
+        <div
+          className={`${styles.timelineWrap} ${
+            steps.length > 5
+              ? styles.timelineDense
+              : ""
+          }`}
+        >
           <div
             className={styles.timelineLine}
             aria-hidden="true"
           />
 
           <div className={styles.steps}>
-            {steps.map((step, index) => {
-              const Icon = step.icon;
-
-              return (
-                <motion.article
-                  key={step.number}
-                  className={styles.step}
-                  initial={
-                    reduceMotion
-                      ? false
-                      : {
-                          opacity: 0,
-                          y: 28,
-                          scale: 0.97,
-                        }
-                  }
-                  whileInView={{
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                  }}
-                  viewport={{
-                    once: true,
-                    amount: 0.28,
-                  }}
-                  transition={{
-                    duration: 0.5,
-                    delay: index * 0.08,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
+            {steps.map((step, index) => (
+              <motion.article
+                key={step.id}
+                className={styles.step}
+                initial={
+                  reduceMotion
+                    ? false
+                    : {
+                        opacity: 0,
+                        y: 28,
+                        scale: 0.97,
+                      }
+                }
+                whileInView={{
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                }}
+                viewport={{
+                  once: true,
+                  amount: 0.28,
+                }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.08,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                whileHover={
+                  reduceMotion
+                    ? undefined
+                    : { y: -7 }
+                }
+              >
+                <motion.span
+                  className={styles.stepNumber}
+                  initial={false}
                   whileHover={
                     reduceMotion
                       ? undefined
-                      : {
-                          y: -7,
-                        }
+                      : { scale: 1.08 }
                   }
                 >
-                  <motion.span
-                    className={styles.stepNumber}
-                    initial={false}
-                    whileHover={
-                      reduceMotion
-                        ? undefined
-                        : {
-                            scale: 1.08,
-                          }
-                    }
-                  >
-                    {step.number}
-                  </motion.span>
+                  {step.number}
+                </motion.span>
 
-                  <span className={styles.stepIcon}>
-                    <Icon
-                      size={23}
-                      strokeWidth={1.55}
+                <span className={styles.stepIcon}>
+                  <ProcessIconGlyph
+                    type={step.icon}
+                    size={23}
+                    strokeWidth={1.55}
+                  />
+                </span>
+
+                <div className={styles.stepContent}>
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
+                </div>
+
+                {index ===
+                steps.length - 1 ? (
+                  <span
+                    className={styles.finishMark}
+                    aria-hidden="true"
+                  >
+                    <CheckCircle2
+                      size={17}
+                      strokeWidth={1.7}
                     />
                   </span>
-
-                  <div className={styles.stepContent}>
-                    <h3>
-                      {step.title}
-                    </h3>
-
-                    <p>
-                      {step.description}
-                    </p>
-                  </div>
-
-                  {index === steps.length - 1 && (
-                    <span
-                      className={styles.finishMark}
-                      aria-hidden="true"
-                    >
-                      <CheckCircle2
-                        size={17}
-                        strokeWidth={1.7}
-                      />
-                    </span>
-                  )}
-                </motion.article>
-              );
-            })}
+                ) : null}
+              </motion.article>
+            ))}
           </div>
         </div>
       </div>

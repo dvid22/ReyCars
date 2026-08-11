@@ -1301,3 +1301,57 @@ and
     background: transparent;
   }
 }
+
+/* =========================================================
+   CRUD DINÁMICO · SOPORTE PARA MÁS ETAPAS
+   ========================================================= */
+
+@media (min-width: 901px) {
+  .steps {
+    max-height:
+      min(
+        58vh,
+        34rem
+      );
+
+    overflow-y: auto;
+
+    padding-right: 4px;
+
+    scrollbar-width: thin;
+
+    scrollbar-color:
+      rgba(
+        32,
+        154,
+        170,
+        0.22
+      )
+      transparent;
+  }
+
+  .steps::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .steps::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+
+    background:
+      rgba(
+        32,
+        154,
+        170,
+        0.2
+      );
+  }
+}
+
+@media (max-width: 900px) {
+  .steps {
+    max-height: none;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+}

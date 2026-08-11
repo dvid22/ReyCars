@@ -11,11 +11,26 @@ import type {
   HomeContent,
   HomeContentDocument,
 } from "@/types/home.types";
+import {
+  isProcessIconName,
+} from "@/types/process.types";
+import type {
+  ProcessContent,
+  ProcessContentDocument,
+  ProcessHighlight,
+  ProcessStep,
+} from "@/types/process.types";
 
 const HOME_DOC = doc(
   db,
   "siteContent",
   "home"
+);
+
+const PROCESS_DOC = doc(
+  db,
+  "siteContent",
+  "process"
 );
 
 function normalizeHomeContent(
@@ -122,6 +137,91 @@ function normalizeHomeContent(
   };
 }
 
+
+function normalizeHighlight(
+  item: Partial<ProcessHighlight>
+): ProcessHighlight {
+  return {
+    icon:
+      isProcessIconName(
+        item.icon
+      )
+        ? item.icon
+        : "check",
+    title: item.title ?? "",
+    description: item.description ?? "",
+  };
+}
+
+function normalizeStep(
+  item: Partial<ProcessStep>,
+  index: number
+): ProcessStep {
+  const order =
+    typeof item.order === "number"
+      ? item.order
+      : index + 1;
+
+  return {
+    id: item.id || `paso-${order}`,
+    order,
+    number:
+      item.number ||
+      String(order).padStart(2, "0"),
+    title: item.title ?? "",
+    shortTitle:
+      item.shortTitle ||
+      item.title ||
+      "",
+    description:
+      item.description ?? "",
+    imageUrl:
+      item.imageUrl ?? "",
+    imageAlt:
+      item.imageAlt ??
+      `${item.title ?? "Etapa"} ReyCars`,
+    icon:
+      isProcessIconName(
+        item.icon
+      )
+        ? item.icon
+        : "route",
+    highlights:
+      Array.isArray(item.highlights)
+        ? item.highlights
+            .slice(0, 3)
+            .map(normalizeHighlight)
+        : [],
+    active:
+      item.active !== false,
+  };
+}
+
+function normalizeProcessContent(
+  data: Partial<ProcessContentDocument>
+): ProcessContent | null {
+  if (!Array.isArray(data.steps)) {
+    return null;
+  }
+
+  return {
+    eyebrow: data.eyebrow ?? "",
+    title: data.title ?? "",
+    highlightedText:
+      data.highlightedText ?? "",
+    description:
+      data.description ?? "",
+    selectorTitle:
+      data.selectorTitle ?? "",
+    steps: data.steps
+      .map(normalizeStep)
+      .sort(
+        (a, b) =>
+          a.order - b.order
+      ),
+  };
+}
+
 export const siteService = {
   async getHomeContent() {
     const snapshot =
@@ -174,6 +274,69 @@ export const siteService = {
       {
         ...content,
         updatedAt: serverTimestamp(),
+        updatedByUid:
+          user?.uid ?? "",
+        updatedByEmail:
+          user?.email ?? "",
+      },
+      {
+        merge: true,
+      }
+    );
+  },
+
+  async getProcessContent() {
+    const snapshot =
+      await getDoc(PROCESS_DOC);
+
+    if (!snapshot.exists()) {
+      return null;
+    }
+
+    return normalizeProcessContent(
+      snapshot.data() as Partial<ProcessContentDocument>
+    );
+  },
+
+  subscribeProcessContent(
+    onData: (
+      content: ProcessContent | null
+    ) => void,
+    onError?: (error: Error) => void
+  ) {
+    return onSnapshot(
+      PROCESS_DOC,
+      (snapshot) => {
+        if (!snapshot.exists()) {
+          onData(null);
+          return;
+        }
+
+        onData(
+          normalizeProcessContent(
+            snapshot.data() as Partial<ProcessContentDocument>
+          )
+        );
+      },
+      (error) => {
+        onError?.(error);
+      }
+    );
+  },
+
+  async saveProcessContent(
+    content: ProcessContent,
+    user?: {
+      uid?: string;
+      email?: string | null;
+    }
+  ) {
+    await setDoc(
+      PROCESS_DOC,
+      {
+        ...content,
+        updatedAt:
+          serverTimestamp(),
         updatedByUid:
           user?.uid ?? "",
         updatedByEmail:
