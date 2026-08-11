@@ -82,7 +82,7 @@
 .eyebrow {
   color: var(--cyan-dark);
 
-  font-size: clamp(7.5px, 0.58vw, 9.5px);
+  font-size: clamp(10.8px, 0.72vw, 12px);
   font-weight: 600;
 
   letter-spacing: 0.17em;
@@ -114,7 +114,7 @@
 
   color: var(--muted);
 
-  font-size: clamp(12px, 0.82vw, 13.5px);
+  font-size: clamp(13px, 0.9vw, 14.5px);
 
   line-height: 1.55;
 }
@@ -134,7 +134,7 @@
 .introMeta span {
   color: var(--cyan-dark);
 
-  font-size: 7.5px;
+  font-size: 10.8px;
   font-weight: 600;
 
   letter-spacing: 0.15em;
@@ -145,7 +145,7 @@
 
   color: #536369;
 
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 500;
 
   line-height: 1.42;
@@ -221,7 +221,7 @@
 .selectorHeader > span {
   color: #879398;
 
-  font-size: 7.5px;
+  font-size: 10.8px;
   font-weight: 600;
 
   letter-spacing: 0.16em;
@@ -246,7 +246,7 @@
 .selectorCount small {
   color: #8e999d;
 
-  font-size: 8.5px;
+  font-size: 11.4px;
 }
 
 .selectorGroup {
@@ -258,7 +258,7 @@
 .groupTitle {
   color: var(--cyan-dark);
 
-  font-size: 7.5px;
+  font-size: 10.8px;
   font-weight: 600;
 
   letter-spacing: 0.12em;
@@ -354,7 +354,7 @@
 .courseNumber {
   color: var(--cyan-dark);
 
-  font-size: 10.5px;
+  font-size: 12.6px;
   font-weight: 600;
 }
 
@@ -389,7 +389,7 @@
 .courseItemText small {
   color: var(--cyan-dark);
 
-  font-size: 6.8px;
+  font-size: 10.8px;
   font-weight: 600;
 
   letter-spacing: 0.035em;
@@ -402,7 +402,7 @@
 
   color: #1d2629;
 
-  font-size: clamp(10.5px, 0.76vw, 12px);
+  font-size: clamp(12.6px, 0.84vw, 14px);
   font-weight: 600;
 
   line-height: 1.16;
@@ -417,7 +417,7 @@
 
   color: #7a878c;
 
-  font-size: 7.6px;
+  font-size: 11.4px;
   font-style: normal;
 
   text-overflow: ellipsis;
@@ -459,7 +459,7 @@
 .stageLabel {
   color: #859196;
 
-  font-size: 7.5px;
+  font-size: 10.8px;
   font-weight: 600;
 
   letter-spacing: 0.16em;
@@ -586,7 +586,7 @@
 
   background: rgba(89, 197, 211, 0.055);
 
-  font-size: 9.5px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -597,7 +597,7 @@
 
   color: var(--cyan-dark);
 
-  font-size: 8.5px;
+  font-size: 11.4px;
   font-weight: 600;
 
   letter-spacing: 0.07em;
@@ -625,7 +625,7 @@
 
   color: #2f3d42;
 
-  font-size: clamp(11px, 0.84vw, 13px);
+  font-size: clamp(12.6px, 0.9vw, 14px);
   font-weight: 600;
 }
 
@@ -873,7 +873,7 @@
 .stat > div > span {
   color: #849095;
 
-  font-size: 7.3px;
+  font-size: 10.8px;
 }
 
 .offer {
@@ -902,7 +902,7 @@
 .price span {
   color: #667b82;
 
-  font-size: 8px;
+  font-size: 11.4px;
 }
 
 .price strong {
@@ -935,7 +935,7 @@
 
   color: #617075;
 
-  font-size: 7.7px;
+  font-size: 11.4px;
 
   line-height: 1.3;
 }
@@ -975,7 +975,7 @@
   box-shadow:
     0 10px 20px rgba(21, 145, 161, 0.13);
 
-  font-size: 9px;
+  font-size: 11.4px;
   font-weight: 500;
 
   white-space: nowrap;
@@ -1055,7 +1055,7 @@
 .trustItem strong {
   color: #253136;
 
-  font-size: 9.3px;
+  font-size: 11.8px;
   font-weight: 600;
 }
 
@@ -1066,7 +1066,7 @@
 
   color: #77858a;
 
-  font-size: 7.6px;
+  font-size: 11.4px;
 
   line-height: 1.4;
 }
@@ -1093,7 +1093,7 @@
   .intro p {
     margin-top: 6px;
 
-    font-size: 11.5px;
+    font-size: 13px;
   }
 
   .selector {
@@ -1113,7 +1113,7 @@
   .visualCopy p {
     margin-top: 10px;
 
-    font-size: 11.5px;
+    font-size: 13px;
   }
 
   .courseImage {
@@ -1251,7 +1251,7 @@
   }
 
   .mobileChip strong {
-    font-size: 8px;
+    font-size: 11.4px;
   }
 
   .mobileChip small {
@@ -1259,7 +1259,7 @@
 
     overflow: hidden;
 
-    font-size: 7.2px;
+    font-size: 10.8px;
 
     text-overflow: ellipsis;
 
@@ -1350,7 +1350,7 @@
   }
 
   .intro p {
-    font-size: 11px;
+    font-size: 12.6px;
   }
 
   .stageLabel {
@@ -1375,11 +1375,11 @@
   }
 
   .visualCopy > strong {
-    font-size: 11px;
+    font-size: 12.6px;
   }
 
   .visualCopy p {
-    font-size: 10.5px;
+    font-size: 12.6px;
   }
 
   .visual {
@@ -1515,110 +1515,110 @@
 
 /* Encabezados pequeños */
 .eyebrow {
-  font-size: clamp(9px, 0.66vw, 11px);
+  font-size: clamp(10.8px, 0.74vw, 12.2px);
   font-weight: 600;
 }
 
 .selectorHeader > span {
-  font-size: 9px;
+  font-size: 11.4px;
   font-weight: 600;
 }
 
 .groupTitle {
-  font-size: 8.5px;
+  font-size: 11.4px;
   font-weight: 600;
 }
 
 .stageLabel {
-  font-size: 9px;
+  font-size: 11.4px;
   font-weight: 600;
 }
 
 .introMeta span {
-  font-size: 8.5px;
+  font-size: 11.4px;
   font-weight: 600;
 }
 
 /* Selector lateral: servicio + descripción */
 .courseItemText small {
-  font-size: 7.5px;
+  font-size: 10.8px;
   font-weight: 600;
 }
 
 .courseItemText strong {
-  font-size: clamp(11.5px, 0.82vw, 13px);
+  font-size: clamp(12.6px, 0.9vw, 14px);
   font-weight: 600;
 }
 
 .courseItemText em {
-  font-size: 8.5px;
+  font-size: 11.4px;
   line-height: 1.25;
 }
 
 .courseNumber {
-  font-size: 11.5px;
+  font-size: 13px;
 }
 
 /* Texto principal del curso */
 .badge {
-  font-size: 9px;
+  font-size: 11.4px;
   font-weight: 600;
 }
 
 .visualCopy > strong {
-  font-size: clamp(12px, 0.9vw, 14px);
+  font-size: clamp(13px, 0.94vw, 14.5px);
   font-weight: 600;
 }
 
 .visualCopy p {
-  font-size: clamp(12.5px, 0.92vw, 14.5px);
+  font-size: clamp(13px, 0.96vw, 15px);
   line-height: 1.58;
 }
 
 /* Stats del curso */
 .stat strong {
-  font-size: clamp(11px, 0.84vw, 13px);
+  font-size: clamp(12.6px, 0.9vw, 14px);
   font-weight: 600;
 }
 
 .stat > div > span {
-  font-size: 8.5px;
+  font-size: 11.4px;
 }
 
 /* Precio y detalles del servicio */
 .price span {
-  font-size: 9px;
+  font-size: 11.4px;
 }
 
 .includes span {
-  font-size: 8.8px;
+  font-size: 11.4px;
   line-height: 1.35;
 }
 
 /* KPIs / beneficios inferiores */
 .trustItem strong {
-  font-size: 10.5px;
+  font-size: 12.6px;
   font-weight: 600;
 }
 
 .trustItem p {
-  font-size: 8.8px;
+  font-size: 11.4px;
   line-height: 1.42;
 }
 
 /* Botón */
 .detailButton {
-  font-size: 9.5px;
+  font-size: 12px;
 }
 
 /* Low-height desktop: conservar legibilidad */
 @media (max-height: 850px) and (min-width: 901px) {
   .courseItemText strong {
-    font-size: 11.5px;
+    font-size: 13px;
   }
 
   .courseItemText em {
-    font-size: 8px;
+    font-size: 11.4px;
   }
 
   .visualCopy p {
@@ -1648,11 +1648,11 @@
   }
 
   .mobileChip strong {
-    font-size: 8.5px;
+    font-size: 11.4px;
   }
 
   .mobileChip small {
-    font-size: 7.7px;
+    font-size: 11.4px;
   }
 
   .visualCopy > strong {
@@ -1660,19 +1660,19 @@
   }
 
   .visualCopy p {
-    font-size: 11.5px;
+    font-size: 13px;
   }
 
   .stat strong {
-    font-size: 11px;
+    font-size: 12.6px;
   }
 
   .stat > div > span {
-    font-size: 8px;
+    font-size: 11.4px;
   }
 
   .includes span {
-    font-size: 8.5px;
+    font-size: 11.4px;
   }
 
   .trustItem strong {
@@ -1680,6 +1680,6 @@
   }
 
   .trustItem p {
-    font-size: 8.5px;
+    font-size: 11.4px;
   }
 }

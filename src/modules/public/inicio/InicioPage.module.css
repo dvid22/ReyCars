@@ -1,8 +1,14 @@
 .page {
+  --page-white: #ffffff;
+  --page-soft: #fbfdfd;
+  --page-cyan: var(--reycars-cyan, #59c5d3);
+  --page-cyan-dark: var(--reycars-cyan-dark, #209aaa);
+
   width: 100%;
   min-height: 100svh;
 
   position: relative;
+  isolation: isolate;
 
   margin: 0;
   padding: 0;
@@ -10,11 +16,23 @@
   overflow-x: clip;
 
   /*
-   * Evita que cualquier separación entre secciones
-   * deje ver un fondo blanco.
+   * La Home es clara.
+   * Este fondo evita cortes visuales durante
+   * animaciones, carga o pequeñas separaciones.
    */
-  background: #03141e;
+  background:
+    linear-gradient(
+      180deg,
+      var(--page-white) 0%,
+      var(--page-soft) 50%,
+      var(--page-white) 100%
+    );
 }
+
+
+/* =========================================================
+   ANCLA DE SCROLL DEL HERO
+   ========================================================= */
 
 .contentAnchor {
   width: 100%;
@@ -33,14 +51,237 @@
   pointer-events: none;
 }
 
+
+/* =========================================================
+   CONTENEDOR DE SECCIONES
+   ========================================================= */
+
+.sections {
+  width: 100%;
+
+  position: relative;
+  z-index: 1;
+
+  display: block;
+
+  overflow: clip;
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #fbfdfd 34%,
+      #ffffff 72%,
+      #fbfdfd 100%
+    );
+}
+
+
+/* =========================================================
+   REVEAL GENERAL AL HACER SCROLL
+   ========================================================= */
+
+.sectionReveal {
+  width: 100%;
+
+  position: relative;
+
+  transform-origin: 50% 28%;
+
+  will-change:
+    transform,
+    opacity;
+}
+
+
+/*
+ * Separadores muy suaves para mantener continuidad
+ * sin que las secciones parezcan bloques pegados.
+ */
+.sectionReveal::before {
+  content: "";
+
+  width:
+    min(
+      calc(100% - clamp(2rem, 8vw, 8rem)),
+      88rem
+    );
+
+  height: 1px;
+
+  position: absolute;
+
+  top: 0;
+  left: 50%;
+
+  z-index: 4;
+
+  opacity: 0.46;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(32, 154, 170, 0.07) 18%,
+      rgba(18, 48, 56, 0.05) 50%,
+      rgba(32, 154, 170, 0.07) 82%,
+      transparent
+    );
+
+  transform:
+    translateX(-50%);
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   TRANSICIONES ENTRE MÓDULOS
+   ========================================================= */
+
+.coursesReveal {
+  z-index: 4;
+
+  background:
+    #ffffff;
+}
+
+.coursesReveal::before {
+  display: none;
+}
+
+
+.processReveal {
+  z-index: 3;
+
+  background:
+    linear-gradient(
+      180deg,
+      #f8fcfd 0%,
+      #ffffff 100%
+    );
+}
+
+
+.faqReveal {
+  z-index: 2;
+
+  background:
+    #ffffff;
+}
+
+
+.ctaReveal {
+  z-index: 1;
+
+  background:
+    linear-gradient(
+      180deg,
+      #fbfdfd 0%,
+      #ffffff 100%
+    );
+}
+
+
+/* =========================================================
+   SCROLL FEEL / CONTINUIDAD VISUAL
+   ========================================================= */
+
+@supports (animation-timeline: view()) {
+  .sectionReveal {
+    animation-name:
+      homeSectionDepth;
+
+    animation-duration: 1ms;
+
+    animation-timing-function:
+      linear;
+
+    animation-fill-mode: both;
+
+    animation-timeline:
+      view();
+
+    animation-range:
+      entry 0%
+      cover 34%;
+  }
+
+  @keyframes homeSectionDepth {
+    from {
+      filter:
+        saturate(0.965);
+    }
+
+    to {
+      filter:
+        saturate(1);
+    }
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
 @media (max-width: 980px) {
   .contentAnchor {
     scroll-margin-top: 68px;
   }
+
+  .sectionReveal::before {
+    width:
+      calc(
+        100% -
+        clamp(
+          1.5rem,
+          6vw,
+          3rem
+        )
+      );
+  }
 }
+
 
 @media (max-width: 680px) {
   .contentAnchor {
     scroll-margin-top: 64px;
+  }
+
+  .sections {
+    overflow: hidden;
+  }
+
+  .sectionReveal {
+    will-change:
+      opacity,
+      transform;
+  }
+
+  .sectionReveal::before {
+    width:
+      calc(
+        100% - 1.6rem
+      );
+
+    opacity: 0.38;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .sectionReveal {
+    will-change: auto;
+  }
+
+  @supports (animation-timeline: view()) {
+    .sectionReveal {
+      animation: none;
+    }
   }
 }

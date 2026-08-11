@@ -106,7 +106,7 @@
 
   color: var(--cyan-dark);
 
-  font-size: clamp(0.62rem, 0.66vw, 0.72rem);
+  font-size: clamp(0.72rem, 0.76vw, 0.82rem);
   font-weight: 600;
 
   line-height: 1.2;
@@ -168,9 +168,9 @@
 
   font-size:
     clamp(
-      0.77rem,
-      0.68rem + 0.22vw,
-      0.92rem
+      0.86rem,
+      0.76rem + 0.22vw,
+      0.98rem
     );
 
   line-height: 1.7;
@@ -408,9 +408,9 @@
 
   font-size:
     clamp(
-      0.52rem,
-      0.45rem + 0.12vw,
-      0.64rem
+      0.68rem,
+      0.62rem + 0.12vw,
+      0.78rem
     );
 
   font-weight: 600;
@@ -588,9 +588,9 @@
 
   font-size:
     clamp(
-      0.63rem,
-      0.72vw,
-      0.72rem
+      0.78rem,
+      0.82vw,
+      0.88rem
     );
 
   line-height: 1.62;
@@ -671,9 +671,9 @@
 
   font-size:
     clamp(
-      0.62rem,
-      0.66vw,
-      0.72rem
+      0.72rem,
+      0.76vw,
+      0.82rem
     );
 
   font-weight: 600;
@@ -729,9 +729,9 @@
 
   font-size:
     clamp(
-      0.72rem,
-      0.68rem + 0.14vw,
-      0.84rem
+      0.84rem,
+      0.78rem + 0.14vw,
+      0.94rem
     );
 
   line-height: 1.62;
@@ -885,9 +885,9 @@
 
   font-size:
     clamp(
-      0.62rem,
-      0.68vw,
-      0.72rem
+      0.74rem,
+      0.78vw,
+      0.82rem
     );
 
   font-weight: 500;
@@ -904,9 +904,9 @@
 
   font-size:
     clamp(
-      0.58rem,
-      0.64vw,
-      0.69rem
+      0.72rem,
+      0.76vw,
+      0.82rem
     );
 
   line-height: 1.52;
@@ -982,9 +982,9 @@
 
   font-size:
     clamp(
-      0.7rem,
-      0.74vw,
-      0.8rem
+      0.82rem,
+      0.86vw,
+      0.92rem
     );
 
   font-weight: 500;
@@ -1075,9 +1075,9 @@
 
   font-size:
     clamp(
-      0.62rem,
-      0.66vw,
-      0.72rem
+      0.72rem,
+      0.76vw,
+      0.82rem
     );
 
   font-weight: 600;
@@ -1139,9 +1139,9 @@
 
   font-size:
     clamp(
-      0.68rem,
-      0.64rem + 0.13vw,
-      0.8rem
+      0.8rem,
+      0.74rem + 0.13vw,
+      0.9rem
     );
 
   line-height: 1.6;
@@ -1187,9 +1187,9 @@
 
   font-size:
     clamp(
-      0.62rem,
-      0.68vw,
-      0.72rem
+      0.74rem,
+      0.78vw,
+      0.82rem
     );
 
   font-weight: 600;
@@ -1471,9 +1471,9 @@
 
   font-size:
     clamp(
-      0.48rem,
-      0.52vw,
-      0.58rem
+      0.66rem,
+      0.7vw,
+      0.76rem
     );
 
   font-weight: 600;
@@ -1636,9 +1636,9 @@
 
   font-size:
     clamp(
-      0.55rem,
-      0.6vw,
-      0.65rem
+      0.7rem,
+      0.74vw,
+      0.8rem
     );
 
   font-style: italic;
@@ -1811,9 +1811,9 @@
 
   font-size:
     clamp(
-      0.55rem,
-      0.62vw,
-      0.68rem
+      0.7rem,
+      0.76vw,
+      0.82rem
     );
 }
 
@@ -1941,9 +1941,9 @@
 
   font-size:
     clamp(
-      0.62rem,
-      0.7vw,
-      0.76rem
+      0.78rem,
+      0.82vw,
+      0.88rem
     );
 
   line-height: 1.45;
@@ -2198,9 +2198,9 @@
 
   font-size:
     clamp(
-      0.72rem,
-      0.78vw,
-      0.84rem
+      0.84rem,
+      0.88vw,
+      0.94rem
     );
 
   font-weight: 600;
@@ -2214,9 +2214,9 @@
 
   font-size:
     clamp(
-      0.58rem,
-      0.63vw,
-      0.68rem
+      0.72rem,
+      0.76vw,
+      0.82rem
     );
 
   line-height: 1.48;
@@ -2331,9 +2331,9 @@
 
   font-size:
     clamp(
-      0.66rem,
-      0.72vw,
-      0.78rem
+      0.78rem,
+      0.82vw,
+      0.88rem
     );
 
   font-weight: 600;
@@ -2350,9 +2350,9 @@
 
   font-size:
     clamp(
-      0.5rem,
-      0.56vw,
-      0.62rem
+      0.66rem,
+      0.7vw,
+      0.76rem
     );
 
   font-weight: 500;
@@ -2632,9 +2632,9 @@
 
   font-size:
     clamp(
-      0.65rem,
-      0.74vw,
-      0.76rem
+      0.78rem,
+      0.82vw,
+      0.88rem
     );
 
   font-weight: 600;
@@ -2647,9 +2647,9 @@
 
   font-size:
     clamp(
-      0.52rem,
-      0.58vw,
-      0.61rem
+      0.68rem,
+      0.72vw,
+      0.78rem
     );
 
   line-height: 1.45;
@@ -2976,9 +2976,9 @@
 
     font-size:
       clamp(
-        0.62rem,
-        2cqi,
-        0.7rem
+        0.72rem,
+        2.2cqi,
+        0.8rem
       );
 
     font-weight: 600;
@@ -2989,9 +2989,9 @@
 
     font-size:
       clamp(
-        0.65rem,
-        2cqi,
-        0.72rem
+        0.76rem,
+        2.2cqi,
+        0.84rem
       );
 
     font-weight: 600;
@@ -3033,9 +3033,9 @@
 
     font-size:
       clamp(
-        0.59rem,
-        1.8cqi,
-        0.65rem
+        0.7rem,
+        2cqi,
+        0.78rem
       );
 
     line-height: 1.55;
@@ -3242,9 +3242,9 @@
   .galleryAlbumLabel {
     font-size:
       clamp(
-        0.48rem,
-        1.7cqi,
-        0.58rem
+        0.66rem,
+        1.9cqi,
+        0.74rem
       );
   }
 

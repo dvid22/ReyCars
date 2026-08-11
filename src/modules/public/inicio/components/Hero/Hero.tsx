@@ -5,10 +5,11 @@ import Link from "next/link";
 import {
   ArrowDown,
   ArrowUpRight,
-  BookOpen,
-  Car,
+  CalendarCheck2,
+  MapPin,
   Route,
   ShieldCheck,
+  UsersRound,
 } from "lucide-react";
 import {
   motion,
@@ -17,30 +18,21 @@ import {
 
 import styles from "./Hero.module.css";
 
-const features = [
-  {
-    icon: BookOpen,
-    title: "Formación integral",
-    description:
-      "Teoría y práctica dentro de un mismo proceso de formación.",
-  },
-  {
-    icon: Car,
-    title: "Acompañamiento experto",
-    description:
-      "Orientación profesional durante cada etapa de tu aprendizaje.",
-  },
-  {
-    icon: Route,
-    title: "Proceso a tu ritmo",
-    description:
-      "Una experiencia clara y organizada para avanzar con confianza.",
-  },
+const corporatePoints = [
   {
     icon: ShieldCheck,
-    title: "Seguridad ante todo",
-    description:
-      "Hábitos responsables para desenvolverte mejor en la vía.",
+    title: "Formación responsable",
+    description: "Aprende con una metodología clara y enfocada en la seguridad.",
+  },
+  {
+    icon: UsersRound,
+    title: "Acompañamiento cercano",
+    description: "Te guiamos durante cada etapa de tu proceso.",
+  },
+  {
+    icon: CalendarCheck2,
+    title: "Proceso claro y organizado",
+    description: "Una ruta de formación pensada para avanzar con confianza.",
   },
 ];
 
@@ -51,9 +43,7 @@ export function Hero() {
     document
       .getElementById("inicio-contenido")
       ?.scrollIntoView({
-        behavior: reduceMotion
-          ? "auto"
-          : "smooth",
+        behavior: reduceMotion ? "auto" : "smooth",
         block: "start",
       });
   };
@@ -63,31 +53,10 @@ export function Hero() {
       className={styles.hero}
       aria-labelledby="home-hero-title"
     >
-      {/* ======================================
-          MEDIA
-          ====================================== */}
-      <div
-        className={styles.media}
-        aria-hidden="true"
-      >
-        <Image
-          src="/assets/images/home/hero-driving-lesson.jpg"
-          alt=""
-          fill
-          priority
-          sizes="(max-width: 860px) 100vw, 62vw"
-          className={styles.mediaImage}
-        />
-
-        <div className={styles.mediaBlend} />
-        <div className={styles.mediaShade} />
-        <div className={styles.mediaGlow} />
-      </div>
-
-      {/* ======================================
-          CONTENT
-          ====================================== */}
       <div className={styles.shell}>
+        {/* ======================================
+            CORPORATE COPY
+            ====================================== */}
         <motion.div
           className={styles.content}
           initial={
@@ -95,7 +64,7 @@ export function Hero() {
               ? false
               : {
                   opacity: 0,
-                  y: 24,
+                  y: 20,
                 }
           }
           animate={{
@@ -103,14 +72,19 @@ export function Hero() {
             y: 0,
           }}
           transition={{
-            duration: 0.72,
+            duration: 0.7,
             ease: [0.16, 1, 0.3, 1],
           }}
         >
+          <div
+            className={styles.corporateShape}
+            aria-hidden="true"
+          />
+
           <div className={styles.eyebrow}>
             <span className={styles.eyebrowIcon}>
               <Route
-                size={16}
+                size={15}
                 strokeWidth={1.7}
               />
             </span>
@@ -120,21 +94,19 @@ export function Hero() {
             </span>
           </div>
 
+          <span
+            className={styles.topAccent}
+            aria-hidden="true"
+          />
+
           <h1
             id="home-hero-title"
             className={styles.title}
           >
             <span>Tramita tu </span>
-
-            <strong>
-              Licencia con nosotros.
-            </strong>
+            <strong>Licencia</strong>
+            <span> con nosotros.</span>
           </h1>
-
-          <div
-            className={styles.accentLine}
-            aria-hidden="true"
-          />
 
           <p className={styles.description}>
             Formación completa para conductores responsables.
@@ -142,17 +114,57 @@ export function Hero() {
             tu proceso.
           </p>
 
+          <div className={styles.corporatePoints}>
+            {corporatePoints.map((point, index) => {
+              const Icon = point.icon;
+
+              return (
+                <motion.div
+                  key={point.title}
+                  className={styles.corporatePoint}
+                  initial={
+                    reduceMotion
+                      ? false
+                      : {
+                          opacity: 0,
+                          x: -12,
+                        }
+                  }
+                  animate={{
+                    opacity: 1,
+                    x: 0,
+                  }}
+                  transition={{
+                    duration: 0.42,
+                    delay: 0.14 + index * 0.07,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                >
+                  <span className={styles.pointIcon}>
+                    <Icon
+                      size={16}
+                      strokeWidth={1.65}
+                    />
+                  </span>
+
+                  <div>
+                    <strong>{point.title}</strong>
+                    <p>{point.description}</p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
           <div className={styles.actions}>
             <Link
               href="/cursos"
               className={styles.primaryAction}
             >
-              <span>
-                Conocer cursos
-              </span>
+              <span>Conocer cursos</span>
 
               <ArrowUpRight
-                size={17}
+                size={16}
                 strokeWidth={1.7}
               />
             </Link>
@@ -161,110 +173,86 @@ export function Hero() {
               href="/proceso"
               className={styles.secondaryAction}
             >
-              <span>
-                Cómo funciona
-              </span>
+              <span>Cómo funciona</span>
 
               <ArrowUpRight
-                size={16}
+                size={15}
                 strokeWidth={1.6}
               />
             </Link>
           </div>
+
+          <div className={styles.location}>
+            <span className={styles.locationIcon}>
+              <MapPin
+                size={17}
+                strokeWidth={1.6}
+              />
+            </span>
+
+            <div>
+              <strong>UBATÉ · COLOMBIA</strong>
+              <span>
+                Centro de Enseñanza Automovilística ReyCars
+              </span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            className={styles.scrollCue}
+            onClick={scrollToContent}
+            aria-label="Ver siguiente sección"
+          >
+            <span>Explorar</span>
+
+            <ArrowDown
+              size={14}
+              strokeWidth={1.6}
+            />
+          </button>
         </motion.div>
 
-        <button
-          type="button"
-          className={styles.scrollCue}
-          onClick={scrollToContent}
-          aria-label="Ver siguiente sección"
+        {/* ======================================
+            MEDIA
+            ====================================== */}
+        <motion.div
+          className={styles.media}
+          initial={
+            reduceMotion
+              ? false
+              : {
+                  opacity: 0,
+                  x: 28,
+                }
+          }
+          animate={{
+            opacity: 1,
+            x: 0,
+          }}
+          transition={{
+            duration: 0.8,
+            delay: 0.05,
+            ease: [0.16, 1, 0.3, 1],
+          }}
         >
-          <span>
-            Explorar
-          </span>
-
-          <ArrowDown
-            size={15}
-            strokeWidth={1.6}
+          <div
+            className={styles.mediaEdge}
+            aria-hidden="true"
           />
-        </button>
+
+          <div className={styles.mediaInner}>
+            <Image
+              src="/assets/images/home/hero-driving-lesson.jpg"
+              alt="Sede del Centro de Enseñanza Automovilística ReyCars en Ubaté"
+              fill
+              priority
+              sizes="(max-width: 860px) 100vw, 60vw"
+              className={styles.mediaImage}
+            />
+          </div>
+        </motion.div>
       </div>
-
-      {/* ======================================
-          FEATURES
-          ====================================== */}
-      <motion.div
-        className={styles.featuresWrap}
-        initial={
-          reduceMotion
-            ? false
-            : {
-                opacity: 0,
-                y: 26,
-              }
-        }
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          duration: 0.72,
-          delay: 0.18,
-          ease: [0.16, 1, 0.3, 1],
-        }}
-      >
-        <div className={styles.features}>
-          {features.map(
-            (feature, index) => {
-              const Icon = feature.icon;
-
-              return (
-                <motion.article
-                  key={feature.title}
-                  className={styles.feature}
-                  initial={false}
-                  whileHover={
-                    reduceMotion
-                      ? undefined
-                      : {
-                          y: -4,
-                        }
-                  }
-                  transition={{
-                    duration: 0.26,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                >
-                  <div className={styles.featureIcon}>
-                    <Icon
-                      size={25}
-                      strokeWidth={1.6}
-                    />
-                  </div>
-
-                  <div className={styles.featureText}>
-                    <strong>
-                      {feature.title}
-                    </strong>
-
-                    <p>
-                      {feature.description}
-                    </p>
-                  </div>
-
-                  {index <
-                    features.length - 1 && (
-                    <span
-                      className={styles.divider}
-                      aria-hidden="true"
-                    />
-                  )}
-                </motion.article>
-              );
-            }
-          )}
-        </div>
-      </motion.div>
     </section>
   );
 }

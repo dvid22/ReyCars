@@ -280,15 +280,7 @@ export function ContactoPage() {
               className={styles.heroImage}
             />
 
-            <span
-              className={styles.heroDots}
-              aria-hidden="true"
-            />
 
-            <span
-              className={styles.heroCorner}
-              aria-hidden="true"
-            />
           </motion.div>
         </section>
 
@@ -461,7 +453,7 @@ export function ContactoPage() {
                   Lunes a viernes
                 </strong>
                 <span>
-                  Consultar horario
+                  7:45 a. m. – 8:00 p. m.
                 </span>
               </div>
 
@@ -470,7 +462,7 @@ export function ContactoPage() {
                   Sábado
                 </strong>
                 <span>
-                  Consultar horario
+                  8:00 a. m. – 4:00 p. m.
                 </span>
               </div>
 
@@ -479,7 +471,7 @@ export function ContactoPage() {
                   Domingo
                 </strong>
                 <span>
-                  Consultar disponibilidad
+                  8:00 a. m. – 2:00 p. m.
                 </span>
               </div>
             </div>
