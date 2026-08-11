@@ -1,4 +1,930 @@
-.page { padding: 6px; }
-.page > span { color: var(--reycars-cyan-dark); font-size: 10px; font-weight: 600; letter-spacing: .12em; }
-.page h1 { margin: 8px 0 0; font-size: clamp(28px, 4vw, 42px); }
-.page p { color: var(--reycars-muted); }
+.page {
+  --cyan: var(--reycars-cyan, #59c5d3);
+  --cyan-dark: var(--reycars-cyan-dark, #209aaa);
+  --ink: #172126;
+  --muted: #76868d;
+  --line: rgba(23, 33, 38, 0.075);
+
+  width: 100%;
+}
+
+.page,
+.page :where(*) {
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  margin-bottom: 1rem;
+}
+
+.eyebrow {
+  display: block;
+
+  color: var(--cyan-dark);
+
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.header h1 {
+  margin: 0.42rem 0 0;
+
+  color: var(--ink);
+
+  font-size:
+    clamp(
+      1.8rem,
+      3vw,
+      2.75rem
+    );
+
+  font-weight: 500;
+  letter-spacing: -0.045em;
+}
+
+.header p {
+  max-width: 36rem;
+
+  margin: 0.55rem 0 0;
+
+  color: var(--muted);
+
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.primaryButton,
+.secondaryButton,
+.dangerButton,
+.emptyState button {
+  min-height: 2.55rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.42rem;
+
+  padding-inline: 0.85rem;
+
+  border-radius: 0.68rem;
+
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.primaryButton {
+  color: #fff;
+
+  border:
+    1px solid
+      var(--cyan-dark);
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--cyan-dark),
+      #268e9d
+    );
+
+  box-shadow:
+    0 0.65rem 1.4rem
+      rgba(32, 154, 170, 0.14);
+}
+
+.secondaryButton {
+  color: #63757c;
+
+  border:
+    1px solid var(--line);
+
+  background: #fff;
+}
+
+.dangerButton {
+  color: #fff;
+
+  border:
+    1px solid
+      rgba(151, 70, 70, 0.55);
+
+  background:
+    linear-gradient(
+      135deg,
+      #aa6262,
+      #915151
+    );
+}
+
+.primaryButton:disabled,
+.secondaryButton:disabled,
+.dangerButton:disabled,
+.emptyState button:disabled {
+  opacity: 0.52;
+
+  cursor: not-allowed;
+}
+
+.emptyState {
+  display: grid;
+
+  grid-template-columns:
+    auto
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: 0.8rem;
+
+  padding: 0.9rem;
+
+  border:
+    1px solid
+      rgba(32, 154, 170, 0.12);
+
+  border-radius: 0.9rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(89, 197, 211, 0.055),
+      rgba(255, 255, 255, 0.98)
+    );
+}
+
+.emptyIcon {
+  width: 2.55rem;
+  aspect-ratio: 1;
+
+  display: grid;
+  place-items: center;
+
+  color: var(--cyan-dark);
+
+  border:
+    1px solid
+      rgba(32, 154, 170, 0.14);
+
+  border-radius: 50%;
+
+  background: #fff;
+}
+
+.emptyState > div {
+  min-width: 0;
+}
+
+.emptyState strong {
+  display: block;
+
+  color: #42575f;
+
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.emptyState p {
+  margin: 0.18rem 0 0;
+
+  color: #87949a;
+
+  font-size: 0.64rem;
+  line-height: 1.5;
+}
+
+.emptyState button {
+  color: var(--cyan-dark);
+
+  border:
+    1px solid
+      rgba(32, 154, 170, 0.18);
+
+  background: #fff;
+}
+
+.error,
+.success {
+  margin-top: 0.75rem;
+
+  padding: 0.68rem 0.78rem;
+
+  border-radius: 0.65rem;
+
+  font-size: 0.66rem;
+}
+
+.error {
+  color: #8f4949;
+
+  border:
+    1px solid
+      rgba(185, 85, 85, 0.14);
+
+  background:
+    rgba(185, 85, 85, 0.05);
+}
+
+.success {
+  color: #34717a;
+
+  border:
+    1px solid
+      rgba(32, 154, 170, 0.14);
+
+  background:
+    rgba(89, 197, 211, 0.06);
+}
+
+.board {
+  margin-top: 0.8rem;
+
+  overflow: hidden;
+
+  border:
+    1px solid var(--line);
+
+  border-radius: 0.92rem;
+
+  background: #fff;
+}
+
+.boardHeader {
+  min-height: 3.7rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 0.75rem;
+
+  padding: 0.72rem 0.82rem;
+
+  border-bottom:
+    1px solid var(--line);
+}
+
+.boardHeader > div {
+  display: grid;
+  gap: 0.08rem;
+}
+
+.boardHeader span {
+  color: var(--cyan-dark);
+
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+}
+
+.boardHeader strong {
+  color: #607179;
+
+  font-size: 0.64rem;
+  font-weight: 500;
+}
+
+.orderNote {
+  color: #9aa5a9 !important;
+
+  letter-spacing: 0 !important;
+}
+
+.list {
+  display: grid;
+}
+
+.card {
+  min-width: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    2.3rem
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: 0.75rem;
+
+  padding:
+    0.78rem
+    0.82rem;
+
+  border-bottom:
+    1px solid var(--line);
+
+  background: #fff;
+
+  transition:
+    opacity 0.18s ease,
+    background 0.18s ease;
+}
+
+.card:last-child {
+  border-bottom: 0;
+}
+
+.cardHidden {
+  opacity: 0.58;
+
+  background: #fbfcfd;
+}
+
+.number {
+  width: 2rem;
+  aspect-ratio: 1;
+
+  display: grid;
+  place-items: center;
+
+  color: var(--cyan-dark);
+
+  border:
+    1px solid
+      rgba(32, 154, 170, 0.14);
+
+  border-radius: 50%;
+
+  background:
+    rgba(89, 197, 211, 0.055);
+
+  font-size: 0.64rem;
+  font-weight: 600;
+}
+
+.content {
+  min-width: 0;
+}
+
+.questionRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 0.45rem;
+}
+
+.questionRow strong {
+  color: #33484f;
+
+  font-size: 0.72rem;
+  font-weight: 600;
+
+  line-height: 1.35;
+}
+
+.status {
+  display: inline-flex;
+
+  min-height: 1.4rem;
+
+  align-items: center;
+
+  padding-inline: 0.45rem;
+
+  border-radius: 999px;
+
+  font-size: 0.54rem;
+  font-weight: 600;
+}
+
+.statusActive {
+  color: var(--cyan-dark);
+
+  background:
+    rgba(89, 197, 211, 0.09);
+}
+
+.statusHidden {
+  color: #8d989c;
+
+  background: #f0f3f4;
+}
+
+.content p {
+  max-width: 62rem;
+
+  margin: 0.28rem 0 0;
+
+  color: #7f8e94;
+
+  font-size: 0.64rem;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+
+  gap: 0.32rem;
+}
+
+.orderActions {
+  display: flex;
+  align-items: center;
+
+  gap: 0.25rem;
+
+  margin-right: 0.15rem;
+}
+
+.actions button {
+  width: 2rem;
+  aspect-ratio: 1;
+
+  display: grid;
+  place-items: center;
+
+  color: #708188;
+
+  border:
+    1px solid var(--line);
+
+  border-radius: 0.55rem;
+
+  background: #fff;
+
+  cursor: pointer;
+}
+
+.actions button:hover {
+  color: var(--cyan-dark);
+
+  border-color:
+    rgba(32, 154, 170, 0.18);
+
+  background:
+    rgba(89, 197, 211, 0.045);
+}
+
+.actions button:disabled {
+  opacity: 0.32;
+
+  cursor: not-allowed;
+}
+
+.actions .deleteAction {
+  color: #9b5b5b;
+}
+
+.dialogBackdrop {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  display: grid;
+  place-items: center;
+
+  padding: 1rem;
+
+  background:
+    rgba(17, 29, 34, 0.28);
+
+  backdrop-filter:
+    blur(5px);
+}
+
+.modal,
+.deleteDialog {
+  width:
+    min(
+      100%,
+      31rem
+    );
+
+  position: relative;
+
+  overflow: hidden;
+
+  border:
+    1px solid
+      rgba(23, 33, 38, 0.07);
+
+  border-radius: 1rem;
+
+  background: #fff;
+
+  box-shadow:
+    0 1.6rem 4rem
+      rgba(18, 43, 50, 0.18);
+}
+
+.modalClose {
+  width: 2rem;
+  aspect-ratio: 1;
+
+  position: absolute;
+
+  top: 0.75rem;
+  right: 0.75rem;
+
+  display: grid;
+  place-items: center;
+
+  color: #849399;
+
+  border:
+    1px solid var(--line);
+
+  border-radius: 50%;
+
+  background: #fff;
+
+  cursor: pointer;
+}
+
+.modalHeader {
+  padding:
+    1rem
+    1rem
+    0.85rem;
+
+  border-bottom:
+    1px solid var(--line);
+}
+
+.modalHeader > span,
+.deleteEyebrow {
+  color: var(--cyan-dark);
+
+  font-size: 0.57rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.modalHeader h2,
+.deleteDialog h2 {
+  margin: 0.3rem 0 0;
+
+  color: #2d424a;
+
+  font-size:
+    clamp(
+      1.2rem,
+      2vw,
+      1.45rem
+    );
+
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+.modalHeader p,
+.deleteDialog p {
+  margin: 0.42rem 0 0;
+
+  color: #7d8c92;
+
+  font-size: 0.66rem;
+  line-height: 1.5;
+}
+
+.form {
+  display: grid;
+
+  gap: 0.75rem;
+
+  padding: 0.9rem 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.36rem;
+}
+
+.field > span {
+  color: #4e626a;
+
+  font-size: 0.65rem;
+  font-weight: 500;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+
+  color: #31464e;
+
+  border:
+    1px solid var(--line);
+
+  border-radius: 0.68rem;
+
+  outline: 0;
+
+  background: #fbfcfd;
+
+  font: inherit;
+  font-size: 0.72rem;
+}
+
+.field input {
+  min-height: 2.65rem;
+
+  padding-inline: 0.7rem;
+}
+
+.field textarea {
+  min-height: 7rem;
+
+  padding: 0.7rem;
+
+  resize: vertical;
+
+  line-height: 1.5;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color:
+    rgba(105, 127, 136, 0.4);
+}
+
+.field input:focus,
+.field textarea:focus {
+  border-color:
+    rgba(32, 154, 170, 0.36);
+
+  background: #fff;
+
+  box-shadow:
+    0 0 0 0.2rem
+      rgba(89, 197, 211, 0.065);
+}
+
+.visibility {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: 0.7rem;
+
+  position: relative;
+
+  padding:
+    0.68rem
+    0.72rem;
+
+  border:
+    1px solid var(--line);
+
+  border-radius: 0.68rem;
+
+  background: #fbfcfd;
+
+  cursor: pointer;
+}
+
+.visibility > div {
+  display: grid;
+  gap: 0.08rem;
+}
+
+.visibility strong {
+  color: #52666e;
+
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
+.visibility small {
+  color: #98a4a8;
+
+  font-size: 0.56rem;
+}
+
+.visibility input {
+  position: absolute;
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+.visibility > span {
+  width: 2.55rem;
+  height: 1.4rem;
+
+  position: relative;
+
+  display: block;
+
+  border-radius: 999px;
+
+  background: #dfe5e7;
+}
+
+.visibility > span i {
+  width: 1rem;
+  aspect-ratio: 1;
+
+  position: absolute;
+
+  top: 50%;
+  left: 0.2rem;
+
+  transform:
+    translateY(-50%);
+
+  border-radius: 50%;
+
+  background: #fff;
+
+  box-shadow:
+    0 0.15rem 0.4rem
+      rgba(23, 33, 38, 0.16);
+
+  transition:
+    left 0.18s ease;
+}
+
+.visibility input:checked + span {
+  background:
+    var(--cyan-dark);
+}
+
+.visibility input:checked + span i {
+  left: 1.35rem;
+}
+
+.modalActions {
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr;
+
+  gap: 0.5rem;
+
+  padding:
+    0.75rem
+    1rem
+    1rem;
+
+  border-top:
+    1px solid var(--line);
+}
+
+.deleteDialog {
+  padding: 1rem;
+}
+
+.deleteIcon {
+  width: 2.65rem;
+  aspect-ratio: 1;
+
+  display: grid;
+  place-items: center;
+
+  color: #a25656;
+
+  border:
+    1px solid
+      rgba(162, 86, 86, 0.12);
+
+  border-radius: 50%;
+
+  background:
+    rgba(162, 86, 86, 0.055);
+}
+
+.deleteDialog > div:nth-child(2) {
+  margin-top: 0.75rem;
+}
+
+.deleteDialog small {
+  display: block;
+
+  margin-top: 0.45rem;
+
+  color: #9aa5a9;
+
+  font-size: 0.58rem;
+  line-height: 1.45;
+}
+
+.deleteDialog
+.modalActions {
+  padding:
+    0.9rem
+    0
+    0;
+
+  border-top: 0;
+}
+
+.loadingState {
+  min-height: 18rem;
+
+  display: grid;
+  place-items: center;
+  align-content: center;
+
+  gap: 0.65rem;
+
+  color: #829198;
+}
+
+.loadingState > span {
+  width: 1.35rem;
+  aspect-ratio: 1;
+
+  border:
+    2px solid
+      rgba(32, 154, 170, 0.14);
+
+  border-top-color:
+    var(--cyan-dark);
+
+  border-radius: 50%;
+
+  animation:
+    spin 0.8s linear infinite;
+}
+
+.loadingState p {
+  margin: 0;
+
+  font-size: 0.7rem;
+}
+
+@media (max-width: 760px) {
+  .header {
+    display: grid;
+  }
+
+  .primaryButton {
+    width: 100%;
+  }
+
+  .emptyState {
+    grid-template-columns:
+      auto
+      minmax(0, 1fr);
+  }
+
+  .emptyState button {
+    grid-column: 1 / -1;
+
+    width: 100%;
+  }
+
+  .card {
+    grid-template-columns:
+      2.1rem
+      minmax(0, 1fr);
+
+    align-items: start;
+  }
+
+  .actions {
+    grid-column: 2;
+
+    flex-wrap: wrap;
+  }
+
+  .orderNote {
+    display: none;
+  }
+}
+
+@media (max-width: 460px) {
+  .modalActions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (
+  prefers-reduced-motion:
+  reduce
+) {
+  .card,
+  .visibility > span i {
+    transition: none;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform:
+      rotate(360deg);
+  }
+}

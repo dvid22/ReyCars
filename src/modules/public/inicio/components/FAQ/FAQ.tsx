@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   AnimatePresence,
   motion,
@@ -15,71 +15,67 @@ import {
 } from "lucide-react";
 
 import { useHomeContent } from "@/hooks/useHomeContent";
+import { useFaq } from "@/hooks/useFaq";
 
 import styles from "./FAQ.module.css";
 
-type FaqItem = {
-  id: string;
-  number: string;
-  question: string;
-  answer: string;
-};
-
-const faqItems: FaqItem[] = [
-  {
-    id: "documentos",
-    number: "01",
-    question: "¿Qué documentos necesito para iniciar?",
-    answer:
-      "Los requisitos pueden variar según el trámite y la categoría. Escríbenos y te indicamos exactamente qué necesitas para comenzar tu proceso.",
-  },
-  {
-    id: "practica",
-    number: "02",
-    question: "¿El curso incluye formación práctica?",
-    answer:
-      "Sí. Los cursos de licencia combinan formación teórica y práctica de acuerdo con la categoría seleccionada.",
-  },
-  {
-    id: "duracion",
-    number: "03",
-    question: "¿Cuánto dura el proceso?",
-    answer:
-      "La duración depende de la categoría, la programación de clases y el avance de cada estudiante. Podemos orientarte según el curso que quieras realizar.",
-  },
-  {
-    id: "horarios",
-    number: "04",
-    question: "¿En qué horarios puedo tomar las clases?",
-    answer:
-      "La disponibilidad puede variar. Contáctanos para consultar los horarios disponibles y organizar tu proceso.",
-  },
-  {
-    id: "categoria",
-    number: "05",
-    question: "¿Cómo sé qué categoría de licencia necesito?",
-    answer:
-      "Depende del tipo de vehículo que deseas conducir y del uso que tendrá. En ReyCars te ayudamos a identificar la categoría adecuada antes de iniciar.",
-  },
-  {
-    id: "refuerzo",
-    number: "06",
-    question: "¿Puedo solicitar clases de refuerzo?",
-    answer:
-      "Sí. Contamos con refuerzo práctico para automóvil y motocicleta, pensado para fortalecer confianza, control y experiencia en la conducción.",
-  },
-];
-
 export function FAQ() {
   const reduceMotion = useReducedMotion();
-  const [openId, setOpenId] = useState<string>("documentos");
-  const { content, isLoading } = useHomeContent();
 
-  if (isLoading || !content) {
+  const [openId, setOpenId] =
+    useState<string>("");
+
+  const {
+    content,
+    isLoading: homeLoading,
+  } = useHomeContent();
+
+  const {
+    items,
+    isLoading: faqLoading,
+  } = useFaq();
+
+  const faqItems = useMemo(
+    () =>
+      items.filter(
+        (item) => item.active
+      ),
+    [items]
+  );
+
+  useEffect(() => {
+    if (faqItems.length === 0) {
+      setOpenId("");
+      return;
+    }
+
+    const stillExists =
+      faqItems.some(
+        (item) =>
+          item.id === openId
+      );
+
+    if (!stillExists) {
+      setOpenId(
+        faqItems[0].id
+      );
+    }
+  }, [faqItems, openId]);
+
+  if (
+    homeLoading ||
+    faqLoading ||
+    !content
+  ) {
     return null;
   }
 
-  const sectionContent = content.faqSection;
+  if (faqItems.length === 0) {
+    return null;
+  }
+
+  const sectionContent =
+    content.faqSection;
 
   return (
     <section
@@ -277,7 +273,7 @@ export function FAQ() {
                     aria-controls={`faq-${item.id}`}
                   >
                     <span className={styles.number}>
-                      {item.number}
+                      {String(index + 1).padStart(2, "0")}
                     </span>
 
                     <span className={styles.question}>
