@@ -14,6 +14,8 @@ import {
   MessageCircleMore,
 } from "lucide-react";
 
+import { useHomeContent } from "@/hooks/useHomeContent";
+
 import styles from "./FAQ.module.css";
 
 type FaqItem = {
@@ -71,6 +73,13 @@ const faqItems: FaqItem[] = [
 export function FAQ() {
   const reduceMotion = useReducedMotion();
   const [openId, setOpenId] = useState<string>("documentos");
+  const { content, isLoading } = useHomeContent();
+
+  if (isLoading || !content) {
+    return null;
+  }
+
+  const sectionContent = content.faqSection;
 
   return (
     <section
@@ -111,7 +120,7 @@ export function FAQ() {
             </span>
 
             <span>
-              Preguntas frecuentes
+              {sectionContent.eyebrow}
             </span>
           </div>
 
@@ -119,9 +128,13 @@ export function FAQ() {
             id="faq-title"
             className={styles.title}
           >
-            ¿Tienes
-            <br />
-            <strong>dudas?</strong>
+            {sectionContent.title.replace(
+              sectionContent.highlightedText,
+              ""
+            )}
+            <strong>
+              {sectionContent.highlightedText}
+            </strong>
           </h2>
 
           <span
@@ -130,8 +143,7 @@ export function FAQ() {
           />
 
           <p className={styles.description}>
-            Respondemos las preguntas más comunes
-            antes de que comiences tu proceso.
+            {sectionContent.description}
           </p>
 
           <Link
@@ -144,7 +156,7 @@ export function FAQ() {
             />
 
             <span>
-              Hablemos por WhatsApp
+              {sectionContent.ctaLabel || "Hablemos por WhatsApp"}
             </span>
 
             <ArrowRight

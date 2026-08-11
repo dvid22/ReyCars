@@ -11,6 +11,8 @@ import {
   useReducedMotion,
 } from "motion/react";
 
+import { useHomeContent } from "@/hooks/useHomeContent";
+
 import styles from "./CoursesPreview.module.css";
 
 type PathCard = {
@@ -157,6 +159,13 @@ function PathIcon({
 
 export function CoursesPreview() {
   const reduceMotion = useReducedMotion();
+  const { content, isLoading } = useHomeContent();
+
+  if (isLoading || !content) {
+    return null;
+  }
+
+  const sectionContent = content.coursesSection;
 
   return (
     <section
@@ -193,16 +202,21 @@ export function CoursesPreview() {
           }}
         >
           <span className={styles.eyebrow}>
-            Nuestros cursos
+            {sectionContent.eyebrow}
           </span>
 
           <h2 id="courses-preview-title">
-            ¿Qué quieres lograr con{" "}
-            <strong>ReyCars?</strong>
+            {sectionContent.title.replace(
+              sectionContent.highlightedText,
+              ""
+            )}
+            <strong>
+              {sectionContent.highlightedText}
+            </strong>
           </h2>
 
           <p>
-            Elige una opción y descubre la formación indicada para ti.
+            {sectionContent.description}
           </p>
 
           <span
@@ -315,7 +329,7 @@ export function CoursesPreview() {
                 className={styles.cardAction}
               >
                 <span>
-                  {path.cta}
+                  {sectionContent.ctaLabel || path.cta}
                 </span>
 
                 <ArrowRight

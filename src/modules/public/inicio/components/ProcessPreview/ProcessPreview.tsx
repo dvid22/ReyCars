@@ -15,6 +15,8 @@ import {
   useReducedMotion,
 } from "motion/react";
 
+import { useHomeContent } from "@/hooks/useHomeContent";
+
 import styles from "./ProcessPreview.module.css";
 
 const steps = [
@@ -57,6 +59,13 @@ const steps = [
 
 export function ProcessPreview() {
   const reduceMotion = useReducedMotion();
+  const { content, isLoading } = useHomeContent();
+
+  if (isLoading || !content) {
+    return null;
+  }
+
+  const sectionContent = content.processSection;
 
   return (
     <section
@@ -92,19 +101,21 @@ export function ProcessPreview() {
           }}
         >
           <span className={styles.eyebrow}>
-            Así es tu proceso
+            {sectionContent.eyebrow}
           </span>
 
           <h2 id="process-preview-title">
-            De tu inscripción
-            <br />
-            a tu licencia,
-            <strong> paso a paso.</strong>
+            {sectionContent.title.replace(
+              sectionContent.highlightedText,
+              ""
+            )}
+            <strong>
+              {sectionContent.highlightedText}
+            </strong>
           </h2>
 
           <p>
-            Un recorrido claro, organizado y acompañado para que
-            sepas qué sigue en cada etapa.
+            {sectionContent.description}
           </p>
 
           <Link
@@ -112,7 +123,7 @@ export function ProcessPreview() {
             className={styles.cta}
           >
             <span>
-              Conocer el proceso
+              {sectionContent.ctaLabel || "Conocer el proceso"}
             </span>
 
             <ArrowRight

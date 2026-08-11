@@ -11,9 +11,10 @@ import {
 } from "motion/react";
 import {
   useEffect,
-  useMemo,
   useState,
 } from "react";
+
+import { useHomeContent } from "@/hooks/useHomeContent";
 
 import styles from "./HomeCTA.module.css";
 
@@ -258,6 +259,11 @@ export function HomeCTA() {
   const reduceMotion =
     useReducedMotion();
 
+  const {
+    content,
+    isLoading,
+  } = useHomeContent();
+
   /*
    * IMPORTANTE:
    * No usamos new Date() durante el primer render.
@@ -292,18 +298,22 @@ export function HomeCTA() {
     };
   }, []);
 
-  const current = useMemo(
-    () =>
-      now
-        ? getBogotaParts(now)
-        : {
-            day: 1,
-            hour: 12,
-            minute: 0,
-            second: 0,
-          },
-    [now]
-  );
+  if (isLoading || !content) {
+    return null;
+  }
+
+  const sectionContent =
+    content.hoursSection;
+
+  const current =
+    now
+      ? getBogotaParts(now)
+      : {
+          day: 1,
+          hour: 12,
+          minute: 0,
+          second: 0,
+        };
 
   const minutesNow =
     current.hour * 60 +
@@ -401,7 +411,7 @@ export function HomeCTA() {
           }}
         >
           <div className={styles.eyebrow}>
-            <span>Nuestro horario</span>
+            <span>{sectionContent.eyebrow}</span>
 
             <span className={styles.eyebrowIcon}>
               <Clock3
@@ -412,14 +422,17 @@ export function HomeCTA() {
           </div>
 
           <h2 id="home-hours-title">
-            Horarios de
-            <strong> atención</strong>
+            {sectionContent.title.replace(
+              sectionContent.highlightedText,
+              ""
+            )}
+            <strong>
+              {sectionContent.highlightedText}
+            </strong>
           </h2>
 
           <p>
-            En ReyCars estamos para acompañarte.
-            Conoce nuestros horarios de atención
-            y planifica tu próxima visita.
+            {sectionContent.description}
           </p>
 
           <AnalogClock
