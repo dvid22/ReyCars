@@ -25,6 +25,17 @@ import type {
   SiteConfigDocument,
   SiteScheduleItem,
 } from "@/types/site.types";
+import {
+  isAboutIconName,
+} from "@/types/about.types";
+import type {
+  AboutContent,
+  AboutContentDocument,
+  AboutGalleryAlbum,
+  AboutHighlight,
+  AboutStoryItem,
+  AboutValueItem,
+} from "@/types/about.types";
 
 const HOME_DOC = doc(
   db,
@@ -42,6 +53,12 @@ const SITE_CONFIG_DOC = doc(
   db,
   "siteContent",
   "config"
+);
+
+const ABOUT_DOC = doc(
+  db,
+  "siteContent",
+  "about"
 );
 
 function normalizeHomeContent(
@@ -350,6 +367,228 @@ function normalizeSiteConfig(
   };
 }
 
+
+function normalizeAboutHighlight(
+  item: Partial<AboutHighlight>,
+  index: number
+): AboutHighlight {
+  return {
+    id:
+      item.id ||
+      `highlight-${index + 1}`,
+    icon:
+      isAboutIconName(
+        item.icon
+      )
+        ? item.icon
+        : "sparkles",
+    title:
+      item.title ?? "",
+  };
+}
+
+function normalizeAboutStory(
+  item: Partial<AboutStoryItem>,
+  index: number
+): AboutStoryItem {
+  const fallbackIds:
+    AboutStoryItem["id"][] = [
+      "esencia",
+      "mision",
+      "vision",
+    ];
+
+  const id =
+    item.id === "esencia" ||
+    item.id === "mision" ||
+    item.id === "vision"
+      ? item.id
+      : fallbackIds[
+          Math.min(
+            index,
+            fallbackIds.length - 1
+          )
+        ];
+
+  return {
+    id,
+    number:
+      item.number ||
+      String(index + 1).padStart(
+        2,
+        "0"
+      ),
+    icon:
+      isAboutIconName(
+        item.icon
+      )
+        ? item.icon
+        : id === "mision"
+          ? "target"
+          : "sparkles",
+    title:
+      item.title ?? "",
+    description:
+      item.description ?? "",
+  };
+}
+
+function normalizeAboutValue(
+  item: Partial<AboutValueItem>,
+  index: number
+): AboutValueItem {
+  return {
+    id:
+      item.id ||
+      `value-${index + 1}`,
+    icon:
+      isAboutIconName(
+        item.icon
+      )
+        ? item.icon
+        : "shield",
+    title:
+      item.title ?? "",
+    description:
+      item.description ?? "",
+  };
+}
+
+function normalizeAboutAlbum(
+  item: Partial<AboutGalleryAlbum>,
+  index: number
+): AboutGalleryAlbum {
+  return {
+    id:
+      item.id ||
+      `album-${index + 1}`,
+    order:
+      typeof item.order === "number"
+        ? item.order
+        : index + 1,
+    title:
+      item.title ?? "",
+    description:
+      item.description ?? "",
+    images:
+      Array.isArray(
+        item.images
+      )
+        ? item.images.filter(
+            (image):
+              image is string =>
+                typeof image === "string" &&
+                image.trim().length > 0
+          )
+        : [],
+    active:
+      item.active !== false,
+  };
+}
+
+function normalizeAboutContent(
+  data: Partial<AboutContentDocument>
+): AboutContent | null {
+  if (
+    !data.hero ||
+    !Array.isArray(data.story) ||
+    !data.teamSection ||
+    !data.gallerySection ||
+    !Array.isArray(data.values)
+  ) {
+    return null;
+  }
+
+  return {
+    hero: {
+      eyebrow:
+        data.hero.eyebrow ?? "",
+      title:
+        data.hero.title ?? "",
+      highlightedText:
+        data.hero.highlightedText ??
+        "",
+      description:
+        data.hero.description ?? "",
+      imageUrl:
+        data.hero.imageUrl ?? "",
+      imageAlt:
+        data.hero.imageAlt ?? "",
+      highlights:
+        Array.isArray(
+          data.hero.highlights
+        )
+          ? data.hero.highlights.map(
+              normalizeAboutHighlight
+            )
+          : [],
+    },
+
+    story:
+      data.story
+        .map(
+          normalizeAboutStory
+        )
+        .slice(0, 3),
+
+    teamSection: {
+      eyebrow:
+        data.teamSection.eyebrow ??
+        "",
+      title:
+        data.teamSection.title ?? "",
+      highlightedText:
+        data.teamSection
+          .highlightedText ?? "",
+      description:
+        data.teamSection.description ??
+        "",
+      statement:
+        data.teamSection.statement ??
+        "",
+    },
+
+    gallerySection: {
+      eyebrow:
+        data.gallerySection.eyebrow ??
+        "",
+      title:
+        data.gallerySection.title ??
+        "",
+      highlightedText:
+        data.gallerySection
+          .highlightedText ?? "",
+      description:
+        data.gallerySection.description ??
+        "",
+      footerTitle:
+        data.gallerySection.footerTitle ??
+        "",
+      footerDescription:
+        data.gallerySection
+          .footerDescription ?? "",
+      albums:
+        Array.isArray(
+          data.gallerySection.albums
+        )
+          ? data.gallerySection.albums
+              .map(
+                normalizeAboutAlbum
+              )
+              .sort(
+                (a, b) =>
+                  a.order - b.order
+              )
+          : [],
+    },
+
+    values:
+      data.values.map(
+        normalizeAboutValue
+      ),
+  };
+}
+
 export const siteService = {
   async getHomeContent() {
     const snapshot =
@@ -530,6 +769,73 @@ export const siteService = {
       SITE_CONFIG_DOC,
       {
         ...config,
+        updatedAt:
+          serverTimestamp(),
+        updatedByUid:
+          user?.uid ?? "",
+        updatedByEmail:
+          user?.email ?? "",
+      },
+      {
+        merge: true,
+      }
+    );
+  },
+
+  async getAboutContent() {
+    const snapshot =
+      await getDoc(
+        ABOUT_DOC
+      );
+
+    if (!snapshot.exists()) {
+      return null;
+    }
+
+    return normalizeAboutContent(
+      snapshot.data() as Partial<AboutContentDocument>
+    );
+  },
+
+  subscribeAboutContent(
+    onData: (
+      content: AboutContent | null
+    ) => void,
+    onError?: (
+      error: Error
+    ) => void
+  ) {
+    return onSnapshot(
+      ABOUT_DOC,
+      (snapshot) => {
+        if (!snapshot.exists()) {
+          onData(null);
+          return;
+        }
+
+        onData(
+          normalizeAboutContent(
+            snapshot.data() as Partial<AboutContentDocument>
+          )
+        );
+      },
+      (error) => {
+        onError?.(error);
+      }
+    );
+  },
+
+  async saveAboutContent(
+    content: AboutContent,
+    user?: {
+      uid?: string;
+      email?: string | null;
+    }
+  ) {
+    await setDoc(
+      ABOUT_DOC,
+      {
+        ...content,
         updatedAt:
           serverTimestamp(),
         updatedByUid:

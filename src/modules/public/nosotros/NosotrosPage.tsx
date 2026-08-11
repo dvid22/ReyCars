@@ -15,81 +15,19 @@ import {
   motion,
   useReducedMotion,
 } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+import {
+  useAboutContent,
+} from "@/hooks/useAboutContent";
+
+import type {
+  AboutGalleryAlbum,
+  AboutIconName,
+  AboutStoryId,
+} from "@/types/about.types";
 
 import styles from "./NosotrosPage.module.css";
-
-type StoryId = "esencia" | "mision" | "vision";
-
-type StoryItem = {
-  id: StoryId;
-  number: string;
-  title: string;
-  description: string;
-  icon: "sparkles" | "target" | "vision";
-};
-
-const storyItems: StoryItem[] = [
-  {
-    id: "esencia",
-    number: "01",
-    title: "Nuestra esencia",
-    description:
-      "Impulsamos una formación vial cercana, responsable y enfocada en acompañar a cada estudiante durante su proceso de aprendizaje.",
-    icon: "sparkles",
-  },
-  {
-    id: "mision",
-    number: "02",
-    title: "Nuestra misión",
-    description:
-      "Formar conductores conscientes, seguros y preparados para desenvolverse con responsabilidad en la vía.",
-    icon: "target",
-  },
-  {
-    id: "vision",
-    number: "03",
-    title: "Nuestra visión",
-    description:
-      "Continuar fortaleciendo una experiencia de formación confiable, moderna y cercana para quienes eligen ReyCars.",
-    icon: "vision",
-  },
-];
-
-const highlights = [
-  { icon: ShieldCheck, title: "Formación responsable" },
-  { icon: Users, title: "Acompañamiento cercano" },
-  { icon: Sparkles, title: "Metodología clara" },
-  { icon: Heart, title: "Confianza en cada paso" },
-];
-
-const values = [
-  {
-    icon: ShieldCheck,
-    title: "Seguridad",
-    description:
-      "Promovemos hábitos responsables para una mejor experiencia en la vía.",
-  },
-  {
-    icon: Users,
-    title: "Acompañamiento",
-    description:
-      "Guiamos cada etapa del proceso de formación con cercanía y claridad.",
-  },
-  {
-    icon: ThumbsUp,
-    title: "Confianza",
-    description:
-      "Buscamos que cada estudiante avance con mayor seguridad y tranquilidad.",
-  },
-  {
-    icon: Heart,
-    title: "Responsabilidad",
-    description:
-      "Formamos conductores conscientes del entorno y de sus decisiones.",
-  },
-];
-
 
 const teamMembers = [
   {
@@ -127,119 +65,204 @@ const teamMembers = [
 ];
 
 
-type GalleryAlbum = {
-  id: string;
-  title: string;
-  description: string;
-  images: string[];
-};
+function AboutIcon({
+  type,
+  size = 25,
+}: {
+  type: AboutIconName;
+  size?: number;
+}) {
+  if (type === "target") {
+    return (
+      <Target
+        size={size}
+        strokeWidth={1.6}
+      />
+    );
+  }
 
-const galleryAlbums: GalleryAlbum[] = [
-  {
-    id: "en-ruta",
-    title: "En ruta",
-    description:
-      "Práctica real para ganar confianza y seguridad detrás del volante.",
-    images: [
-      "/assets/images/nosotros/galeria-01.jpg",
-      "/assets/images/nosotros/galeria-06.jpg",
-    ],
-  },
-  {
-    id: "formacion",
-    title: "Formación",
-    description:
-      "Aprendizaje teórico claro para comprender la vía y tomar mejores decisiones.",
-    images: [
-      "/assets/images/nosotros/galeria-02.jpg",
-    ],
-  },
-  {
-    id: "practica",
-    title: "Práctica",
-    description:
-      "Acompañamiento cercano para convertir la teoría en experiencia.",
-    images: [
-      "/assets/images/nosotros/galeria-03.jpg",
-    ],
-  },
-  {
-    id: "nuestra-sede",
-    title: "Nuestra sede",
-    description:
-      "Un espacio preparado para recibir, orientar y acompañar cada proceso.",
-    images: [
-      "/assets/images/nosotros/galeria-04.jpg",
-    ],
-  },
-  {
-    id: "vehiculos",
-    title: "Vehículos",
-    description:
-      "Herramientas de formación que hacen parte del aprendizaje práctico.",
-    images: [
-      "/assets/images/nosotros/galeria-05.jpg",
-    ],
-  },
-  {
-    id: "en-practica",
-    title: "En práctica",
-    description:
-      "Cada clase suma experiencia, control y confianza para avanzar.",
-    images: [
-      "/assets/images/nosotros/galeria-06.jpg",
-    ],
-  },
-  {
-    id: "experiencia-reycars",
-    title: "Experiencia ReyCars",
-    description:
-      "Momentos que reflejan cercanía, aprendizaje y acompañamiento.",
-    images: [
-      "/assets/images/nosotros/galeria-07.jpg",
-    ],
-  },
-];
+  if (type === "shield") {
+    return (
+      <ShieldCheck
+        size={size}
+        strokeWidth={1.6}
+      />
+    );
+  }
+
+  if (type === "users") {
+    return (
+      <Users
+        size={size}
+        strokeWidth={1.6}
+      />
+    );
+  }
+
+  if (type === "heart") {
+    return (
+      <Heart
+        size={size}
+        strokeWidth={1.6}
+      />
+    );
+  }
+
+  if (type === "thumbs-up") {
+    return (
+      <ThumbsUp
+        size={size}
+        strokeWidth={1.6}
+      />
+    );
+  }
+
+  return (
+    <Sparkles
+      size={size}
+      strokeWidth={1.6}
+    />
+  );
+}
+
+function renderHighlightedTitle(
+  title: string,
+  highlighted: string
+) {
+  if (
+    !highlighted ||
+    !title.includes(
+      highlighted
+    )
+  ) {
+    return title;
+  }
+
+  const index =
+    title.indexOf(
+      highlighted
+    );
+
+  return (
+    <>
+      {title.slice(
+        0,
+        index
+      )}
+
+      <strong>
+        {highlighted}
+      </strong>
+
+      {title.slice(
+        index +
+          highlighted.length
+      )}
+    </>
+  );
+}
+
+const FIXED_GALLERY_ALBUM_IDS = [
+  "en-ruta",
+  "formacion",
+  "practica",
+  "nuestra-sede",
+  "vehiculos",
+  "en-practica",
+  "experiencia-reycars",
+] as const;
 
 type GalleryFrame = {
   albumIndex: number;
   imageIndex: number;
-  album: GalleryAlbum;
+  album: AboutGalleryAlbum;
   image: string;
 };
 
-const galleryFrames: GalleryFrame[] = galleryAlbums.flatMap(
-  (album, albumIndex) =>
-    album.images.map((image, imageIndex) => ({
-      albumIndex,
-      imageIndex,
-      album,
-      image,
-    }))
-);
-
-function StoryIcon({
-  type,
-  size = 25,
-}: {
-  type: StoryItem["icon"];
-  size?: number;
-}) {
-  if (type === "target") {
-    return <Target size={size} strokeWidth={1.6} />;
-  }
-
-  if (type === "vision") {
-    return <Sparkles size={size} strokeWidth={1.6} />;
-  }
-
-  return <Sparkles size={size} strokeWidth={1.6} />;
-}
-
 export function NosotrosPage() {
-  const reduceMotion = useReducedMotion();
-  const [openMobile, setOpenMobile] =
-    useState<StoryId>("esencia");
+  const reduceMotion =
+    useReducedMotion();
+
+  const {
+    content,
+    isLoading,
+  } = useAboutContent();
+
+  const storyItems =
+    content?.story ?? [];
+
+  const highlights =
+    content?.hero.highlights ?? [];
+
+  const values =
+    content?.values ?? [];
+
+  const galleryAlbums =
+    useMemo(
+      () => {
+        const albums =
+          content?.gallerySection
+            .albums ?? [];
+
+        const byId =
+          new Map(
+            albums.map(
+              (album) => [
+                album.id,
+                album,
+              ]
+            )
+          );
+
+        return FIXED_GALLERY_ALBUM_IDS
+          .map(
+            (id) =>
+              byId.get(id)
+          )
+          .filter(
+            (
+              album
+            ): album is AboutGalleryAlbum =>
+              Boolean(
+                album &&
+                  album.images.length >
+                    0
+              )
+          );
+      },
+      [content]
+    );
+
+  const galleryFrames =
+    useMemo<GalleryFrame[]>(
+      () =>
+        galleryAlbums.flatMap(
+          (
+            album,
+            albumIndex
+          ) =>
+            album.images.map(
+              (
+                image,
+                imageIndex
+              ) => ({
+                albumIndex,
+                imageIndex,
+                album,
+                image,
+              })
+            )
+        ),
+      [galleryAlbums]
+    );
+
+  const [
+    openMobile,
+    setOpenMobile,
+  ] =
+    useState<AboutStoryId>(
+      "esencia"
+    );
 
   const [galleryFrameIndex, setGalleryFrameIndex] =
     useState(0);
@@ -254,17 +277,42 @@ export function NosotrosPage() {
     } | null>(null);
 
   const activeFrame =
-    galleryFrames[galleryFrameIndex] ?? galleryFrames[0];
+    galleryFrames[
+      galleryFrameIndex
+    ] ??
+    galleryFrames[0] ??
+    null;
 
   const activeGalleryAlbum =
     activeGallery === null
       ? null
-      : galleryAlbums[activeGallery.albumIndex] ?? null;
+      : galleryAlbums[
+          activeGallery.albumIndex
+        ] ?? null;
 
   const activeGalleryImage =
     activeGalleryAlbum && activeGallery
       ? activeGalleryAlbum.images[activeGallery.imageIndex] ?? null
       : null;
+
+  useEffect(() => {
+    if (
+      galleryFrames.length === 0
+    ) {
+      setGalleryFrameIndex(0);
+      return;
+    }
+
+    if (
+      galleryFrameIndex >=
+      galleryFrames.length
+    ) {
+      setGalleryFrameIndex(0);
+    }
+  }, [
+    galleryFrameIndex,
+    galleryFrames.length,
+  ]);
 
   useEffect(() => {
     if (
@@ -296,16 +344,32 @@ export function NosotrosPage() {
   };
 
   const showPreviousGalleryFrame = () => {
+    if (
+      galleryFrames.length === 0
+    ) {
+      return;
+    }
+
     setGalleryFrameIndex(
       (current) =>
-        (current - 1 + galleryFrames.length) %
+        (current -
+          1 +
+          galleryFrames.length) %
         galleryFrames.length
     );
   };
 
   const showNextGalleryFrame = () => {
+    if (
+      galleryFrames.length === 0
+    ) {
+      return;
+    }
+
     setGalleryFrameIndex(
-      (current) => (current + 1) % galleryFrames.length
+      (current) =>
+        (current + 1) %
+        galleryFrames.length
     );
   };
 
@@ -372,6 +436,22 @@ export function NosotrosPage() {
     });
   };
 
+  if (
+    isLoading ||
+    !content
+  ) {
+    return null;
+  }
+
+  if (
+    storyItems.length === 0 ||
+    highlights.length === 0 ||
+    values.length === 0 ||
+    !activeFrame
+  ) {
+    return null;
+  }
+
   return (
     <section className={styles.page}>
       <div className={styles.container}>
@@ -399,20 +479,14 @@ export function NosotrosPage() {
             }}
           >
             <span className={styles.eyebrow}>
-              Nosotros
+              {content.hero.eyebrow}
             </span>
 
             <h1>
-              Formamos
-              <br />
-              conductores,
-              <br />
-              creamos{" "}
-              <strong>
-                caminos
-                <br className={styles.titleBreak} />
-                más seguros.
-              </strong>
+              {renderHighlightedTitle(
+                content.hero.title,
+                content.hero.highlightedText
+              )}
             </h1>
 
             <span
@@ -421,10 +495,7 @@ export function NosotrosPage() {
             />
 
             <p className={styles.heroDescription}>
-              En ReyCars creemos que conducir es mucho más
-              que desplazarse de un lugar a otro. Por eso,
-              acompañamos cada etapa del proceso con una
-              formación clara, responsable y cercana.
+              {content.hero.description}
             </p>
           </motion.div>
 
@@ -460,8 +531,8 @@ export function NosotrosPage() {
 
             <div className={styles.imageFrame}>
               <Image
-                src="/assets/images/nosotros/nosotros-principal.png"
-                alt="Instructor acompañando a estudiantes de ReyCars"
+                src={content.hero.imageUrl}
+                alt={content.hero.imageAlt}
                 fill
                 priority
                 sizes="(max-width: 900px) 100vw, 58vw"
@@ -471,18 +542,18 @@ export function NosotrosPage() {
           </motion.div>
 
           <div className={styles.heroHighlights}>
-              {highlights.map((item) => {
-                const Icon = item.icon;
-
-                return (
+              {highlights.map(
+                (item) => (
                   <div
-                    key={item.title}
-                    className={styles.heroHighlight}
+                    key={item.id}
+                    className={
+                      styles.heroHighlight
+                    }
                   >
                     <span>
-                      <Icon
+                      <AboutIcon
+                        type={item.icon}
                         size={21}
-                        strokeWidth={1.65}
                       />
                     </span>
 
@@ -490,8 +561,8 @@ export function NosotrosPage() {
                       {item.title}
                     </strong>
                   </div>
-                );
-              })}
+                )
+              )}
             </div>
         </div>
 
@@ -531,7 +602,7 @@ export function NosotrosPage() {
 
               <div className={styles.storyBody}>
                 <span className={styles.storyIcon}>
-                  <StoryIcon type={item.icon} />
+                  <AboutIcon type={item.icon} />
                 </span>
 
                 <div>
@@ -570,7 +641,7 @@ export function NosotrosPage() {
                   aria-expanded={open}
                 >
                   <span className={styles.mobileStoryIcon}>
-                    <StoryIcon
+                    <AboutIcon
                       type={item.icon}
                       size={20}
                     />
@@ -659,18 +730,19 @@ export function NosotrosPage() {
           >
             <div>
               <span className={styles.teamEyebrow}>
-                Nuestro equipo
+                {content.teamSection.eyebrow}
               </span>
 
               <h2 id="nosotros-team-title">
-                Personas que acompañan
-                <strong> tu recorrido.</strong>
+                {renderHighlightedTitle(
+                  content.teamSection.title,
+                  content.teamSection.highlightedText
+                )}
               </h2>
             </div>
 
             <p>
-              Un equipo cercano que orienta y acompaña cada etapa de tu
-              proceso de formación en ReyCars.
+              {content.teamSection.description}
             </p>
           </motion.div>
 
@@ -749,8 +821,7 @@ export function NosotrosPage() {
           >
             <span aria-hidden="true">“</span>
             <p>
-              Acompañamos cada proceso con cercanía, claridad y
-              responsabilidad.
+              {content.teamSection.statement}
             </p>
             <i aria-hidden="true" />
           </motion.div>
@@ -788,17 +859,18 @@ export function NosotrosPage() {
           >
             <div>
               <span className={styles.galleryEyebrow}>
-                Conoce ReyCars
+                {content.gallerySection.eyebrow}
               </span>
 
               <h2 id="nosotros-gallery-title">
-                Un vistazo a
-                <strong> nuestro día a día.</strong>
+                {renderHighlightedTitle(
+                  content.gallerySection.title,
+                  content.gallerySection.highlightedText
+                )}
               </h2>
 
               <p>
-                Espacios, vehículos y momentos que hacen parte del
-                proceso de formación de nuestros estudiantes.
+                {content.gallerySection.description}
               </p>
             </div>
 
@@ -1171,10 +1243,10 @@ export function NosotrosPage() {
 
             <div>
               <strong>
-                Más que un lugar, una experiencia de formación.
+                {content.gallerySection.footerTitle}
               </strong>
               <p>
-                Cada espacio acompaña una parte distinta del recorrido.
+                {content.gallerySection.footerDescription}
               </p>
             </div>
           </motion.div>
@@ -1336,11 +1408,9 @@ export function NosotrosPage() {
             ===================================================== */}
         <div className={styles.values}>
           {values.map((item, index) => {
-            const Icon = item.icon;
-
             return (
               <motion.article
-                key={item.title}
+                key={item.id}
                 className={styles.valueItem}
                 initial={
                   reduceMotion
@@ -1365,9 +1435,9 @@ export function NosotrosPage() {
                 }}
               >
                 <span className={styles.valueIcon}>
-                  <Icon
+                  <AboutIcon
+                    type={item.icon}
                     size={22}
-                    strokeWidth={1.6}
                   />
                 </span>
 
