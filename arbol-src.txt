@@ -1,0 +1,341 @@
+Listado de rutas de carpetas para el volumen Windows
+El número de serie del volumen es 00000235 0E60:6C43
+C:\USERS\SANTIAGO\DOCUMENTS\DALOTECH\REYCARS\SRC
++---app
+|   |   globals.css
+|   |   icon.png
+|   |   layout.tsx
+|   |   not-found.tsx
+|   |   
+|   +---(admin)
+|   |   \---admin
+|   |       |   layout.tsx
+|   |       |   page.tsx
+|   |       |   
+|   |       +---configuracion
+|   |       |       page.tsx
+|   |       |       
+|   |       +---contacto
+|   |       |       page.tsx
+|   |       |       
+|   |       +---cursos
+|   |       |       page.tsx
+|   |       |       
+|   |       +---equipo
+|   |       |       page.tsx
+|   |       |       
+|   |       +---faq
+|   |       |       page.tsx
+|   |       |       
+|   |       +---inicio
+|   |       |       page.tsx
+|   |       |       
+|   |       +---instalaciones
+|   |       |       page.tsx
+|   |       |       
+|   |       +---nosotros
+|   |       |       page.tsx
+|   |       |       
+|   |       +---proceso
+|   |       |       page.tsx
+|   |       |       
+|   |       +---recruitment
+|   |       |       page.tsx
+|   |       |       
+|   |       \---testimonios
+|   |               page.tsx
+|   |               
+|   +---(admin-auth)
+|   |   \---admin
+|   |       \---login
+|   |               page.tsx
+|   |               
+|   \---(public)
+|       |   layout.tsx
+|       |   page.tsx
+|       |   
+|       +---contacto
+|       |       page.tsx
+|       |       
+|       +---cursos
+|       |   |   page.tsx
+|       |   |   
+|       |   \---[slug]
+|       |           page.tsx
+|       |           
+|       +---nosotros
+|       |       page.tsx
+|       |       
+|       +---proceso
+|       |       page.tsx
+|       |       
+|       \---trabaja-con-nosotros
+|               page.tsx
+|               
++---components
+|   +---admin
+|   |   +---AdminHeader
+|   |   |       AdminHeader.module.css
+|   |   |       AdminHeader.tsx
+|   |   |       
+|   |   +---AdminLayout
+|   |   |       AdminLayout.module.css
+|   |   |       AdminLayout.tsx
+|   |   |       
+|   |   +---AdminModal
+|   |   |       AdminModal.module.css
+|   |   |       AdminModal.tsx
+|   |   |       
+|   |   +---ConfirmDialog
+|   |   |       ConfirmDialog.module.css
+|   |   |       ConfirmDialog.tsx
+|   |   |       
+|   |   +---ImageUploader
+|   |   |       ImageUploader.module.css
+|   |   |       ImageUploader.tsx
+|   |   |       
+|   |   +---Sidebar
+|   |   |       Sidebar.module.css
+|   |   |       Sidebar.tsx
+|   |   |       
+|   |   \---StatusBadge
+|   |           StatusBadge.module.css
+|   |           StatusBadge.tsx
+|   |           
+|   +---public
+|   |   +---Footer
+|   |   |       Footer.module.css
+|   |   |       Footer.tsx
+|   |   |       
+|   |   +---Header
+|   |   |       Header.module.css
+|   |   |       Header.tsx
+|   |   |       
+|   |   +---PublicLayout
+|   |   |       PublicLayout.module.css
+|   |   |       PublicLayout.tsx
+|   |   |       
+|   |   \---WhatsAppButton
+|   |           WhatsAppButton.module.css
+|   |           WhatsAppButton.tsx
+|   |           
+|   \---ui
+|       +---Button
+|       |       Button.module.css
+|       |       Button.tsx
+|       |       
+|       +---Loader
+|       |       Loader.module.css
+|       |       Loader.tsx
+|       |       
+|       +---Modal
+|       |       Modal.module.css
+|       |       Modal.tsx
+|       |       
+|       \---SectionTag
+|               SectionTag.module.css
+|               SectionTag.tsx
+|               
++---constants
+|       routes.ts
+|       theme.ts
+|       
++---firebase
+|   +---auth
+|   |       auth.service.ts
+|   |       
+|   +---config
+|   |       firebase.ts
+|   |       
+|   +---firestore
+|   |       courses.service.ts
+|   |       facilities.service.ts
+|   |       faq.service.ts
+|   |       instructors.service.ts
+|   |       recruitment.service.ts
+|   |       site.service.ts
+|   |       testimonials.service.ts
+|   |       
+|   \---storage
+|           storage.service.ts
+|           
++---hooks
+|       useCourses.ts
+|       useFacilities.ts
+|       useFaq.ts
+|       useHomeContent.ts
+|       useInstructors.ts
+|       useRecruitment.ts
+|       useSiteConfig.ts
+|       useTestimonials.ts
+|       
++---modules
+|   +---admin
+|   |   +---auth
+|   |   |       AdminLoginPage.module.css
+|   |   |       AdminLoginPage.tsx
+|   |   |       
+|   |   +---contacto
+|   |   |       AdminContactoPage.module.css
+|   |   |       AdminContactoPage.tsx
+|   |   |       
+|   |   +---cursos
+|   |   |       AdminCursosPage.module.css
+|   |   |       AdminCursosPage.tsx
+|   |   |       
+|   |   +---dashboard
+|   |   |       DashboardPage.module.css
+|   |   |       DashboardPage.tsx
+|   |   |       
+|   |   +---equipo
+|   |   |       AdminEquipoPage.module.css
+|   |   |       AdminEquipoPage.tsx
+|   |   |       
+|   |   +---faq
+|   |   |       AdminFaqPage.module.css
+|   |   |       AdminFaqPage.tsx
+|   |   |       
+|   |   +---inicio
+|   |   |       AdminInicioPage.module.css
+|   |   |       AdminInicioPage.tsx
+|   |   |       
+|   |   +---instalaciones
+|   |   |       AdminInstalacionesPage.module.css
+|   |   |       AdminInstalacionesPage.tsx
+|   |   |       
+|   |   +---nosotros
+|   |   |       AdminNosotrosPage.module.css
+|   |   |       AdminNosotrosPage.tsx
+|   |   |       
+|   |   +---proceso
+|   |   |       AdminProcesoPage.module.css
+|   |   |       AdminProcesoPage.tsx
+|   |   |       
+|   |   +---recruitment
+|   |   |       AdminRecruitmentPage.module.css
+|   |   |       AdminRecruitmentPage.tsx
+|   |   |       
+|   |   +---settings
+|   |   |       AdminSettingsPage.module.css
+|   |   |       AdminSettingsPage.tsx
+|   |   |       
+|   |   \---testimonios
+|   |           AdminTestimoniosPage.module.css
+|   |           AdminTestimoniosPage.tsx
+|   |           
+|   \---public
+|       +---contacto
+|       |   |   ContactoPage.module.css
+|       |   |   ContactoPage.tsx
+|       |   |   
+|       |   \---components
+|       |       +---ContactForm
+|       |       |       ContactForm.module.css
+|       |       |       ContactForm.tsx
+|       |       |       
+|       |       \---ContactInfo
+|       |               ContactInfo.module.css
+|       |               ContactInfo.tsx
+|       |               
+|       +---cursos
+|       |   |   CursoDetallePage.module.css
+|       |   |   CursoDetallePage.tsx
+|       |   |   CursosPage.module.css
+|       |   |   CursosPage.tsx
+|       |   |   
+|       |   \---components
+|       |       +---CourseCard
+|       |       |       CourseCard.module.css
+|       |       |       CourseCard.tsx
+|       |       |       
+|       |       +---CourseDetailHero
+|       |       |       CourseDetailHero.module.css
+|       |       |       CourseDetailHero.tsx
+|       |       |       
+|       |       \---CourseGrid
+|       |               CourseGrid.module.css
+|       |               CourseGrid.tsx
+|       |               
+|       +---inicio
+|       |   |   InicioPage.module.css
+|       |   |   InicioPage.tsx
+|       |   |   
+|       |   \---components
+|       |       +---CoursesPreview
+|       |       |       CoursesPreview.module.css
+|       |       |       CoursesPreview.tsx
+|       |       |       
+|       |       +---FacilitiesPreview
+|       |       |       FacilitiesPreview.module.css
+|       |       |       FacilitiesPreview.tsx
+|       |       |       
+|       |       +---FAQ
+|       |       |       FAQ.module.css
+|       |       |       FAQ.tsx
+|       |       |       
+|       |       +---Hero
+|       |       |       Hero.module.css
+|       |       |       Hero.tsx
+|       |       |       
+|       |       +---HomeCTA
+|       |       |       HomeCTA.module.css
+|       |       |       HomeCTA.tsx
+|       |       |       
+|       |       +---ProcessPreview
+|       |       |       ProcessPreview.module.css
+|       |       |       ProcessPreview.tsx
+|       |       |       
+|       |       +---TeamPreview
+|       |       |       TeamPreview.module.css
+|       |       |       TeamPreview.tsx
+|       |       |       
+|       |       +---Testimonials
+|       |       |       Testimonials.module.css
+|       |       |       Testimonials.tsx
+|       |       |       
+|       |       \---WhyReyCars
+|       |               WhyReyCars.module.css
+|       |               WhyReyCars.tsx
+|       |               
+|       +---nosotros
+|       |       NosotrosPage.module.css
+|       |       NosotrosPage.tsx
+|       |       
+|       +---proceso
+|       |       ProcesoPage.module.css
+|       |       ProcesoPage.tsx
+|       |       
+|       \---recruitment
+|           |   RecruitmentPage.module.css
+|           |   RecruitmentPage.tsx
+|           |   
+|           \---components
+|               +---ApplicationForm
+|               |       ApplicationForm.module.css
+|               |       ApplicationForm.tsx
+|               |       
+|               +---VacancyCard
+|               |       VacancyCard.module.css
+|               |       VacancyCard.tsx
+|               |       
+|               \---VacancyModal
+|                       VacancyModal.module.css
+|                       VacancyModal.tsx
+|                       
++---types
+|       application.types.ts
+|       course.types.ts
+|       facility.types.ts
+|       faq.types.ts
+|       home.types.ts
+|       instructor.types.ts
+|       process.types.ts
+|       recruitment.types.ts
+|       site.types.ts
+|       testimonial.types.ts
+|       vacancy.types.ts
+|       
+\---utils
+        cn.ts
+        formatPhone.ts
+        

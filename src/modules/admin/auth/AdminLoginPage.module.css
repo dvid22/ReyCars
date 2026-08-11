@@ -1,3 +1,743 @@
-.page { min-height: 100vh; display: grid; place-items: center; padding: 24px; background: #f4f7f8; }
-.card { width: min(100%, 430px); padding: 34px; border-radius: 24px; background: #fff; box-shadow: 0 24px 70px rgba(17,25,27,.08); }
-.card span { color: var(--reycars-cyan-dark); font-size: 10px; font-weight: 600; letter-spacing: .12em; }
+.page {
+  --cyan: var(--reycars-cyan, #59c5d3);
+  --cyan-dark: var(--reycars-cyan-dark, #209aaa);
+  --ink: #172126;
+  --muted: #75868e;
+
+  position: fixed;
+  inset: 0;
+
+  width: 100vw;
+  height: 100dvh;
+
+  display: grid;
+  grid-template-columns: minmax(0, 70%) minmax(0, 30%);
+
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.page,
+.page :where(*) {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   VISUAL LEFT
+   ========================================================= */
+
+.visual {
+  min-width: 0;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+  background: #203239;
+}
+
+.visualImage {
+  object-fit: cover;
+  object-position: center;
+}
+
+.visualOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(16, 30, 35, 0.08) 0%,
+      rgba(16, 30, 35, 0.2) 40%,
+      rgba(16, 30, 35, 0.7) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(20, 34, 39, 0.12) 0%,
+      rgba(20, 34, 39, 0.03) 66%,
+      rgba(20, 34, 39, 0.12) 100%
+    );
+}
+
+.visualContent {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: clamp(1.8rem, 3.2vw, 3.8rem);
+}
+
+.visualMessage {
+  width: min(100%, 34rem);
+  margin-top: auto;
+  margin-bottom: clamp(2.5rem, 6vh, 5rem);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  color: var(--cyan);
+  font-size: clamp(0.72rem, 0.78vw, 0.84rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 2rem;
+  height: 1px;
+  background: var(--cyan);
+}
+
+.visualMessage h1 {
+  margin: 0.9rem 0 0;
+  color: #ffffff;
+  font-size: clamp(2.7rem, 4vw, 4.9rem);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.052em;
+}
+
+.visualMessage p {
+  width: min(100%, 30rem);
+  margin: 1.1rem 0 0;
+
+  color: rgba(255, 255, 255, 0.8);
+  font-size: clamp(0.84rem, 0.9vw, 0.96rem);
+  line-height: 1.62;
+}
+
+.visualFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  padding-top: 0.95rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.7rem;
+}
+
+/* =========================================================
+   RIGHT SIDE
+   ========================================================= */
+
+.formSide {
+  min-width: 0;
+  min-height: 0;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  overflow: hidden;
+  padding: clamp(1.5rem, 2.6vw, 2.5rem);
+
+  background:
+    linear-gradient(
+      180deg,
+      #fcfefe 0%,
+      #ffffff 52%,
+      #fbfdfd 100%
+    );
+  border-left: 1px solid rgba(23, 33, 38, 0.05);
+}
+
+.formGlow,
+.formGlowSecondary {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.formGlow {
+  width: clamp(14rem, 18vw, 19rem);
+  aspect-ratio: 1;
+  top: -6rem;
+  right: -7rem;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(89, 197, 211, 0.12) 0%,
+      rgba(89, 197, 211, 0.04) 48%,
+      transparent 74%
+    );
+
+  filter: blur(8px);
+}
+
+.formGlowSecondary {
+  width: clamp(12rem, 15vw, 16rem);
+  aspect-ratio: 1;
+  bottom: -5rem;
+  left: -6rem;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(32, 154, 170, 0.07) 0%,
+      rgba(32, 154, 170, 0.02) 55%,
+      transparent 75%
+    );
+
+  filter: blur(12px);
+}
+
+.formPanel {
+  width: min(100%, 27rem);
+  position: relative;
+  z-index: 1;
+
+  margin: auto;
+  padding: clamp(1.5rem, 2.2vw, 2rem);
+
+  border: 1px solid rgba(23, 33, 38, 0.06);
+  border-radius: 1.55rem;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.98) 0%,
+      rgba(252, 254, 254, 0.98) 100%
+    );
+
+  box-shadow:
+    0 1.3rem 3rem rgba(23, 33, 38, 0.06),
+    0 0.3rem 1rem rgba(23, 33, 38, 0.04);
+  backdrop-filter: blur(8px);
+}
+
+.brand {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: clamp(1.25rem, 2vh, 1.7rem);
+}
+
+.logo {
+  width: clamp(10.5rem, 11.5vw, 13rem);
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.formHeading > span {
+  color: var(--cyan-dark);
+  font-size: clamp(0.72rem, 0.76vw, 0.82rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.formHeading h2 {
+  margin: 0.68rem 0 0;
+  color: var(--ink);
+  font-size: clamp(2.35rem, 3vw, 3.45rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+}
+
+.formHeading p {
+  width: min(100%, 22rem);
+  margin: 0.82rem 0 0;
+
+  color: var(--muted);
+  font-size: clamp(0.84rem, 0.88vw, 0.94rem);
+  line-height: 1.58;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  margin-top: clamp(1.55rem, 2.3vh, 2rem);
+}
+
+.field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.field > span {
+  color: #40545c;
+  font-size: clamp(0.76rem, 0.8vw, 0.84rem);
+  font-weight: 600;
+}
+
+.field input {
+  width: 100%;
+  min-height: clamp(3.15rem, 3.5vw, 3.4rem);
+
+  padding: 0 1rem;
+
+  color: #24363e;
+  border: 1px solid rgba(23, 33, 38, 0.09);
+  border-radius: 0.95rem;
+  outline: none;
+
+  background: #ffffff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+
+  font: inherit;
+  font-size: 0.9rem;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.field input::placeholder {
+  color: #a1adb2;
+}
+
+.field input:focus {
+  border-color: rgba(32, 154, 170, 0.5);
+  box-shadow:
+    0 0 0 0.24rem rgba(89, 197, 211, 0.1),
+    0 0.35rem 0.9rem rgba(23, 33, 38, 0.04);
+}
+
+.field input:disabled {
+  opacity: 0.65;
+}
+
+.passwordField {
+  position: relative;
+}
+
+.passwordField input {
+  padding-right: 4.8rem;
+}
+
+.passwordToggle {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+
+  padding: 0.35rem 0.45rem;
+
+  color: var(--cyan-dark);
+  border: 0;
+  background: transparent;
+
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.error {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.55rem;
+
+  padding: 0.8rem 0.9rem;
+
+  border: 1px solid rgba(184, 67, 67, 0.14);
+  border-radius: 0.9rem;
+  background: rgba(184, 67, 67, 0.045);
+}
+
+.error > span {
+  width: 0.42rem;
+  aspect-ratio: 1;
+  margin-top: 0.35rem;
+  border-radius: 50%;
+  background: #b84343;
+}
+
+.error p {
+  margin: 0;
+  color: #904040;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.submit {
+  min-height: clamp(3.15rem, 3.5vw, 3.4rem);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.68rem;
+
+  margin-top: 0.2rem;
+  padding-inline: 1rem;
+
+  color: #ffffff;
+  border: 1px solid var(--cyan-dark);
+  border-radius: 0.95rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--cyan-dark),
+      #278c9a
+    );
+
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  box-shadow:
+    0 0.95rem 2rem rgba(32, 154, 170, 0.18);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+.submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow:
+    0 1.1rem 2.2rem rgba(32, 154, 170, 0.24);
+  filter: saturate(1.03);
+}
+
+.submit:disabled {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.security {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  margin-top: 1.15rem;
+  padding-top: 1rem;
+
+  border-top: 1px solid rgba(23, 33, 38, 0.07);
+}
+
+.security > span {
+  width: 0.46rem;
+  aspect-ratio: 1;
+  flex: 0 0 auto;
+  border-radius: 50%;
+
+  background: var(--cyan-dark);
+  box-shadow: 0 0 0 0.24rem rgba(89, 197, 211, 0.09);
+}
+
+.security p {
+  margin: 0;
+  color: #89979d;
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.bottomBrand {
+  position: absolute;
+  left: clamp(1.5rem, 2.4vw, 2.2rem);
+  right: clamp(1.5rem, 2.4vw, 2.2rem);
+  bottom: clamp(1rem, 1.5vw, 1.4rem);
+
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+
+  color: #9aa6ab;
+  font-size: 0.66rem;
+}
+
+/* =========================================================
+   LOADER
+   ========================================================= */
+
+.spinner,
+.sessionLoader span {
+  width: 1rem;
+  aspect-ratio: 1;
+
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+
+  animation: spin 0.8s linear infinite;
+}
+
+.sessionLoader {
+  width: 3.1rem;
+  aspect-ratio: 1;
+
+  display: grid;
+  place-items: center;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1rem 3rem rgba(23, 33, 38, 0.08);
+}
+
+.sessionLoader span {
+  width: 1.15rem;
+  border-color: rgba(32, 154, 170, 0.16);
+  border-top-color: var(--cyan-dark);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   DESKTOP / LAPTOP
+   ========================================================= */
+
+@media (max-width: 1280px) and (min-width: 901px) {
+  .page {
+    grid-template-columns: minmax(0, 64%) minmax(22rem, 36%);
+  }
+
+  .visualContent {
+    padding: 2rem 2.4rem;
+  }
+
+  .formSide {
+    padding: 1.7rem 1.8rem;
+  }
+
+  .formPanel {
+    width: min(100%, 25rem);
+  }
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) and (min-width: 681px) {
+  .page {
+    grid-template-columns: minmax(0, 54%) minmax(0, 46%);
+  }
+
+  .visualContent {
+    padding: 1.7rem;
+  }
+
+  .visualMessage {
+    margin-bottom: 2rem;
+  }
+
+  .visualMessage h1 {
+    font-size: clamp(2.35rem, 5vw, 3.5rem);
+  }
+
+  .visualMessage p {
+    max-width: 22rem;
+    font-size: 0.84rem;
+  }
+
+  .formSide {
+    padding: 1.4rem;
+  }
+
+  .formPanel {
+    width: min(100%, 25rem);
+    padding: 1.35rem;
+    border-radius: 1.35rem;
+  }
+
+  .logo {
+    width: 10rem;
+  }
+
+  .formHeading h2 {
+    font-size: clamp(2.2rem, 4.8vw, 2.95rem);
+  }
+
+  .bottomBrand {
+    left: 1.4rem;
+    right: 1.4rem;
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 680px) {
+  .page {
+    position: relative;
+    inset: auto;
+
+    width: 100%;
+    min-height: 100svh;
+    height: auto;
+
+    display: block;
+    overflow: visible;
+  }
+
+  .visual {
+    width: 100%;
+    height: clamp(14rem, 34svh, 20rem);
+  }
+
+  .visualContent {
+    padding: 1.1rem;
+  }
+
+  .visualMessage {
+    margin-top: auto;
+    margin-bottom: 0;
+  }
+
+  .eyebrow {
+    font-size: 0.7rem;
+  }
+
+  .visualMessage h1 {
+    margin-top: 0.65rem;
+    font-size: clamp(2rem, 9vw, 2.85rem);
+  }
+
+  .visualMessage p,
+  .visualFoot {
+    display: none;
+  }
+
+  .formSide {
+    width: 100%;
+    min-height: auto;
+    overflow: visible;
+    padding: 1.2rem 1rem 1.8rem;
+    border-left: 0;
+  }
+
+  .formPanel {
+    width: min(100%, 31rem);
+    margin: -1.9rem auto 0;
+    padding: 1.25rem;
+    border-radius: 1.25rem;
+    box-shadow:
+      0 1rem 2.4rem rgba(23, 33, 38, 0.08),
+      0 0.2rem 0.8rem rgba(23, 33, 38, 0.04);
+  }
+
+  .brand {
+    margin-bottom: 1.15rem;
+  }
+
+  .logo {
+    width: clamp(10rem, 42vw, 12rem);
+  }
+
+  .formHeading h2 {
+    font-size: clamp(2.15rem, 8.8vw, 3rem);
+  }
+
+  .form {
+    margin-top: 1.45rem;
+  }
+
+  .bottomBrand {
+    position: static;
+    margin-top: 1.4rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .visual {
+    height: 28svh;
+    min-height: 13rem;
+  }
+
+  .visualMessage h1 {
+    font-size: clamp(1.8rem, 10vw, 2.5rem);
+  }
+
+  .formSide {
+    padding: 1rem 0.85rem 1.5rem;
+  }
+
+  .formPanel {
+    padding: 1.05rem;
+  }
+
+  .logo {
+    width: 9.5rem;
+  }
+
+  .bottomBrand {
+    display: none;
+  }
+}
+
+/* =========================================================
+   SHORT HEIGHT
+   ========================================================= */
+
+@media (max-height: 720px) and (min-width: 681px) {
+  .visualContent,
+  .formSide {
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
+  }
+
+  .visualMessage {
+    margin-bottom: 1.5rem;
+  }
+
+  .visualMessage h1 {
+    font-size: clamp(2.25rem, 3.5vw, 3.45rem);
+  }
+
+  .formPanel {
+    padding: 1.25rem;
+  }
+
+  .logo {
+    width: 9.4rem;
+  }
+
+  .formHeading h2 {
+    font-size: clamp(2.15rem, 3vw, 2.95rem);
+  }
+
+  .form {
+    margin-top: 1.25rem;
+  }
+
+  .field input,
+  .submit {
+    min-height: 2.95rem;
+  }
+
+  .security {
+    margin-top: 0.85rem;
+    padding-top: 0.8rem;
+  }
+
+  .bottomBrand {
+    bottom: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .submit,
+  .field input {
+    transition: none;
+  }
+
+  .spinner,
+  .sessionLoader span {
+    animation-duration: 1.5s;
+  }
+}
