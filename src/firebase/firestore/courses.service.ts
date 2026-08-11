@@ -4,6 +4,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  onSnapshot,
   orderBy,
   query,
   serverTimestamp,
@@ -16,78 +17,115 @@ import {
 } from "firebase/storage";
 
 import { db, storage } from "../config/firebase";
-import type { Course, CourseFormData } from "@/types/course.types";
+import { DEFAULT_COURSES } from "@/constants/defaultCourses";
+import type {
+  Course,
+  CourseFormData,
+  CourseGroup,
+  CourseIconType,
+} from "@/types/course.types";
 
 const COLLECTION_NAME = "courses";
-
 const coursesCollection = collection(db, COLLECTION_NAME);
+
+function asString(value: unknown) {
+  return typeof value === "string" ? value : "";
+}
+
+function asStringArray(value: unknown) {
+  return Array.isArray(value) ? value.map(String) : [];
+}
+
+function asNumberOrNull(value: unknown) {
+  return typeof value === "number" && Number.isFinite(value)
+    ? value
+    : null;
+}
+
+function normalizeGroup(value: unknown): CourseGroup {
+  return value === "Licencias de conducción"
+    ? "Licencias de conducción"
+    : "Formación complementaria";
+}
+
+function normalizeIcon(value: unknown): CourseIconType {
+  if (
+    value === "motorcycle" ||
+    value === "steering" ||
+    value === "shield" ||
+    value === "id"
+  ) {
+    return value;
+  }
+
+  return "car";
+}
 
 function normalizeCourse(
   id: string,
   data: Record<string, unknown>
 ): Course {
+  const legacyCategory = asString(data.category);
+
   return {
     id,
-    slug: String(data.slug ?? ""),
-    category: String(data.category ?? ""),
-    name: String(data.name ?? ""),
-    description: String(data.description ?? ""),
-    imageUrl: String(data.imageUrl ?? ""),
-    active: Boolean(data.active ?? true),
-    order: Number(data.order ?? 0),
+    slug: asString(data.slug),
+    group: normalizeGroup(data.group),
+    category: legacyCategory,
+    badge: asString(data.badge) || legacyCategory,
+    name: asString(data.name),
+    subtitle: asString(data.subtitle),
+    description: asString(data.description),
 
-    price:
-      typeof data.price === "number"
-        ? data.price
-        : null,
+    imageUrl: asString(data.imageUrl),
+    imageAlt: asString(data.imageAlt),
 
-    priceLabel:
-      typeof data.priceLabel === "string"
-        ? data.priceLabel
-        : "",
+    active:
+      typeof data.active === "boolean"
+        ? data.active
+        : true,
 
-    theoryHours:
-      typeof data.theoryHours === "number"
-        ? data.theoryHours
-        : null,
+    order:
+      typeof data.order === "number"
+        ? data.order
+        : 0,
 
-    practiceHours:
-      typeof data.practiceHours === "number"
-        ? data.practiceHours
-        : null,
+    price: asNumberOrNull(data.price),
+    priceText: asString(data.priceText),
+    priceLabel: asString(data.priceLabel),
 
-    durationLabel:
-      typeof data.durationLabel === "string"
-        ? data.durationLabel
-        : "",
+    theoryHours: asNumberOrNull(data.theoryHours),
+    theoryLabel: asString(data.theoryLabel),
 
-    modality:
-      typeof data.modality === "string"
-        ? data.modality
-        : "",
+    practiceHours: asNumberOrNull(data.practiceHours),
+    practiceLabel: asString(data.practiceLabel),
 
-    audience:
-      typeof data.audience === "string"
-        ? data.audience
-        : "",
+    vehicle: asString(data.vehicle),
+    modality: asString(data.modality),
+    durationLabel: asString(data.durationLabel),
+    audience: asString(data.audience),
 
-    features: Array.isArray(data.features)
-      ? data.features.map(String)
-      : [],
+    icon: normalizeIcon(data.icon),
+    whatsappLabel: asString(data.whatsappLabel),
 
-    includes: Array.isArray(data.includes)
-      ? data.includes.map(String)
-      : [],
+    features: asStringArray(data.features),
+    includes: asStringArray(data.includes),
   };
 }
 
 function cleanPayload(course: CourseFormData) {
   return {
     slug: course.slug.trim(),
+    group: course.group,
     category: course.category.trim(),
+    badge: course.badge.trim(),
     name: course.name.trim(),
+    subtitle: course.subtitle.trim(),
     description: course.description.trim(),
+
     imageUrl: course.imageUrl.trim(),
+    imageAlt: course.imageAlt.trim(),
+
     active: course.active,
     order: Number(course.order) || 0,
 
@@ -97,6 +135,7 @@ function cleanPayload(course: CourseFormData) {
         ? course.price
         : null,
 
+    priceText: course.priceText?.trim() ?? "",
     priceLabel: course.priceLabel?.trim() ?? "",
 
     theoryHours:
@@ -105,15 +144,23 @@ function cleanPayload(course: CourseFormData) {
         ? course.theoryHours
         : null,
 
+    theoryLabel: course.theoryLabel?.trim() ?? "",
+
     practiceHours:
       typeof course.practiceHours === "number" &&
       Number.isFinite(course.practiceHours)
         ? course.practiceHours
         : null,
 
-    durationLabel: course.durationLabel?.trim() ?? "",
+    practiceLabel: course.practiceLabel?.trim() ?? "",
+
+    vehicle: course.vehicle?.trim() ?? "",
     modality: course.modality?.trim() ?? "",
+    durationLabel: course.durationLabel?.trim() ?? "",
     audience: course.audience?.trim() ?? "",
+
+    icon: course.icon,
+    whatsappLabel: course.whatsappLabel?.trim() ?? "",
 
     features: (course.features ?? [])
       .map((item) => item.trim())
@@ -135,6 +182,37 @@ async function getCourses(): Promise<Course[]> {
       item.id,
       item.data() as Record<string, unknown>
     )
+  );
+}
+
+async function getPublicCourses(): Promise<Course[]> {
+  const courses = await getCourses();
+
+  return courses.filter((course) => course.active);
+}
+
+function subscribePublicCourses(
+  onData: (courses: Course[]) => void,
+  onError?: (error: Error) => void
+) {
+  return onSnapshot(
+    query(coursesCollection, orderBy("order", "asc")),
+    (snapshot) => {
+      const courses = snapshot.docs
+        .map((item) =>
+          normalizeCourse(
+            item.id,
+            item.data() as Record<string, unknown>
+          )
+        )
+        .filter((course) => course.active);
+
+      onData(courses);
+    },
+    (error) => {
+      console.error(error);
+      onError?.(error);
+    }
   );
 }
 
@@ -195,12 +273,35 @@ async function uploadCourseImage(
   return getDownloadURL(storageRef);
 }
 
+async function importDefaultCourses(): Promise<number> {
+  const current = await getCourses();
+
+  if (current.length > 0) {
+    return 0;
+  }
+
+  await Promise.all(
+    DEFAULT_COURSES.map((course) =>
+      addDoc(coursesCollection, {
+        ...cleanPayload(course),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      })
+    )
+  );
+
+  return DEFAULT_COURSES.length;
+}
+
 export const coursesService = {
   db,
   getCourses,
+  getPublicCourses,
+  subscribePublicCourses,
   createCourse,
   updateCourse,
   deleteCourse,
   setCourseActive,
   uploadCourseImage,
+  importDefaultCourses,
 };
