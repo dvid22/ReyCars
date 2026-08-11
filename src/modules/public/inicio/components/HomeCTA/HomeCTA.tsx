@@ -15,6 +15,7 @@ import {
 } from "react";
 
 import { useHomeContent } from "@/hooks/useHomeContent";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 import styles from "./HomeCTA.module.css";
 
@@ -29,38 +30,64 @@ type ScheduleItem = {
   days: number[];
 };
 
-const schedule: ScheduleItem[] = [
-  {
-    key: "weekdays",
-    short: "LUN – VIE",
-    label: "Lunes a viernes",
-    open: "7:45 a. m.",
-    close: "8:00 p. m.",
-    openMinutes: 7 * 60 + 45,
-    closeMinutes: 20 * 60,
-    days: [1, 2, 3, 4, 5],
-  },
-  {
-    key: "saturday",
-    short: "SÁBADO",
-    label: "Sábado",
-    open: "8:00 a. m.",
-    close: "4:00 p. m.",
-    openMinutes: 8 * 60,
-    closeMinutes: 16 * 60,
-    days: [6],
-  },
-  {
-    key: "sunday",
-    short: "DOMINGO",
-    label: "Domingo",
-    open: "8:00 a. m.",
-    close: "2:00 p. m.",
-    openMinutes: 8 * 60,
-    closeMinutes: 14 * 60,
-    days: [0],
-  },
-];
+function parseTimeMinutes(
+  value: string
+) {
+  const [
+    hour,
+    minute,
+  ] =
+    value
+      .split(":")
+      .map(Number);
+
+  if (
+    !Number.isFinite(hour) ||
+    !Number.isFinite(minute)
+  ) {
+    return 0;
+  }
+
+  return (
+    hour * 60 +
+    minute
+  );
+}
+
+function formatTime(
+  value: string
+) {
+  const [
+    rawHour,
+    rawMinute,
+  ] =
+    value.split(":");
+
+  const hour =
+    Number(rawHour);
+
+  const minute =
+    Number(rawMinute);
+
+  if (
+    !Number.isFinite(hour) ||
+    !Number.isFinite(minute)
+  ) {
+    return value;
+  }
+
+  const period =
+    hour >= 12
+      ? "p. m."
+      : "a. m.";
+
+  const displayHour =
+    hour % 12 || 12;
+
+  return `${displayHour}:${String(
+    minute
+  ).padStart(2, "0")} ${period}`;
+}
 
 const TIME_ZONE = "America/Bogota";
 
@@ -102,15 +129,19 @@ function getBogotaParts(date: Date) {
   };
 }
 
-function getScheduleForDay(day: number) {
-  return (
-    schedule.find((item) =>
+function getScheduleForDay(
+  schedule: ScheduleItem[],
+  day: number
+) {
+  return schedule.find(
+    (item) =>
       item.days.includes(day)
-    ) ?? schedule[0]
   );
 }
 
-function formatDuration(totalMinutes: number) {
+function formatDuration(
+  totalMinutes: number
+) {
   const safeMinutes = Math.max(
     0,
     Math.floor(totalMinutes)
@@ -119,7 +150,9 @@ function formatDuration(totalMinutes: number) {
   const hours = Math.floor(
     safeMinutes / 60
   );
-  const minutes = safeMinutes % 60;
+
+  const minutes =
+    safeMinutes % 60;
 
   if (hours === 0) {
     return `${minutes} min`;
@@ -133,46 +166,65 @@ function formatDuration(totalMinutes: number) {
 }
 
 function getNextOpening(
+  schedule: ScheduleItem[],
   day: number,
   minutesNow: number
 ) {
   const today =
-    getScheduleForDay(day);
+    getScheduleForDay(
+      schedule,
+      day
+    );
 
-  if (minutesNow < today.openMinutes) {
+  if (
+    today &&
+    minutesNow <
+      today.openMinutes
+  ) {
     return {
-      label: "Abrimos hoy",
+      label:
+        "Abrimos hoy",
       time: today.open,
     };
   }
 
-  for (let offset = 1; offset <= 7; offset += 1) {
+  for (
+    let offset = 1;
+    offset <= 7;
+    offset += 1
+  ) {
     const nextDay =
       (day + offset) % 7;
 
     const item =
-      getScheduleForDay(nextDay);
+      getScheduleForDay(
+        schedule,
+        nextDay
+      );
 
-    if (item) {
-      const dayName =
-        nextDay === 6
-          ? "sábado"
-          : nextDay === 0
-            ? "domingo"
-            : "mañana";
-
-      return {
-        label:
-          offset === 1
-            ? "Abrimos mañana"
-            : `Abrimos el ${dayName}`,
-        time: item.open,
-      };
+    if (!item) {
+      continue;
     }
+
+    const dayName =
+      nextDay === 6
+        ? "sábado"
+        : nextDay === 0
+          ? "domingo"
+          : "mañana";
+
+    return {
+      label:
+        offset === 1
+          ? "Abrimos mañana"
+          : `Abrimos el ${dayName}`,
+      time: item.open,
+    };
   }
 
   return {
-    label: "Próxima apertura",
+    label:
+      "Próxima apertura",
     time: "Consultar",
   };
 }
@@ -264,6 +316,12 @@ export function HomeCTA() {
     isLoading,
   } = useHomeContent();
 
+  const {
+    config,
+    isLoading:
+      configLoading,
+  } = useSiteConfig();
+
   /*
    * IMPORTANTE:
    * No usamos new Date() durante el primer render.
@@ -298,12 +356,58 @@ export function HomeCTA() {
     };
   }, []);
 
-  if (isLoading || !content) {
+  if (
+    isLoading ||
+    configLoading ||
+    !content ||
+    !config
+  ) {
     return null;
   }
 
   const sectionContent =
     content.hoursSection;
+
+  const schedule:
+    ScheduleItem[] =
+      config.schedule
+        .filter(
+          (item) =>
+            item.active
+        )
+        .map(
+          (item) => ({
+            key: item.id,
+            short:
+              item.short,
+            label:
+              item.label,
+            open:
+              formatTime(
+                item.open
+              ),
+            close:
+              formatTime(
+                item.close
+              ),
+            openMinutes:
+              parseTimeMinutes(
+                item.open
+              ),
+            closeMinutes:
+              parseTimeMinutes(
+                item.close
+              ),
+            days:
+              item.days,
+          })
+        );
+
+  if (
+    schedule.length === 0
+  ) {
+    return null;
+  }
 
   const current =
     now
@@ -321,27 +425,42 @@ export function HomeCTA() {
     current.second / 60;
 
   const todaySchedule =
-    getScheduleForDay(current.day);
+    getScheduleForDay(
+      schedule,
+      current.day
+    );
 
   const isOpen =
-    minutesNow >=
-      todaySchedule.openMinutes &&
-    minutesNow <
-      todaySchedule.closeMinutes;
+    Boolean(
+      todaySchedule &&
+      minutesNow >=
+        todaySchedule.openMinutes &&
+      minutesNow <
+        todaySchedule.closeMinutes
+    );
 
-  const statusDetail = isOpen
-    ? `Cerramos en ${formatDuration(
-        todaySchedule.closeMinutes -
-          minutesNow
-      )}`
-    : (() => {
-        const next = getNextOpening(
-          current.day,
-          minutesNow
-        );
+  const statusDetail =
+    isOpen &&
+    todaySchedule
+      ? `Cerramos en ${formatDuration(
+          todaySchedule.closeMinutes -
+            minutesNow
+        )}`
+      : (() => {
+          const next =
+            getNextOpening(
+              schedule,
+              current.day,
+              minutesNow
+            );
 
-        return `${next.label} · ${next.time}`;
-      })();
+          return `${next.label} · ${next.time}`;
+        })();
+
+  const todayHours =
+    todaySchedule
+      ? `${todaySchedule.open} – ${todaySchedule.close}`
+      : "Sin atención hoy";
 
   return (
     <section
@@ -499,9 +618,7 @@ export function HomeCTA() {
               </span>
 
               <strong>
-                {todaySchedule.open}
-                {" – "}
-                {todaySchedule.close}
+                {todayHours}
               </strong>
 
               <p>{statusDetail}</p>

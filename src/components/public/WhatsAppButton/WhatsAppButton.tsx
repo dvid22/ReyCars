@@ -1,8 +1,35 @@
+"use client";
+
+import { useSiteConfig } from "@/hooks/useSiteConfig";
+
 import styles from "./WhatsAppButton.module.css";
 
 export function WhatsAppButton() {
+  const {
+    config,
+    isLoading,
+  } = useSiteConfig();
+
+  if (
+    isLoading ||
+    !config
+  ) {
+    return null;
+  }
+
+  const digits =
+    config.whatsapp.replace(
+      /\D/g,
+      ""
+    );
+
+  const text =
+    "Hola ReyCars, quiero recibir información sobre sus cursos.";
+
   const whatsappUrl =
-    "https://wa.me/573102062512?text=Hola%20ReyCars%2C%20quiero%20recibir%20informaci%C3%B3n%20sobre%20sus%20cursos.";
+    `https://wa.me/${digits}?text=${encodeURIComponent(
+      text
+    )}`;
 
   return (
     <a

@@ -22,18 +22,12 @@ import {
 } from "motion/react";
 import {
   FormEvent,
-  useMemo,
   useState,
 } from "react";
 
-import styles from "./ContactoPage.module.css";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 
-const PHONE_DISPLAY = "+57 310 2062512";
-const PHONE_LINK = "tel:+573102062512";
-const WHATSAPP_LINK = "https://wa.me/573102062512";
-const ADDRESS = "Calle 15 # 5 - 68, Ubaté";
-const MAP_QUERY =
-  "https://www.google.com/maps/search/?api=1&query=Calle%2015%20%23%205%20-%2068%20Ubat%C3%A9";
+import styles from "./ContactoPage.module.css";
 
 const courseOptions = [
   "Curso B1",
@@ -45,26 +39,10 @@ const courseOptions = [
   "Refrendación de licencia",
 ];
 
-const socialLinks = [
-  {
-    label: "Instagram",
-    href: "https://www.instagram.com/reycars_ubate?igsh=Y3hxZW1rNWsxcmVt",
-    icon: "instagram",
-  },
-  {
-    label: "Facebook",
-    href: "https://www.facebook.com/share/18ye5QQfPU/?mibextid=wwXIfr",
-    icon: "facebook",
-  },
-  {
-    label: "TikTok",
-    href: "https://www.tiktok.com/@reycars_ubate?_r=1&_t=ZS-98kig2MXwVI",
-    icon: "tiktok",
-  },
-] as const;
-
 type SocialIconName =
-  (typeof socialLinks)[number]["icon"];
+  | "instagram"
+  | "facebook"
+  | "tiktok";
 
 function SocialIcon({
   name,
@@ -156,8 +134,87 @@ function WhatsAppIcon({
   );
 }
 
+function onlyDigits(
+  value: string
+) {
+  return value.replace(
+    /\D/g,
+    ""
+  );
+}
+
+function formatTime(
+  value: string
+) {
+  const [
+    rawHour,
+    rawMinute,
+  ] =
+    value.split(":");
+
+  const hour =
+    Number(rawHour);
+
+  const minute =
+    Number(rawMinute);
+
+  if (
+    !Number.isFinite(hour) ||
+    !Number.isFinite(minute)
+  ) {
+    return value;
+  }
+
+  const period =
+    hour >= 12
+      ? "p. m."
+      : "a. m.";
+
+  const displayHour =
+    hour % 12 || 12;
+
+  return `${displayHour}:${String(
+    minute
+  ).padStart(2, "0")} ${period}`;
+}
+
+function renderHighlightedTitle(
+  title: string,
+  highlighted: string
+) {
+  if (
+    !highlighted ||
+    !title.includes(highlighted)
+  ) {
+    return title;
+  }
+
+  const index =
+    title.indexOf(
+      highlighted
+    );
+
+  return (
+    <>
+      {title.slice(0, index)}
+      <strong>
+        {highlighted}
+      </strong>
+      {title.slice(
+        index +
+          highlighted.length
+      )}
+    </>
+  );
+}
+
 export function ContactoPage() {
   const reduceMotion = useReducedMotion();
+
+  const {
+    config,
+    isLoading,
+  } = useSiteConfig();
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -166,20 +223,89 @@ export function ContactoPage() {
   const [courseOpen, setCourseOpen] = useState(false);
   const [message, setMessage] = useState("");
 
-  const whatsappFormUrl = useMemo(() => {
-    const text = [
-      "Hola ReyCars, quiero recibir información.",
-      name ? `Nombre: ${name}` : "",
-      phone ? `Teléfono: ${phone}` : "",
-      email ? `Correo: ${email}` : "",
-      course ? `Curso de interés: ${course}` : "",
-      message ? `Mensaje: ${message}` : "",
-    ]
-      .filter(Boolean)
-      .join("\n");
+  if (
+    isLoading ||
+    !config
+  ) {
+    return null;
+  }
 
-    return `${WHATSAPP_LINK}?text=${encodeURIComponent(text)}`;
-  }, [course, email, message, name, phone]);
+  const phoneDigits =
+    onlyDigits(
+      config.phone
+    );
+
+  const whatsappDigits =
+    onlyDigits(
+      config.whatsapp
+    );
+
+  const phoneLink =
+    `tel:+${phoneDigits}`;
+
+  const whatsappLink =
+    `https://wa.me/${whatsappDigits}`;
+
+  const mapQuery =
+    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      config.address
+    )}`;
+
+  const mapEmbed =
+    `https://www.google.com/maps?q=${encodeURIComponent(
+      config.address
+    )}&output=embed`;
+
+  const socialLinks = [
+    {
+      label: "Instagram",
+      href:
+        config.instagramUrl,
+      icon:
+        "instagram" as const,
+    },
+    {
+      label: "Facebook",
+      href:
+        config.facebookUrl,
+      icon:
+        "facebook" as const,
+    },
+    {
+      label: "TikTok",
+      href:
+        config.tiktokUrl,
+      icon:
+        "tiktok" as const,
+    },
+  ].filter(
+    (social) =>
+      Boolean(
+        social.href
+      )
+  );
+
+  const schedule =
+    config.schedule.filter(
+      (item) =>
+        item.active
+    );
+
+  const whatsappText = [
+    "Hola ReyCars, quiero recibir información.",
+    name ? `Nombre: ${name}` : "",
+    phone ? `Teléfono: ${phone}` : "",
+    email ? `Correo: ${email}` : "",
+    course ? `Curso de interés: ${course}` : "",
+    message ? `Mensaje: ${message}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const whatsappFormUrl =
+    `${whatsappLink}?text=${encodeURIComponent(
+      whatsappText
+    )}`;
 
   const handleSubmit = (
     event: FormEvent<HTMLFormElement>
@@ -233,21 +359,18 @@ export function ContactoPage() {
             </div>
 
             <span className={styles.eyebrow}>
-              Contacto
+              {config.contactPage.eyebrow}
             </span>
 
             <h1>
-              Habla con
-              <br />
-              CEA{" "}
-              <strong>
-                ReyCars.
-              </strong>
+              {renderHighlightedTitle(
+                config.contactPage.title,
+                config.contactPage.highlightedText
+              )}
             </h1>
 
             <p>
-              Estamos listos para ayudarte. Escríbenos,
-              llámanos o visítanos en nuestra sede en Ubaté.
+              {config.contactPage.description}
             </p>
           </motion.div>
 
@@ -272,7 +395,7 @@ export function ContactoPage() {
             }}
           >
             <Image
-              src="/assets/images/nosotros/galeria-07.jpg"
+              src={config.contactPage.heroImageUrl}
               alt="Experiencia ReyCars en su sede"
               fill
               priority
@@ -317,7 +440,7 @@ export function ContactoPage() {
 
             <div className={styles.contactList}>
               <a
-                href={WHATSAPP_LINK}
+                href={whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.contactItem}
@@ -334,7 +457,7 @@ export function ContactoPage() {
                     Escríbenos directamente
                   </small>
                   <b>
-                    {PHONE_DISPLAY}
+                    {config.whatsapp}
                   </b>
                 </div>
 
@@ -347,7 +470,7 @@ export function ContactoPage() {
               </a>
 
               <a
-                href={PHONE_LINK}
+                href={phoneLink}
                 className={styles.contactItem}
               >
                 <span className={styles.contactIcon}>
@@ -365,7 +488,7 @@ export function ContactoPage() {
                     Llámanos
                   </small>
                   <b>
-                    {PHONE_DISPLAY}
+                    {config.phone}
                   </b>
                 </div>
 
@@ -377,8 +500,41 @@ export function ContactoPage() {
                 </i>
               </a>
 
+              {config.email ? (
+                <a
+                  href={`mailto:${config.email}`}
+                  className={styles.contactItem}
+                >
+                  <span className={styles.contactIcon}>
+                    <Mail
+                      size={20}
+                      strokeWidth={1.6}
+                    />
+                  </span>
+
+                  <div>
+                    <strong>
+                      Correo
+                    </strong>
+                    <small>
+                      Escríbenos
+                    </small>
+                    <b>
+                      {config.email}
+                    </b>
+                  </div>
+
+                  <i>
+                    <ArrowRight
+                      size={15}
+                      strokeWidth={1.7}
+                    />
+                  </i>
+                </a>
+              ) : null}
+
               <a
-                href={MAP_QUERY}
+                href={mapQuery}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.contactItem}
@@ -398,7 +554,7 @@ export function ContactoPage() {
                     Visítanos en nuestra sede
                   </small>
                   <b>
-                    {ADDRESS}
+                    {config.address}
                   </b>
                 </div>
 
@@ -448,36 +604,25 @@ export function ContactoPage() {
             </div>
 
             <div className={styles.scheduleList}>
-              <div>
-                <strong>
-                  Lunes a viernes
-                </strong>
-                <span>
-                  7:45 a. m. – 8:00 p. m.
-                </span>
-              </div>
+              {schedule.map(
+                (item) => (
+                  <div key={item.id}>
+                    <strong>
+                      {item.label}
+                    </strong>
 
-              <div>
-                <strong>
-                  Sábado
-                </strong>
-                <span>
-                  8:00 a. m. – 4:00 p. m.
-                </span>
-              </div>
-
-              <div>
-                <strong>
-                  Domingo
-                </strong>
-                <span>
-                  8:00 a. m. – 2:00 p. m.
-                </span>
-              </div>
+                    <span>
+                      {formatTime(item.open)}
+                      {" – "}
+                      {formatTime(item.close)}
+                    </span>
+                  </div>
+                )
+              )}
             </div>
 
             <a
-              href={WHATSAPP_LINK}
+              href={whatsappLink}
               target="_blank"
               rel="noopener noreferrer"
               className={styles.scheduleHelp}
@@ -733,7 +878,7 @@ export function ContactoPage() {
             title="Ubicación de ReyCars en Ubaté"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            src="https://www.google.com/maps?q=Calle%2015%20%23%205%20-%2068%20Ubat%C3%A9&output=embed"
+            src={mapEmbed}
           />
 
           <div className={styles.mapCard}>
@@ -750,12 +895,12 @@ export function ContactoPage() {
               </strong>
 
               <p>
-                {ADDRESS}
+                {config.address}
               </p>
             </div>
 
             <a
-              href={MAP_QUERY}
+              href={mapQuery}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -827,7 +972,7 @@ export function ContactoPage() {
             </Link>
 
             <a
-              href={WHATSAPP_LINK}
+              href={whatsappLink}
               target="_blank"
               rel="noopener noreferrer"
               className={styles.secondaryCta}

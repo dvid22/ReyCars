@@ -20,6 +20,11 @@ import type {
   ProcessHighlight,
   ProcessStep,
 } from "@/types/process.types";
+import type {
+  SiteConfig,
+  SiteConfigDocument,
+  SiteScheduleItem,
+} from "@/types/site.types";
 
 const HOME_DOC = doc(
   db,
@@ -31,6 +36,12 @@ const PROCESS_DOC = doc(
   db,
   "siteContent",
   "process"
+);
+
+const SITE_CONFIG_DOC = doc(
+  db,
+  "siteContent",
+  "config"
 );
 
 function normalizeHomeContent(
@@ -222,6 +233,123 @@ function normalizeProcessContent(
   };
 }
 
+
+function normalizeScheduleItem(
+  item: Partial<SiteScheduleItem>,
+  fallbackId:
+    SiteScheduleItem["id"]
+): SiteScheduleItem {
+  const id =
+    item.id === "weekdays" ||
+    item.id === "saturday" ||
+    item.id === "sunday"
+      ? item.id
+      : fallbackId;
+
+  const defaultDays =
+    id === "weekdays"
+      ? [1, 2, 3, 4, 5]
+      : id === "saturday"
+        ? [6]
+        : [0];
+
+  return {
+    id,
+    short: item.short ?? "",
+    label: item.label ?? "",
+    open: item.open ?? "",
+    close: item.close ?? "",
+    days:
+      Array.isArray(item.days) &&
+      item.days.every(
+        (day) =>
+          typeof day === "number"
+      )
+        ? item.days
+        : defaultDays,
+    active:
+      item.active !== false,
+  };
+}
+
+function normalizeSiteConfig(
+  data: Partial<SiteConfigDocument>
+): SiteConfig | null {
+  if (
+    !data.name ||
+    !data.phone ||
+    !data.whatsapp ||
+    !data.address ||
+    !data.contactPage ||
+    !Array.isArray(data.schedule)
+  ) {
+    return null;
+  }
+
+  const scheduleById =
+    new Map(
+      data.schedule.map(
+        (item) => [
+          item.id,
+          item,
+        ]
+      )
+    );
+
+  const scheduleIds:
+    SiteScheduleItem["id"][] = [
+      "weekdays",
+      "saturday",
+      "sunday",
+    ];
+
+  return {
+    name: data.name ?? "",
+    legalName:
+      data.legalName ?? "",
+    slogan:
+      data.slogan ?? "",
+
+    phone:
+      data.phone ?? "",
+    whatsapp:
+      data.whatsapp ?? "",
+    email:
+      data.email ?? "",
+    address:
+      data.address ?? "",
+
+    instagramUrl:
+      data.instagramUrl ?? "",
+    facebookUrl:
+      data.facebookUrl ?? "",
+    tiktokUrl:
+      data.tiktokUrl ?? "",
+
+    contactPage: {
+      eyebrow:
+        data.contactPage.eyebrow ?? "",
+      title:
+        data.contactPage.title ?? "",
+      highlightedText:
+        data.contactPage.highlightedText ?? "",
+      description:
+        data.contactPage.description ?? "",
+      heroImageUrl:
+        data.contactPage.heroImageUrl ?? "",
+    },
+
+    schedule:
+      scheduleIds.map(
+        (id) =>
+          normalizeScheduleItem(
+            scheduleById.get(id) ?? {},
+            id
+          )
+      ),
+  };
+}
+
 export const siteService = {
   async getHomeContent() {
     const snapshot =
@@ -335,6 +463,73 @@ export const siteService = {
       PROCESS_DOC,
       {
         ...content,
+        updatedAt:
+          serverTimestamp(),
+        updatedByUid:
+          user?.uid ?? "",
+        updatedByEmail:
+          user?.email ?? "",
+      },
+      {
+        merge: true,
+      }
+    );
+  },
+
+  async getSiteConfig() {
+    const snapshot =
+      await getDoc(
+        SITE_CONFIG_DOC
+      );
+
+    if (!snapshot.exists()) {
+      return null;
+    }
+
+    return normalizeSiteConfig(
+      snapshot.data() as Partial<SiteConfigDocument>
+    );
+  },
+
+  subscribeSiteConfig(
+    onData: (
+      config: SiteConfig | null
+    ) => void,
+    onError?: (
+      error: Error
+    ) => void
+  ) {
+    return onSnapshot(
+      SITE_CONFIG_DOC,
+      (snapshot) => {
+        if (!snapshot.exists()) {
+          onData(null);
+          return;
+        }
+
+        onData(
+          normalizeSiteConfig(
+            snapshot.data() as Partial<SiteConfigDocument>
+          )
+        );
+      },
+      (error) => {
+        onError?.(error);
+      }
+    );
+  },
+
+  async saveSiteConfig(
+    config: SiteConfig,
+    user?: {
+      uid?: string;
+      email?: string | null;
+    }
+  ) {
+    await setDoc(
+      SITE_CONFIG_DOC,
+      {
+        ...config,
         updatedAt:
           serverTimestamp(),
         updatedByUid:
