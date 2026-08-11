@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  FormEvent,
   useEffect,
   useMemo,
   useState,
@@ -52,7 +51,6 @@ type CourseDraft = {
 
   modules: number | null;
 
-  priceMode: "price" | "consult";
   price: number | null;
 
   renewalSinglePrice: number | null;
@@ -82,11 +80,10 @@ const EMPTY_DRAFT: CourseDraft = {
 
   modules: 2,
 
-  priceMode: "price",
-  price: null,
+  price: 0,
 
-  renewalSinglePrice: 345000,
-  renewalComboPrice: 525000,
+  renewalSinglePrice: 0,
+  renewalComboPrice: 0,
 
   imageUrl: "",
   active: true,
@@ -130,6 +127,25 @@ function money(value?: number | null) {
     currency: "COP",
     maximumFractionDigits: 0,
   }).format(value);
+}
+
+function formatPriceInput(value?: number | null) {
+  if (
+    typeof value !== "number" ||
+    !Number.isFinite(value)
+  ) {
+    return "";
+  }
+
+  return new Intl.NumberFormat("es-CO", {
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function parsePriceInput(value: string) {
+  const digits = value.replace(/\D/g, "");
+
+  return digits ? Number(digits) : null;
 }
 
 function toSlug(value: string) {
@@ -180,9 +196,53 @@ function parseMoneyFromInclude(
 
   if (!item) return null;
 
-  const digits = item.replace(/\D/g, "");
+  // Ejemplo:
+  // "1 categoría: $345.000"
+  // Debemos tomar únicamente "345.000",
+  // no el "1" de "1 categoría".
+  const pricePart = item.includes(":")
+    ? item.split(":").slice(1).join(":")
+    : item;
+
+  const digits = pricePart.replace(/\D/g, "");
 
   return digits ? Number(digits) : null;
+}
+
+function isGeneratedInclude(
+  value: string
+) {
+  const normalized = value
+    .toLowerCase()
+    .trim();
+
+  return (
+    /^\d+\s+horas?\s+te[oó]ricas?/.test(normalized) ||
+    /^\d+\s+horas?\s+pr[aá]cticas?/.test(normalized) ||
+    /^formaci[oó]n en /.test(normalized) ||
+    /^clases por hora/.test(normalized) ||
+    /^paquete de \d+\s+horas?/.test(normalized) ||
+    /^paquete de horas/.test(normalized) ||
+    /^clases personalizadas/.test(normalized) ||
+    /^refuerzo de habilidades/.test(normalized) ||
+    /^\d+\s+m[oó]dulos?/.test(normalized) ||
+    /^formaci[oó]n por m[oó]dulos?/.test(normalized) ||
+    /^formaci[oó]n b[aá]sica aplicada/.test(normalized) ||
+    /^formaci[oó]n te[oó]rica/.test(normalized) ||
+    /^1 categor[ií]a:/.test(normalized) ||
+    /^combo:/.test(normalized) ||
+    /^examen m[eé]dico y derechos de impresi[oó]n/.test(
+      normalized
+    )
+  );
+}
+
+function getCustomIncludes(
+  includes?: string[]
+) {
+  return (includes ?? []).filter(
+    (item) => !isGeneratedInclude(item)
+  );
 }
 
 function courseToDraft(course: Course): CourseDraft {
@@ -220,27 +280,31 @@ function courseToDraft(course: Course): CourseDraft {
         course.theoryLabel?.match(/\d+/)?.[0] ?? ""
       ) || 2,
 
-    priceMode:
-      course.price != null ? "price" : "consult",
-    price: course.price ?? null,
+    price:
+      typeof course.price === "number"
+        ? course.price
+        : 0,
 
     renewalSinglePrice:
-      parseMoneyFromInclude(
-        course.includes ?? [],
-        "1 categoría"
-      ) ?? 345000,
+      typeof course.price === "number" &&
+      course.price > 0
+        ? course.price
+        : parseMoneyFromInclude(
+            course.includes ?? [],
+            "1 categoría"
+          ) ?? 0,
 
     renewalComboPrice:
       parseMoneyFromInclude(
         course.includes ?? [],
         "combo"
-      ) ?? 525000,
+      ) ?? 0,
 
     imageUrl: course.imageUrl,
     active: course.active,
     order: course.order,
 
-    includes: course.includes ?? [],
+    includes: getCustomIncludes(course.includes),
   };
 }
 
@@ -274,15 +338,9 @@ function getIcon(
     : "car";
 }
 
-function buildIncludes(draft: CourseDraft) {
-  const custom = draft.includes
-    .map((item) => item.trim())
-    .filter(Boolean);
-
-  if (custom.length > 0) {
-    return custom;
-  }
-
+function buildGeneratedIncludes(
+  draft: CourseDraft
+) {
   if (draft.kind === "license") {
     return [
       draft.theoryHours != null
@@ -320,16 +378,45 @@ function buildIncludes(draft: CourseDraft) {
   }
 
   return [
-    draft.renewalSinglePrice
+    draft.renewalSinglePrice &&
+    draft.renewalSinglePrice > 0
       ? `1 categoría: ${money(
           draft.renewalSinglePrice
         )}`
-      : "",
-    draft.renewalComboPrice
-      ? `Combo: ${money(draft.renewalComboPrice)}`
-      : "",
+      : "1 categoría: Consultar precio en oficina",
+
+    draft.renewalComboPrice &&
+    draft.renewalComboPrice > 0
+      ? `Combo: ${money(
+          draft.renewalComboPrice
+        )}`
+      : "Combo: Consultar precio en oficina",
+
     "Examen médico y derechos de impresión",
-  ].filter(Boolean);
+  ];
+}
+
+function buildIncludes(draft: CourseDraft) {
+  const generated =
+    buildGeneratedIncludes(draft);
+
+  const custom = draft.includes
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  return [
+    ...generated,
+    ...custom.filter(
+      (item) =>
+        !generated.some(
+          (generatedItem) =>
+            generatedItem
+              .toLowerCase()
+              .trim() ===
+            item.toLowerCase().trim()
+        )
+    ),
+  ];
 }
 
 function buildPayload(
@@ -370,10 +457,13 @@ function buildPayload(
     practiceHours = draft.practiceHours;
     modality = "Presencial";
 
-    if (draft.priceMode === "price") {
-      price = draft.price;
-    } else {
-      priceText = "Consultar";
+    price =
+      typeof draft.price === "number"
+        ? draft.price
+        : 0;
+
+    if (price <= 0) {
+      priceText = "Consultar precio en oficina";
     }
   }
 
@@ -399,10 +489,13 @@ function buildPayload(
     modality = "Personalizada";
     priceLabel = "Valor";
 
-    if (draft.priceMode === "price") {
-      price = draft.price;
-    } else {
-      priceText = "Consultar";
+    price =
+      typeof draft.price === "number"
+        ? draft.price
+        : 0;
+
+    if (price <= 0) {
+      priceText = "Consultar precio en oficina";
     }
   }
 
@@ -419,10 +512,13 @@ function buildPayload(
     modality = "Certificado";
     priceLabel = "Valor";
 
-    if (draft.priceMode === "price") {
-      price = draft.price;
-    } else {
-      priceText = "Consultar";
+    price =
+      typeof draft.price === "number"
+        ? draft.price
+        : 0;
+
+    if (price <= 0) {
+      priceText = "Consultar precio en oficina";
     }
   }
 
@@ -434,13 +530,17 @@ function buildPayload(
     modality = "Trámite";
     priceLabel = "Valor";
 
-    if (draft.renewalSinglePrice) {
-      priceText = `Desde ${money(
-        draft.renewalSinglePrice
-      )}`;
-    } else {
-      priceText = "Consultar";
-    }
+    // Un solo origen de verdad:
+    // el precio numérico es el valor de una categoría.
+    price =
+      typeof draft.renewalSinglePrice === "number"
+        ? draft.renewalSinglePrice
+        : 0;
+
+    priceText =
+      price > 0
+        ? `Desde ${money(price)}`
+        : "Consultar precio en oficina";
   }
 
   const finalName =
@@ -493,8 +593,11 @@ function getDraftPreview(draft: CourseDraft) {
     title: payload.name,
     subtitle: payload.subtitle,
     price:
-      payload.priceText ||
-      money(payload.price),
+      typeof payload.price === "number" &&
+      payload.price > 0
+        ? money(payload.price)
+        : payload.priceText ||
+          "Consultar precio en oficina",
   };
 }
 
@@ -650,16 +753,6 @@ export function AdminCursosPage() {
         return false;
       }
 
-      if (
-        draft.priceMode === "price" &&
-        draft.kind !== "renewal" &&
-        !draft.price
-      ) {
-        setError(
-          "Escribe el valor del curso o selecciona Consultar."
-        );
-        return false;
-      }
     }
 
     setError("");
@@ -714,17 +807,10 @@ export function AdminCursosPage() {
     }
   }
 
-  async function handleSave(
-    event: FormEvent<HTMLFormElement>
-  ) {
-    event.preventDefault();
-
-    if (isSaving) return;
-
-    if (step !== 3) {
-      nextStep();
-      return;
-    }
+  async function handleSave() {
+    // Esta función SOLO se llama desde el botón
+    // "Guardar cambios / Crear curso" del paso 3.
+    if (isSaving || step !== 3) return;
 
     try {
       setIsSaving(true);
@@ -1053,8 +1139,10 @@ export function AdminCursosPage() {
                   <div>
                     <span>Inversión</span>
                     <strong>
-                      {course.priceText ||
-                        money(course.price)}
+                      {typeof course.price === "number" &&
+                      course.price > 0
+                        ? money(course.price)
+                        : "Consultar en oficina"}
                     </strong>
                   </div>
 
@@ -1184,9 +1272,8 @@ export function AdminCursosPage() {
               />
             </div>
 
-            <form
+            <div
               className={styles.wizardForm}
-              onSubmit={handleSave}
             >
               <div className={styles.stepContent}>
                 {step === 1 ? (
@@ -1270,8 +1357,9 @@ export function AdminCursosPage() {
                   </button>
                 ) : (
                   <button
-                    type="submit"
+                    type="button"
                     className={styles.primaryButton}
+                    onClick={() => void handleSave()}
                     disabled={isSaving}
                   >
                     {isSaving
@@ -1289,7 +1377,7 @@ export function AdminCursosPage() {
                   </button>
                 )}
               </footer>
-            </form>
+            </div>
           </section>
         </div>
       ) : null}
@@ -1608,7 +1696,65 @@ function VehicleChoice({
   );
 }
 
-function PriceChoice({
+function MoneyInput({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: number | null;
+  onChange: (value: number | null) => void;
+  placeholder?: string;
+}) {
+  const [text, setText] = useState(
+    formatPriceInput(value)
+  );
+  const [isEditing, setIsEditing] =
+    useState(false);
+
+  useEffect(() => {
+    if (!isEditing) {
+      setText(formatPriceInput(value));
+    }
+  }, [value, isEditing]);
+
+  return (
+    <input
+      type="text"
+      inputMode="numeric"
+      autoComplete="off"
+      value={text}
+      placeholder={placeholder}
+      onFocus={() => {
+        setIsEditing(true);
+      }}
+      onChange={(event) => {
+        // Mientras el usuario escribe NO reformateamos
+        // el texto. Así el cursor permanece exactamente
+        // donde fue colocado.
+        const nextText = event.target.value;
+
+        if (!/^[\d.]*$/.test(nextText)) {
+          return;
+        }
+
+        setText(nextText);
+        onChange(parsePriceInput(nextText));
+      }}
+      onBlur={() => {
+        const numericValue =
+          parsePriceInput(text);
+
+        onChange(numericValue);
+        setText(
+          formatPriceInput(numericValue)
+        );
+        setIsEditing(false);
+      }}
+    />
+  );
+}
+
+function PriceField({
   draft,
   updateDraft,
 }: {
@@ -1619,66 +1765,25 @@ function PriceChoice({
   ) => void;
 }) {
   return (
-    <>
-      <div className={styles.choiceGroup}>
-        <span className={styles.fieldLabel}>
-          Precio
-        </span>
+    <label>
+      <span>Precio</span>
 
-        <div className={styles.segmented}>
-          <button
-            type="button"
-            className={
-              draft.priceMode === "price"
-                ? styles.segmentedActive
-                : ""
-            }
-            onClick={() =>
-              updateDraft("priceMode", "price")
-            }
-          >
-            Mostrar precio
-          </button>
+      <div className={styles.moneyInput}>
+        <span>$</span>
 
-          <button
-            type="button"
-            className={
-              draft.priceMode === "consult"
-                ? styles.segmentedActive
-                : ""
-            }
-            onClick={() =>
-              updateDraft("priceMode", "consult")
-            }
-          >
-            Consultar
-          </button>
-        </div>
+        <MoneyInput
+          value={draft.price}
+          onChange={(value) =>
+            updateDraft("price", value ?? 0)
+          }
+          placeholder="Ej. 1.300.000"
+        />
       </div>
 
-      {draft.priceMode === "price" ? (
-        <label>
-          <span>Valor</span>
-          <div className={styles.moneyInput}>
-            <span>$</span>
-            <input
-              type="number"
-              min="0"
-              value={draft.price ?? ""}
-              onChange={(event) =>
-                updateDraft(
-                  "price",
-                  event.target.value === ""
-                    ? null
-                    : Number(event.target.value)
-                )
-              }
-              placeholder="1300000"
-            />
-          </div>
-        </label>
-      ) : null}
-    </>
+      <small className={styles.fieldHelp}>
+        Escribe 0 si el precio debe consultarse en la oficina.
+      </small>
+    </label>
   );
 }
 
@@ -1704,40 +1809,38 @@ function LicenseFields({
       <label>
         <span>Horas teóricas</span>
         <input
-          type="number"
-          min="0"
+          type="text"
+          inputMode="numeric"
+          autoComplete="off"
           value={draft.theoryHours ?? ""}
           onChange={(event) =>
             updateDraft(
               "theoryHours",
-              event.target.value === ""
-                ? null
-                : Number(event.target.value)
+              parsePriceInput(event.target.value)
             )
           }
-          placeholder="32"
+          placeholder="Ej. 32"
         />
       </label>
 
       <label>
         <span>Horas prácticas</span>
         <input
-          type="number"
-          min="0"
+          type="text"
+          inputMode="numeric"
+          autoComplete="off"
           value={draft.practiceHours ?? ""}
           onChange={(event) =>
             updateDraft(
               "practiceHours",
-              event.target.value === ""
-                ? null
-                : Number(event.target.value)
+              parsePriceInput(event.target.value)
             )
           }
-          placeholder="20"
+          placeholder="Ej. 20"
         />
       </label>
 
-      <PriceChoice
+      <PriceField
         draft={draft}
         updateDraft={updateDraft}
       />
@@ -1811,23 +1914,22 @@ function ReinforcementFields({
         <label>
           <span>Horas del paquete</span>
           <input
-            type="number"
-            min="1"
+            type="text"
+            inputMode="numeric"
+            autoComplete="off"
             value={draft.packageHours ?? ""}
             onChange={(event) =>
               updateDraft(
                 "packageHours",
-                event.target.value === ""
-                  ? null
-                  : Number(event.target.value)
+                parsePriceInput(event.target.value)
               )
             }
-            placeholder="14"
+            placeholder="Ej. 14"
           />
         </label>
       ) : null}
 
-      <PriceChoice
+      <PriceField
         draft={draft}
         updateDraft={updateDraft}
       />
@@ -1850,22 +1952,21 @@ function DefensiveFields({
       <label>
         <span>Número de módulos</span>
         <input
-          type="number"
-          min="1"
+          type="text"
+          inputMode="numeric"
+          autoComplete="off"
           value={draft.modules ?? ""}
           onChange={(event) =>
             updateDraft(
               "modules",
-              event.target.value === ""
-                ? null
-                : Number(event.target.value)
+              parsePriceInput(event.target.value)
             )
           }
-          placeholder="2"
+          placeholder="Ej. 2"
         />
       </label>
 
-      <PriceChoice
+      <PriceField
         draft={draft}
         updateDraft={updateDraft}
       />
@@ -1889,20 +1990,15 @@ function RenewalFields({
         <span>Valor una categoría</span>
         <div className={styles.moneyInput}>
           <span>$</span>
-          <input
-            type="number"
-            min="0"
-            value={
-              draft.renewalSinglePrice ?? ""
-            }
-            onChange={(event) =>
+          <MoneyInput
+            value={draft.renewalSinglePrice}
+            onChange={(value) =>
               updateDraft(
                 "renewalSinglePrice",
-                event.target.value === ""
-                  ? null
-                  : Number(event.target.value)
+                value ?? 0
               )
             }
+            placeholder="Ej. 345.000"
           />
         </div>
       </label>
@@ -1911,20 +2007,15 @@ function RenewalFields({
         <span>Valor combo</span>
         <div className={styles.moneyInput}>
           <span>$</span>
-          <input
-            type="number"
-            min="0"
-            value={
-              draft.renewalComboPrice ?? ""
-            }
-            onChange={(event) =>
+          <MoneyInput
+            value={draft.renewalComboPrice}
+            onChange={(value) =>
               updateDraft(
                 "renewalComboPrice",
-                event.target.value === ""
-                  ? null
-                  : Number(event.target.value)
+                value ?? 0
               )
             }
+            placeholder="Ej. 525.000"
           />
         </div>
       </label>
@@ -1970,6 +2061,9 @@ function StepThree({
   ) => void;
   removeInclude: (index: number) => void;
 }) {
+  const generatedIncludes =
+    buildGeneratedIncludes(draft);
+
   return (
     <div className={styles.stepPanel}>
       <div className={styles.stepHeading}>
@@ -2038,18 +2132,17 @@ function StepThree({
               </button>
             </div>
 
-            {draft.includes.length === 0 ? (
-              <div className={styles.includesEmpty}>
-                Se generará automáticamente según
-                la información del curso.
-              </div>
-            ) : (
-              <div className={styles.includesList}>
-                {draft.includes.map(
+            <div className={styles.autoIncludes}>
+              <span className={styles.autoIncludesLabel}>
+                Se publicará automáticamente
+              </span>
+
+              <div className={styles.autoIncludesList}>
+                {generatedIncludes.map(
                   (item, index) => (
                     <div
-                      className={styles.includeRow}
-                      key={index}
+                      className={styles.autoIncludeItem}
+                      key={`${item}-${index}`}
                     >
                       <span>
                         <Check
@@ -2058,34 +2151,62 @@ function StepThree({
                         />
                       </span>
 
-                      <input
-                        value={item}
-                        onChange={(event) =>
-                          updateInclude(
-                            index,
-                            event.target.value
-                          )
-                        }
-                        placeholder="Ej. 32 horas teóricas"
-                      />
-
-                      <button
-                        type="button"
-                        onClick={() =>
-                          removeInclude(index)
-                        }
-                        aria-label="Eliminar elemento"
-                      >
-                        <Trash2
-                          size={14}
-                          strokeWidth={1.8}
-                        />
-                      </button>
+                      <p>{item}</p>
                     </div>
                   )
                 )}
               </div>
-            )}
+            </div>
+
+            {draft.includes.length > 0 ? (
+              <div className={styles.customIncludes}>
+                <span className={styles.customIncludesLabel}>
+                  Detalles adicionales
+                </span>
+
+                <div className={styles.includesList}>
+                  {draft.includes.map(
+                    (item, index) => (
+                      <div
+                        className={styles.includeRow}
+                        key={index}
+                      >
+                        <span>
+                          <Plus
+                            size={12}
+                            strokeWidth={2}
+                          />
+                        </span>
+
+                        <input
+                          value={item}
+                          onChange={(event) =>
+                            updateInclude(
+                              index,
+                              event.target.value
+                            )
+                          }
+                          placeholder="Ej. Material de apoyo"
+                        />
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            removeInclude(index)
+                          }
+                          aria-label="Eliminar elemento"
+                        >
+                          <Trash2
+                            size={14}
+                            strokeWidth={1.8}
+                          />
+                        </button>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+            ) : null}
           </div>
 
           <label className={styles.publishSwitch}>

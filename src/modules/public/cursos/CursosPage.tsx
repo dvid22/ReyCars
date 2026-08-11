@@ -48,34 +48,41 @@ function formatMoney(value?: number | null) {
 }
 
 function displayTheory(course: Course) {
-  if (course.theoryLabel) {
-    return course.theoryLabel;
-  }
-
+  // El valor numérico guardado tiene prioridad.
   if (course.theoryHours != null) {
     return `${course.theoryHours} h`;
   }
 
-  return "";
+  // Algunos tipos, como manejo defensivo,
+  // usan una etiqueta generada porque no son horas.
+  return course.theoryLabel || "";
 }
 
 function displayPractice(course: Course) {
-  if (course.practiceLabel) {
-    return course.practiceLabel;
-  }
-
+  // El valor numérico guardado tiene prioridad.
   if (course.practiceHours != null) {
     return `${course.practiceHours} h`;
   }
 
-  return "";
+  // Refuerzos pueden usar "Por hora" o "14 h".
+  return course.practiceLabel || "";
 }
 
 function displayPrice(course: Course) {
-  return (
-    course.priceText ||
-    formatMoney(course.price)
-  );
+  if (
+    typeof course.price !== "number" ||
+    course.price <= 0
+  ) {
+    return "Consultar precio en oficina";
+  }
+
+  // Refrendación solo cambia la forma visual
+  // de presentar EL MISMO precio numérico.
+  if (course.slug === "refrendacion") {
+    return `Desde ${formatMoney(course.price)}`;
+  }
+
+  return formatMoney(course.price);
 }
 
 function MotorcycleIcon({

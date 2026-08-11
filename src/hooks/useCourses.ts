@@ -2,20 +2,12 @@
 
 import { useEffect, useState } from "react";
 
-import { DEFAULT_COURSES } from "@/constants/defaultCourses";
 import { coursesService } from "@/firebase/firestore/courses.service";
 import type { Course } from "@/types/course.types";
 
-function defaultsAsCourses(): Course[] {
-  return DEFAULT_COURSES.map((course, index) => ({
-    ...course,
-    id: `default-${index + 1}`,
-  }));
-}
-
 export function useCourses() {
   const [courses, setCourses] =
-    useState<Course[]>(defaultsAsCourses);
+    useState<Course[]>([]);
 
   const [isLoading, setIsLoading] =
     useState(true);
@@ -24,24 +16,22 @@ export function useCourses() {
     useState<string | null>(null);
 
   useEffect(() => {
+    setIsLoading(true);
+
     const unsubscribe =
       coursesService.subscribePublicCourses(
         (firebaseCourses) => {
-          if (firebaseCourses.length > 0) {
-            setCourses(firebaseCourses);
-          } else {
-            setCourses(defaultsAsCourses());
-          }
-
+          // Firestore es la única fuente de verdad.
+          // Nunca se reemplaza con DEFAULT_COURSES.
+          setCourses(firebaseCourses);
           setError(null);
           setIsLoading(false);
         },
         () => {
+          setCourses([]);
           setError(
-            "No fue posible actualizar los cursos desde Firebase."
+            "No fue posible cargar los cursos desde Firebase."
           );
-
-          setCourses(defaultsAsCourses());
           setIsLoading(false);
         }
       );

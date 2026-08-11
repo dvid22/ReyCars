@@ -990,6 +990,39 @@
   line-height: 1.5;
 }
 
+
+.simpleGrid input::placeholder,
+.simpleGrid textarea::placeholder,
+.includeRow input::placeholder {
+  color: rgba(105, 127, 136, 0.42);
+  font-weight: 400;
+  opacity: 1;
+}
+
+.simpleGrid input:placeholder-shown,
+.simpleGrid textarea:placeholder-shown,
+.includeRow input:placeholder-shown {
+  color: #31464e;
+  background:
+    linear-gradient(
+      180deg,
+      #fbfcfd 0%,
+      #f9fbfc 100%
+    );
+}
+
+
+.simpleGrid input[type="number"]::-webkit-outer-spin-button,
+.simpleGrid input[type="number"]::-webkit-inner-spin-button {
+  margin: 0;
+  appearance: none;
+}
+
+.simpleGrid input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
 .simpleGrid input:focus,
 .simpleGrid textarea:focus,
 .includeRow input:focus {
@@ -1000,6 +1033,19 @@
   box-shadow:
     0 0 0 0.2rem
       rgba(89, 197, 211, 0.08);
+}
+
+
+.fieldHelp {
+  display: block;
+
+  margin-top: 0.08rem;
+
+  color: rgba(105, 127, 136, 0.58);
+
+  font-size: 0.61rem;
+  font-weight: 400;
+  line-height: 1.4;
 }
 
 .segmented {
@@ -1907,4 +1953,76 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+
+.autoIncludes {
+  display: grid;
+  gap: 0.5rem;
+
+  padding: 0.7rem;
+
+  border: 1px solid rgba(32, 154, 170, 0.1);
+  border-radius: 0.7rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(89, 197, 211, 0.055),
+      rgba(89, 197, 211, 0.018)
+    );
+}
+
+.autoIncludesLabel,
+.customIncludesLabel {
+  color: #839399;
+
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.autoIncludesList {
+  display: grid;
+  gap: 0.32rem;
+}
+
+.autoIncludeItem {
+  min-width: 0;
+
+  display: grid;
+  grid-template-columns: 1.35rem minmax(0, 1fr);
+
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.autoIncludeItem > span {
+  width: 1.2rem;
+  aspect-ratio: 1;
+
+  display: grid;
+  place-items: center;
+
+  color: var(--cyan-dark);
+
+  border-radius: 50%;
+
+  background: rgba(89, 197, 211, 0.11);
+}
+
+.autoIncludeItem p {
+  margin: 0;
+
+  color: #53676f;
+
+  font-size: 0.68rem;
+  line-height: 1.4;
+}
+
+.customIncludes {
+  display: grid;
+  gap: 0.45rem;
+
+  margin-top: 0.7rem;
 }
