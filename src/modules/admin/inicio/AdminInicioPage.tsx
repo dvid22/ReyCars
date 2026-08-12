@@ -6,9 +6,16 @@ import {
   useState,
 } from "react";
 import {
+  BookOpen,
+  CalendarClock,
   Check,
+  CircleHelp,
+  Eye,
   ImagePlus,
+  LayoutPanelTop,
   Save,
+  Sparkles,
+  Workflow,
 } from "lucide-react";
 import {
   getAuth,
@@ -204,6 +211,9 @@ export function AdminInicioPage() {
   const [error, setError] =
     useState("");
 
+  const [isDirty, setIsDirty] =
+    useState(false);
+
   useEffect(() => {
     void (async () => {
       try {
@@ -264,6 +274,9 @@ export function AdminInicioPage() {
         [key]: value,
       },
     }));
+
+    setIsDirty(true);
+    setSuccess("");
   }
 
   function updateBenefit(
@@ -301,6 +314,9 @@ export function AdminInicioPage() {
         [key]: value,
       },
     }));
+
+    setIsDirty(true);
+    setSuccess("");
   }
 
   async function handleImage(
@@ -319,6 +335,8 @@ export function AdminInicioPage() {
         "heroImageUrl",
         url
       );
+
+      setIsDirty(true);
     } catch (error) {
       console.error(error);
       setError(
@@ -350,6 +368,7 @@ export function AdminInicioPage() {
       );
 
       setHasDocument(true);
+      setIsDirty(false);
       setSuccess(
         "Contenido de Inicio guardado correctamente."
       );
@@ -379,8 +398,12 @@ export function AdminInicioPage() {
   return (
     <section className={styles.page}>
       <header className={styles.header}>
-        <div>
+        <div className={styles.headerCopy}>
           <span className={styles.eyebrow}>
+            <Sparkles
+              size={14}
+              strokeWidth={1.8}
+            />
             CONTENIDO · INICIO
           </span>
 
@@ -389,36 +412,63 @@ export function AdminInicioPage() {
           </h1>
 
           <p>
-            Edita únicamente el contenido
-            propio de la Home. Servicios,
-            Proceso y FAQ mantienen sus
-            datos en sus módulos.
+            Organiza la portada y los mensajes
+            principales del sitio sin tocar la
+            configuración técnica.
           </p>
         </div>
 
-        <button
-          type="button"
-          className={styles.saveButton}
-          onClick={() =>
-            void handleSave()
-          }
-          disabled={
-            isSaving ||
-            isUploading
-          }
-        >
-          {isSaving ? (
-            "Guardando..."
-          ) : (
-            <>
-              <Save
-                size={15}
-                strokeWidth={1.8}
-              />
-              Guardar cambios
-            </>
-          )}
-        </button>
+        <div className={styles.headerActions}>
+          <div
+            className={`${styles.saveStatus} ${
+              isDirty
+                ? styles.saveStatusDirty
+                : styles.saveStatusSaved
+            }`}
+          >
+            <span />
+            <div>
+              <strong>
+                {isDirty
+                  ? "Cambios sin guardar"
+                  : "Todo guardado"}
+              </strong>
+              <small>
+                {isDirty
+                  ? "Guarda para publicarlos."
+                  : "El contenido está actualizado."}
+              </small>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            className={styles.saveButton}
+            onClick={() =>
+              void handleSave()
+            }
+            disabled={
+              isSaving ||
+              isUploading ||
+              !isDirty
+            }
+          >
+            {isSaving ? (
+              <>
+                <span className={styles.buttonSpinner} />
+                Guardando...
+              </>
+            ) : (
+              <>
+                <Save
+                  size={15}
+                  strokeWidth={1.8}
+                />
+                Guardar cambios
+              </>
+            )}
+          </button>
+        </div>
       </header>
 
       {!hasDocument ? (
@@ -466,6 +516,7 @@ export function AdminInicioPage() {
           aria-label="Secciones de Inicio"
         >
           <NavButton
+            icon={LayoutPanelTop}
             label="Hero"
             description="Portada principal"
             active={
@@ -477,6 +528,7 @@ export function AdminInicioPage() {
           />
 
           <NavButton
+            icon={BookOpen}
             label="Servicios"
             description="Encabezado"
             active={
@@ -488,6 +540,7 @@ export function AdminInicioPage() {
           />
 
           <NavButton
+            icon={Workflow}
             label="Proceso"
             description="Encabezado"
             active={
@@ -499,6 +552,7 @@ export function AdminInicioPage() {
           />
 
           <NavButton
+            icon={CircleHelp}
             label="FAQ"
             description="Presentación"
             active={
@@ -510,6 +564,7 @@ export function AdminInicioPage() {
           />
 
           <NavButton
+            icon={CalendarClock}
             label="Horario"
             description="Presentación"
             active={
@@ -525,13 +580,32 @@ export function AdminInicioPage() {
           <div
             className={styles.panelHeader}
           >
-            <span>
-              {sectionLabel}
-            </span>
+            <div className={styles.panelHeaderMain}>
+              <span className={styles.panelHeaderIcon}>
+                <Sparkles
+                  size={17}
+                  strokeWidth={1.75}
+                />
+              </span>
 
-            <strong>
-              Contenido visible en la Home
-            </strong>
+              <div>
+                <span>
+                  {sectionLabel}
+                </span>
+
+                <strong>
+                  Contenido visible en la Home
+                </strong>
+              </div>
+            </div>
+
+            <div className={styles.panelHeaderHint}>
+              <Eye
+                size={14}
+                strokeWidth={1.7}
+              />
+              Vista editable
+            </div>
           </div>
 
           {activeSection ===
@@ -697,11 +771,16 @@ export function AdminInicioPage() {
 }
 
 function NavButton({
+  icon: Icon,
   label,
   description,
   active,
   onClick,
 }: {
+  icon: React.ComponentType<{
+    size?: number;
+    strokeWidth?: number;
+  }>;
   label: string;
   description: string;
   active: boolean;
@@ -717,8 +796,22 @@ function NavButton({
       }`}
       onClick={onClick}
     >
-      <span>{label}</span>
-      <small>{description}</small>
+      <span className={styles.navIcon}>
+        <Icon
+          size={18}
+          strokeWidth={1.7}
+        />
+      </span>
+
+      <span className={styles.navCopy}>
+        <strong>{label}</strong>
+        <small>{description}</small>
+      </span>
+
+      <span
+        className={styles.navState}
+        aria-hidden="true"
+      />
     </button>
   );
 }
@@ -749,207 +842,304 @@ function HeroEditor({
 }) {
   return (
     <div className={styles.form}>
-      <Field
-        label="Texto superior"
-        value={
-          content.hero.eyebrow
-        }
-        onChange={(value) =>
-          updateHero(
-            "eyebrow",
-            value
-          )
-        }
-      />
+      <div className={styles.formIntro}>
+        <span>PORTADA PRINCIPAL</span>
 
-      <Field
-        label="Título principal"
-        value={
-          content.hero.title
-        }
-        onChange={(value) =>
-          updateHero(
-            "title",
-            value
-          )
-        }
-      />
+        <h3>
+          Configura la primera impresión de ReyCars.
+        </h3>
 
-      <Field
-        label="Texto resaltado"
-        value={
-          content.hero
-            .highlightedText
-        }
-        onChange={(value) =>
-          updateHero(
-            "highlightedText",
-            value
-          )
-        }
-        help="Debe ser una parte exacta del título."
-      />
-
-      <Field
-        label="Descripción"
-        value={
-          content.hero.description
-        }
-        onChange={(value) =>
-          updateHero(
-            "description",
-            value
-          )
-        }
-        textarea
-      />
-
-      <div
-        className={styles.twoCols}
-      >
-        <Field
-          label="Botón principal"
-          value={
-            content.hero
-              .primaryCtaLabel
-          }
-          onChange={(value) =>
-            updateHero(
-              "primaryCtaLabel",
-              value
-            )
-          }
-        />
-
-        <Field
-          label="Botón secundario"
-          value={
-            content.hero
-              .secondaryCtaLabel
-          }
-          onChange={(value) =>
-            updateHero(
-              "secondaryCtaLabel",
-              value
-            )
-          }
-        />
+        <p>
+          Divide el trabajo en bloques claros:
+          textos, botones, imagen y beneficios.
+        </p>
       </div>
 
-      <div
-        className={styles.imageField}
-      >
-        <div>
-          <span>
-            Imagen principal
-          </span>
+      <div className={styles.heroWorkspace}>
+        <div className={styles.formColumn}>
+          <section className={styles.formCard}>
+            <div className={styles.formCardHeading}>
+              <span>01</span>
+              <div>
+                <strong>
+                  Mensaje principal
+                </strong>
+                <p>
+                  El texto que verá primero el visitante.
+                </p>
+              </div>
+            </div>
 
-          <p>
-            Esta fotografía ocupa el lado
-            derecho del Hero.
-          </p>
-        </div>
-
-        <label
-          className={styles.upload}
-        >
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            onChange={(event) =>
-              void handleImage(
-                event.target.files?.[0]
-              )
-            }
-          />
-
-          <ImagePlus
-            size={17}
-            strokeWidth={1.7}
-          />
-
-          {isUploading
-            ? "Subiendo..."
-            : "Cambiar imagen"}
-        </label>
-
-        {content.hero
-          .heroImageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={
-              content.hero
-                .heroImageUrl
-            }
-            alt=""
-          />
-        ) : null}
-      </div>
-
-      <div
-        className={styles.benefits}
-      >
-        <div
-          className={
-            styles.blockHeading
-          }
-        >
-          <strong>
-            Beneficios del Hero
-          </strong>
-
-          <p>
-            Son los tres mensajes que
-            aparecen debajo de la
-            descripción.
-          </p>
-        </div>
-
-        {content.hero.benefits.map(
-          (benefit, index) => (
-            <div
-              key={index}
-              className={
-                styles.benefitEditor
+            <Field
+              label="Texto superior"
+              value={
+                content.hero.eyebrow
               }
-            >
-              <span>
-                {String(
-                  index + 1
-                ).padStart(2, "0")}
-              </span>
+              onChange={(value) =>
+                updateHero(
+                  "eyebrow",
+                  value
+                )
+              }
+            />
 
+            <Field
+              label="Título principal"
+              value={
+                content.hero.title
+              }
+              onChange={(value) =>
+                updateHero(
+                  "title",
+                  value
+                )
+              }
+            />
+
+            <Field
+              label="Texto resaltado"
+              value={
+                content.hero
+                  .highlightedText
+              }
+              onChange={(value) =>
+                updateHero(
+                  "highlightedText",
+                  value
+                )
+              }
+              help="Debe ser una parte exacta del título. Ese fragmento se destaca visualmente."
+            />
+
+            <Field
+              label="Descripción"
+              value={
+                content.hero.description
+              }
+              onChange={(value) =>
+                updateHero(
+                  "description",
+                  value
+                )
+              }
+              textarea
+            />
+          </section>
+
+          <section className={styles.formCard}>
+            <div className={styles.formCardHeading}>
+              <span>02</span>
+              <div>
+                <strong>
+                  Botones de acción
+                </strong>
+                <p>
+                  Define cómo invitas al visitante a continuar.
+                </p>
+              </div>
+            </div>
+
+            <div className={styles.twoCols}>
               <Field
-                label="Título"
+                label="Botón principal"
                 value={
-                  benefit.title
+                  content.hero
+                    .primaryCtaLabel
                 }
                 onChange={(value) =>
-                  updateBenefit(
-                    index,
-                    "title",
+                  updateHero(
+                    "primaryCtaLabel",
                     value
                   )
                 }
               />
 
               <Field
-                label="Descripción"
+                label="Botón secundario"
                 value={
-                  benefit.description
+                  content.hero
+                    .secondaryCtaLabel
                 }
                 onChange={(value) =>
-                  updateBenefit(
-                    index,
-                    "description",
+                  updateHero(
+                    "secondaryCtaLabel",
                     value
                   )
                 }
               />
             </div>
-          )
-        )}
+          </section>
+
+          <section className={styles.formCard}>
+            <div className={styles.formCardHeading}>
+              <span>03</span>
+              <div>
+                <strong>
+                  Imagen principal
+                </strong>
+                <p>
+                  Fotografía que acompaña la portada.
+                </p>
+              </div>
+            </div>
+
+            <div className={styles.imageField}>
+              <div className={styles.imageCopy}>
+                <span>
+                  Imagen actual
+                </span>
+
+                <p>
+                  JPG, PNG o WEBP · Máximo 8 MB.
+                </p>
+              </div>
+
+              <label
+                className={styles.upload}
+              >
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={(event) =>
+                    void handleImage(
+                      event.target.files?.[0]
+                    )
+                  }
+                />
+
+                <ImagePlus
+                  size={17}
+                  strokeWidth={1.7}
+                />
+
+                {isUploading
+                  ? "Subiendo..."
+                  : "Cambiar imagen"}
+              </label>
+
+              {content.hero
+                .heroImageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={
+                    content.hero
+                      .heroImageUrl
+                  }
+                  alt=""
+                />
+              ) : null}
+            </div>
+          </section>
+        </div>
+
+        <aside className={styles.livePreview}>
+          <span className={styles.previewEyebrow}>
+            VISTA PREVIA
+          </span>
+
+          <div className={styles.previewCanvas}>
+            <span>
+              {content.hero.eyebrow}
+            </span>
+
+            <h3>
+              {content.hero.title}
+            </h3>
+
+            <p>
+              {content.hero.description}
+            </p>
+
+            <div className={styles.previewButtons}>
+              <strong>
+                {
+                  content.hero
+                    .primaryCtaLabel
+                }
+              </strong>
+
+              <span>
+                {
+                  content.hero
+                    .secondaryCtaLabel
+                }
+              </span>
+            </div>
+          </div>
+
+          <p className={styles.previewNote}>
+            Esta vista te ayuda a entender el resultado
+            mientras editas. No reemplaza la vista pública.
+          </p>
+        </aside>
       </div>
+
+      <section className={styles.benefitsSection}>
+        <div className={styles.blockHeading}>
+          <div>
+            <span>04</span>
+
+            <div>
+              <strong>
+                Beneficios del Hero
+              </strong>
+
+              <p>
+                Tres mensajes breves que refuerzan
+                la propuesta de ReyCars.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.benefitGrid}>
+          {content.hero.benefits.map(
+            (benefit, index) => (
+              <article
+                key={index}
+                className={
+                  styles.benefitEditor
+                }
+              >
+                <span className={styles.benefitNumber}>
+                  {String(
+                    index + 1
+                  ).padStart(2, "0")}
+                </span>
+
+                <Field
+                  label="Título"
+                  value={
+                    benefit.title
+                  }
+                  onChange={(value) =>
+                    updateBenefit(
+                      index,
+                      "title",
+                      value
+                    )
+                  }
+                />
+
+                <Field
+                  label="Descripción"
+                  value={
+                    benefit.description
+                  }
+                  onChange={(value) =>
+                    updateBenefit(
+                      index,
+                      "description",
+                      value
+                    )
+                  }
+                  textarea
+                />
+              </article>
+            )
+          )}
+        </div>
+      </section>
     </div>
   );
 }
@@ -974,65 +1164,110 @@ function GenericSectionEditor({
 }) {
   return (
     <div className={styles.form}>
-      <Field
-        label="Etiqueta superior"
-        value={eyebrow}
-        onChange={(value) =>
-          onChange(
-            "eyebrow",
-            value
-          )
-        }
-      />
+      <div className={styles.formIntro}>
+        <span>ENCABEZADO DE SECCIÓN</span>
 
-      <Field
-        label="Título"
-        value={title}
-        onChange={(value) =>
-          onChange(
-            "title",
-            value
-          )
-        }
-      />
+        <h3>
+          Edita solo el mensaje que presenta esta sección.
+        </h3>
 
-      <Field
-        label="Texto resaltado"
-        value={
-          highlightedText
-        }
-        onChange={(value) =>
-          onChange(
-            "highlightedText",
-            value
-          )
-        }
-        help="Debe formar parte del título."
-      />
+        <p>
+          El contenido interno se administra desde su
+          módulo correspondiente.
+        </p>
+      </div>
 
-      <Field
-        label="Descripción"
-        value={description}
-        onChange={(value) =>
-          onChange(
-            "description",
-            value
-          )
-        }
-        textarea
-      />
+      <section className={styles.formCard}>
+        <div className={styles.formCardHeading}>
+          <span>01</span>
 
-      {ctaLabel !== undefined ? (
+          <div>
+            <strong>
+              Presentación
+            </strong>
+
+            <p>
+              Define la etiqueta, título y explicación.
+            </p>
+          </div>
+        </div>
+
         <Field
-          label="Texto del botón"
-          value={ctaLabel}
+          label="Etiqueta superior"
+          value={eyebrow}
           onChange={(value) =>
             onChange(
-              "ctaLabel",
+              "eyebrow",
               value
             )
           }
         />
+
+        <Field
+          label="Título"
+          value={title}
+          onChange={(value) =>
+            onChange(
+              "title",
+              value
+            )
+          }
+        />
+
+        <Field
+          label="Texto resaltado"
+          value={
+            highlightedText
+          }
+          onChange={(value) =>
+            onChange(
+              "highlightedText",
+              value
+            )
+          }
+          help="Escribe exactamente la parte del título que quieres destacar."
+        />
+
+        <Field
+          label="Descripción"
+          value={description}
+          onChange={(value) =>
+            onChange(
+              "description",
+              value
+            )
+          }
+          textarea
+        />
+      </section>
+
+      {ctaLabel !== undefined ? (
+        <section className={styles.formCard}>
+          <div className={styles.formCardHeading}>
+            <span>02</span>
+
+            <div>
+              <strong>
+                Acción
+              </strong>
+
+              <p>
+                Texto del botón que lleva al siguiente paso.
+              </p>
+            </div>
+          </div>
+
+          <Field
+            label="Texto del botón"
+            value={ctaLabel}
+            onChange={(value) =>
+              onChange(
+                "ctaLabel",
+                value
+              )
+            }
+          />
+        </section>
       ) : null}
     </div>
   );

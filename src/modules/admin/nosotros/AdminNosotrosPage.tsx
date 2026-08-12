@@ -8,10 +8,15 @@ import {
 import {
   ArrowDown,
   ArrowUp,
+  Building2,
   ImagePlus,
+  Images,
   Plus,
   Save,
+  ShieldCheck,
+  Sparkles,
   Trash2,
+  UsersRound,
   X,
 } from "lucide-react";
 
@@ -985,54 +990,180 @@ export function AdminNosotrosPage() {
     <section
       className={styles.page}
     >
-      <header
+      <div
         className={
-          styles.header
+          styles.stickyControls
         }
       >
-        <div>
-          <span
-            className={
-              styles.eyebrow
-            }
-          >
-            CONTENIDO · NOSOTROS
-          </span>
-
-          <h1>
-            Nosotros
-          </h1>
-
-          <p>
-            Administra la información
-            institucional y la galería
-            que se publican en la página.
-          </p>
-        </div>
-
-        <button
-          type="button"
+      <header
           className={
-            styles.saveButton
-          }
-          onClick={() =>
-            void handleSave()
-          }
-          disabled={
-            isSaving ||
-            Boolean(uploadingKey)
+            styles.header
           }
         >
-          <Save
-            size={15}
-            strokeWidth={1.8}
-          />
-
-          {isSaving
-            ? "Guardando..."
-            : "Guardar cambios"}
-        </button>
-      </header>
+          <div
+            className={
+              styles.headerCopy
+            }
+          >
+            <span
+              className={
+                styles.eyebrow
+              }
+            >
+              <Sparkles
+                size={14}
+                strokeWidth={1.8}
+              />
+              CONTENIDO · NOSOTROS
+            </span>
+  
+            <h1>
+              Nosotros
+            </h1>
+  
+            <p>
+              Organiza la identidad de ReyCars,
+              sus valores, presentación del equipo
+              y galería desde un solo lugar.
+            </p>
+          </div>
+  
+          <div
+            className={
+              styles.headerActions
+            }
+          >
+            <div
+              className={
+                styles.contentStatus
+              }
+            >
+              <span />
+  
+              <div>
+                <strong>
+                  Contenido conectado
+                </strong>
+  
+                <small>
+                  Los cambios se publican al guardar.
+                </small>
+              </div>
+            </div>
+  
+            <button
+              type="button"
+              className={
+                styles.saveButton
+              }
+              onClick={() =>
+                void handleSave()
+              }
+              disabled={
+                isSaving ||
+                Boolean(uploadingKey)
+              }
+            >
+              {isSaving ? (
+                <>
+                  <span
+                    className={
+                      styles.buttonSpinner
+                    }
+                  />
+                  Guardando...
+                </>
+              ) : (
+                <>
+                  <Save
+                    size={15}
+                    strokeWidth={1.8}
+                  />
+                  Guardar cambios
+                </>
+              )}
+            </button>
+          </div>
+        </header>
+  
+        <nav
+          className={
+            styles.quickNav
+          }
+          aria-label="Secciones de Nosotros"
+        >
+          <a href="#nosotros-presentacion">
+            <span className={styles.quickIcon}>
+              <Building2
+                size={17}
+                strokeWidth={1.7}
+              />
+            </span>
+  
+            <span>
+              <strong>Presentación</strong>
+              <small>Hero principal</small>
+            </span>
+          </a>
+  
+          <a href="#nosotros-identidad">
+            <span className={styles.quickIcon}>
+              <ShieldCheck
+                size={17}
+                strokeWidth={1.7}
+              />
+            </span>
+  
+            <span>
+              <strong>Identidad</strong>
+              <small>Esencia, misión y visión</small>
+            </span>
+          </a>
+  
+          <a href="#nosotros-equipo">
+            <span className={styles.quickIcon}>
+              <UsersRound
+                size={17}
+                strokeWidth={1.7}
+              />
+            </span>
+  
+            <span>
+              <strong>Equipo</strong>
+              <small>Presentación pública</small>
+            </span>
+          </a>
+  
+          <a href="#nosotros-valores">
+            <span className={styles.quickIcon}>
+              <Sparkles
+                size={17}
+                strokeWidth={1.7}
+              />
+            </span>
+  
+            <span>
+              <strong>Valores</strong>
+              <small>Principios institucionales</small>
+            </span>
+          </a>
+  
+          <a href="#nosotros-galeria">
+            <span className={styles.quickIcon}>
+              <Images
+                size={17}
+                strokeWidth={1.7}
+              />
+            </span>
+  
+            <span>
+              <strong>Galería</strong>
+              <small>7 álbumes fijos</small>
+            </span>
+          </a>
+        </nav>
+  
+        </div>
 
       {!hasDocument ? (
         <div
@@ -1076,13 +1207,15 @@ export function AdminNosotrosPage() {
         }
       >
         <section
+          id="nosotros-presentacion"
           className={
             styles.card
           }
         >
           <SectionHeading
-            eyebrow="01 · HERO"
-            title="Presentación principal"
+            eyebrow="01 · PRESENTACIÓN"
+            title="La primera impresión de ReyCars"
+            description="Edita el mensaje principal, la fotografía y los cuatro destacados que aparecen al inicio de Nosotros."
           />
 
           <div
@@ -1218,6 +1351,21 @@ export function AdminNosotrosPage() {
 
           <div
             className={
+              styles.subsectionHeading
+            }
+          >
+            <span>DESTACADOS DEL HERO</span>
+            <strong>
+              Mensajes rápidos de confianza
+            </strong>
+            <p>
+              Son cuatro frases cortas. Mantén cada una
+              clara y fácil de leer.
+            </p>
+          </div>
+
+          <div
+            className={
               styles.miniGrid
             }
           >
@@ -1254,6 +1402,7 @@ export function AdminNosotrosPage() {
         </section>
 
         <section
+          id="nosotros-identidad"
           className={
             styles.card
           }
@@ -1261,6 +1410,7 @@ export function AdminNosotrosPage() {
           <SectionHeading
             eyebrow="02 · IDENTIDAD"
             title="Esencia, misión y visión"
+            description="Tres bloques que explican quién es ReyCars, qué busca hoy y hacia dónde quiere avanzar."
           />
 
           <div
@@ -1330,6 +1480,7 @@ export function AdminNosotrosPage() {
         </section>
 
         <section
+          id="nosotros-equipo"
           className={
             styles.card
           }
@@ -1437,6 +1588,7 @@ export function AdminNosotrosPage() {
         </section>
 
         <section
+          id="nosotros-valores"
           className={
             styles.card
           }
@@ -1605,6 +1757,7 @@ export function AdminNosotrosPage() {
         </section>
 
         <section
+          id="nosotros-galeria"
           className={
             styles.card
           }
@@ -1720,6 +1873,32 @@ export function AdminNosotrosPage() {
 
           <div
             className={
+              styles.galleryGuide
+            }
+          >
+            <div>
+              <span>ÁLBUMES DE LA GALERÍA</span>
+              <strong>
+                Administra las fotografías por tema
+              </strong>
+              <p>
+                Los siete álbumes siempre se conservan.
+                Puedes cambiar sus textos y agregar o quitar
+                fotografías dentro de cada uno.
+              </p>
+            </div>
+
+            <span
+              className={
+                styles.galleryCount
+              }
+            >
+              7 álbumes
+            </span>
+          </div>
+
+          <div
+            className={
               styles.albumList
             }
           >
@@ -1760,6 +1939,28 @@ export function AdminNosotrosPage() {
                           album.title
                         }
                       </strong>
+
+                      <small
+                        className={
+                          styles.albumPhotoCount
+                        }
+                      >
+                        {album.images.length}{" "}
+                        {album.images.length === 1
+                          ? "fotografía"
+                          : "fotografías"}
+                      </small>
+
+                      <small
+                        className={
+                          styles.albumPhotoCount
+                        }
+                      >
+                        {album.images.length}{" "}
+                        {album.images.length === 1
+                          ? "fotografía"
+                          : "fotografías"}
+                      </small>
                     </div>
 
                     <span
