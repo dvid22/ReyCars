@@ -992,6 +992,12 @@ export function AdminProcesoPage() {
     <section
       className={styles.page}
     >
+      <div
+        className={
+          styles.stickyControls
+        }
+      >
+
       <header
         className={
           styles.header
@@ -1072,6 +1078,7 @@ export function AdminProcesoPage() {
           </button>
         </div>
       </header>
+      </div>
 
       {!hasDocument ? (
         <div

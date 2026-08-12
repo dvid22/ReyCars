@@ -626,6 +626,11 @@ export function AdminRecruitmentPage() {
         styles.page
       }
     >
+      <div
+        className={
+          styles.stickyControls
+        }
+      >
       <header
         className={
           styles.header
@@ -733,6 +738,8 @@ export function AdminRecruitmentPage() {
             </span>
           ) : null}
         </button>
+      </div>
+
       </div>
 
       {error ? (

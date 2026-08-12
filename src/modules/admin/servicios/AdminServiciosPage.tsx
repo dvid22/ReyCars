@@ -1019,6 +1019,11 @@ export function AdminServiciosPage() {
 
   return (
     <section className={styles.page}>
+      <div
+        className={
+          styles.stickyControls
+        }
+      >
       <div className={styles.hero}>
         <div className={styles.heroCopy}>
           <span className={styles.eyebrow}>
@@ -1076,6 +1081,8 @@ export function AdminServiciosPage() {
         >
           Actualizar
         </button>
+      </div>
+
       </div>
 
       {error && !isModalOpen ? (

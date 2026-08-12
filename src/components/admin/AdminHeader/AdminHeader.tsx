@@ -157,7 +157,7 @@ export function AdminHeader({
           }
         >
           <span>
-            REYCARS ADMIN
+            REY CAR'S ADMIN
           </span>
 
           <strong>
@@ -166,6 +166,16 @@ export function AdminHeader({
             }
           </strong>
         </div>
+
+        <span
+          className={
+            styles.sectionStatus
+          }
+          aria-hidden="true"
+        >
+          <i />
+          En línea
+        </span>
       </div>
 
       <div

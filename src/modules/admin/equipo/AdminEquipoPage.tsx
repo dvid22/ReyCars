@@ -702,6 +702,12 @@ export function AdminEquipoPage() {
         styles.page
       }
     >
+      <div
+        className={
+          styles.stickyControls
+        }
+      >
+
       <header
         className={
           styles.header
@@ -744,6 +750,7 @@ export function AdminEquipoPage() {
           Nuevo integrante
         </button>
       </header>
+      </div>
 
       {error ? (
         <div

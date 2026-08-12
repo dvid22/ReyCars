@@ -122,6 +122,15 @@ export function Sidebar({
             onCloseMobile
           }
         >
+          <span
+            className={
+              styles.compactBrand
+            }
+            aria-hidden="true"
+          >
+            R
+          </span>
+
           <Image
             src="/assets/branding/logo-reycars.png"
             alt="CEA ReyCars"
@@ -138,13 +147,8 @@ export function Sidebar({
               styles.brandText
             }
           >
-            <strong>
-              Administrador
-            </strong>
-
-            <span>
-              Gestión de contenido
-            </span>
+           
+            
           </div>
         </Link>
 
@@ -269,6 +273,7 @@ export function Sidebar({
           className={
             styles.status
           }
+          title="Sistema conectado"
         >
           <span />
 

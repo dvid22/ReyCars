@@ -467,6 +467,12 @@ export function AdminContactoPage() {
     <section
       className={styles.page}
     >
+      <div
+        className={
+          styles.stickyControls
+        }
+      >
+
       <header
         className={
           styles.header
@@ -515,6 +521,7 @@ export function AdminContactoPage() {
             : "Guardar cambios"}
         </button>
       </header>
+      </div>
 
       {!hasDocument ? (
         <div

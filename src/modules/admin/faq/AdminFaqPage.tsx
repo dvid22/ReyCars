@@ -354,6 +354,12 @@ export function AdminFaqPage() {
     <section
       className={styles.page}
     >
+      <div
+        className={
+          styles.stickyControls
+        }
+      >
+
       <header
         className={
           styles.header
@@ -397,6 +403,7 @@ export function AdminFaqPage() {
           Nueva pregunta
         </button>
       </header>
+      </div>
 
       {items.length === 0 ? (
         <div

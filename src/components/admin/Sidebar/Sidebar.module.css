@@ -1,37 +1,58 @@
 .sidebar {
   --cyan: var(--reycars-cyan, #59c5d3);
   --cyan-dark: var(--reycars-cyan-dark, #209aaa);
-  --ink: #172126;
-  --muted: #75868e;
-  --line: rgba(23, 33, 38, 0.075);
+  --ink: #17272e;
+  --muted: #75878e;
+  --line: rgba(35, 73, 85, 0.07);
 
   width: 100%;
   min-width: 0;
   height: 100svh;
 
   position: sticky;
-  z-index: 20;
+  z-index: 30;
   top: 0;
 
   display: flex;
   flex-direction: column;
 
   padding:
-    1rem
-    0.6rem
-    0.8rem;
+    0.75rem
+    0.55rem;
 
   overflow: hidden;
 
   border-right:
-    1px solid var(--line);
+    1px solid
+      rgba(
+        255,
+        255,
+        255,
+        0.9
+      );
 
   background:
     linear-gradient(
-      180deg,
-      #ffffff 0%,
-      #fbfdfd 100%
+      160deg,
+      #f8fcfd 0%,
+      #edf5f6 100%
     );
+
+  box-shadow:
+    0.55rem 0 1.6rem
+      rgba(
+        40,
+        79,
+        91,
+        0.045
+      ),
+    inset -1px 0 0
+      rgba(
+        255,
+        255,
+        255,
+        0.8
+      );
 
   transition:
     padding 0.24s cubic-bezier(0.16, 1, 0.3, 1),
@@ -48,13 +69,13 @@
    ========================================================= */
 
 .brandArea {
-  min-height: 4rem;
+  min-height: 4.15rem;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  gap: 0.5rem;
+  gap: 0.45rem;
 
   padding-inline: 0;
 }
@@ -66,10 +87,67 @@
   align-items: center;
   justify-content: center;
 
-  gap: 0.7rem;
+  gap: 0.65rem;
 
   color: inherit;
+
   text-decoration: none;
+}
+
+.compactBrand {
+  width: 2.55rem;
+  aspect-ratio: 1;
+
+  display: grid;
+  place-items: center;
+
+  flex: 0 0 auto;
+
+  color: #ffffff;
+
+  border:
+    1px solid
+      rgba(
+        255,
+        255,
+        255,
+        0.72
+      );
+
+  border-radius: 0.82rem;
+
+  background:
+    linear-gradient(
+      145deg,
+      #63cdda,
+      #209aaa
+    );
+
+  box-shadow:
+    0.38rem 0.38rem 0.8rem
+      rgba(
+        32,
+        154,
+        170,
+        0.18
+      ),
+    -0.2rem -0.2rem 0.58rem
+      rgba(
+        255,
+        255,
+        255,
+        0.94
+      ),
+    inset 1px 1px 1px
+      rgba(
+        255,
+        255,
+        255,
+        0.35
+      );
+
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
 .logo {
@@ -83,7 +161,7 @@
   opacity: 0;
 
   transform:
-    translateX(-0.5rem);
+    translateX(-0.45rem);
 
   pointer-events: none;
 
@@ -106,12 +184,22 @@
   height: 1px;
 
   margin:
-    0.35rem
+    0.2rem
     0.25rem
-    0.7rem;
+    0.65rem;
 
   background:
-    var(--line);
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(
+        42,
+        85,
+        97,
+        0.08
+      ),
+      transparent
+    );
 }
 
 /* =========================================================
@@ -129,7 +217,12 @@
   scrollbar-width: thin;
 
   scrollbar-color:
-    rgba(32, 154, 170, 0.2)
+    rgba(
+      32,
+      154,
+      170,
+      0.18
+    )
     transparent;
 }
 
@@ -139,11 +232,12 @@
 
 .nav {
   display: grid;
-  gap: 0.18rem;
+
+  gap: 0.3rem;
 }
 
 .navItem {
-  min-height: 2.7rem;
+  min-height: 3rem;
 
   display: grid;
 
@@ -156,35 +250,52 @@
 
   position: relative;
 
-  padding:
-    0.35rem;
+  padding: 0.35rem;
 
-  color:
-    #66767d;
+  color: #718189;
 
   border:
-    1px solid transparent;
+    1px solid
+      transparent;
 
-  border-radius:
-    0.75rem;
+  border-radius: 0.86rem;
+
+  background:
+    transparent;
 
   text-decoration: none;
 
-  font-size:
-    0.75rem;
+  font-size: 0.73rem;
 
   transition:
-    color 0.18s ease,
-    background 0.18s ease,
-    border-color 0.18s ease;
+    color 0.16s ease,
+    background 0.16s ease,
+    border-color 0.16s ease,
+    box-shadow 0.16s ease,
+    transform 0.16s ease;
 }
 
 .navItem:hover {
-  color:
-    #30444c;
+  color: #425960;
+
+  border-color:
+    rgba(
+      255,
+      255,
+      255,
+      0.82
+    );
 
   background:
-    #f5f9fa;
+    rgba(
+      255,
+      255,
+      255,
+      0.52
+    );
+
+  transform:
+    translateY(-1px);
 }
 
 .navItemActive {
@@ -192,64 +303,164 @@
     var(--cyan-dark);
 
   border-color:
-    rgba(32, 154, 170, 0.1);
+    rgba(
+      255,
+      255,
+      255,
+      0.95
+    );
 
   background:
     linear-gradient(
-      90deg,
-      rgba(89, 197, 211, 0.1) 0%,
-      rgba(89, 197, 211, 0.035) 100%
+      145deg,
+      #f9fdfe,
+      #e7f2f4
     );
+
+  box-shadow:
+    0.38rem 0.38rem 0.82rem
+      rgba(
+        42,
+        87,
+        99,
+        0.09
+      ),
+    -0.28rem -0.28rem 0.72rem
+      rgba(
+        255,
+        255,
+        255,
+        0.95
+      ),
+    inset 1px 1px 0
+      rgba(
+        255,
+        255,
+        255,
+        0.96
+      );
 }
 
 .navItemActive::before {
   content: "";
 
-  width: 3px;
+  width: 0.24rem;
 
   position: absolute;
 
   inset:
-    0.48rem
+    0.65rem
     auto
-    0.48rem
-    -0.6rem;
+    0.65rem
+    -0.56rem;
 
   border-radius: 999px;
 
   background:
     var(--cyan-dark);
+
+  box-shadow:
+    0 0 0 0.18rem
+      rgba(
+        89,
+        197,
+        211,
+        0.08
+      );
 }
 
 .iconWrap {
-  width: 2.1rem;
+  width: 2.2rem;
   aspect-ratio: 1;
 
   display: grid;
   place-items: center;
 
-  color:
-    #87969c;
+  color: #839299;
 
-  border-radius:
-    0.6rem;
+  border:
+    1px solid
+      rgba(
+        255,
+        255,
+        255,
+        0
+      );
+
+  border-radius: 0.7rem;
+
+  background:
+    transparent;
 
   transition:
-    color 0.18s ease,
-    background 0.18s ease;
+    color 0.16s ease,
+    background 0.16s ease,
+    border-color 0.16s ease,
+    box-shadow 0.16s ease;
 }
 
 .navItem:hover .iconWrap {
-  color:
-    #53676f;
+  color: #50666e;
+
+  border-color:
+    rgba(
+      255,
+      255,
+      255,
+      0.85
+    );
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #ecf3f4
+    );
+
+  box-shadow:
+    0.2rem 0.2rem 0.48rem
+      rgba(
+        43,
+        86,
+        98,
+        0.055
+      );
 }
 
 .navItemActive .iconWrap {
   color:
     var(--cyan-dark);
 
+  border-color:
+    rgba(
+      255,
+      255,
+      255,
+      0.95
+    );
+
   background:
-    rgba(89, 197, 211, 0.08);
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #e8f2f3
+    );
+
+  box-shadow:
+    0.23rem 0.23rem 0.52rem
+      rgba(
+        43,
+        87,
+        99,
+        0.075
+      ),
+    -0.18rem -0.18rem 0.5rem
+      rgba(
+        255,
+        255,
+        255,
+        0.95
+      );
 }
 
 .navLabel,
@@ -261,11 +472,21 @@
   height: 1px;
 
   margin:
-    0.65rem
+    0.5rem
     0.25rem;
 
   background:
-    var(--line);
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(
+        42,
+        85,
+        97,
+        0.08
+      ),
+      transparent
+    );
 }
 
 /* =========================================================
@@ -275,15 +496,20 @@
 .sidebarFoot {
   display: grid;
 
-  padding-top:
-    0.65rem;
+  padding-top: 0.55rem;
 
   border-top:
-    1px solid var(--line);
+    1px solid
+      rgba(
+        42,
+        85,
+        97,
+        0.055
+      );
 }
 
 .status {
-  min-height: 2.8rem;
+  min-height: 3rem;
 
   display: flex;
   align-items: center;
@@ -291,30 +517,61 @@
 
   gap: 0;
 
-  padding:
-    0.5rem;
+  padding: 0.48rem;
 
-  border-radius:
-    0.75rem;
+  border:
+    1px solid
+      rgba(
+        255,
+        255,
+        255,
+        0.9
+      );
+
+  border-radius: 0.82rem;
 
   background:
-    #f7fafb;
+    linear-gradient(
+      145deg,
+      #f8fcfd,
+      #eaf3f5
+    );
+
+  box-shadow:
+    0.28rem 0.28rem 0.68rem
+      rgba(
+        43,
+        86,
+        98,
+        0.055
+      ),
+    -0.22rem -0.22rem 0.62rem
+      rgba(
+        255,
+        255,
+        255,
+        0.94
+      );
 }
 
 .status > span {
-  width: 0.46rem;
+  width: 0.5rem;
   aspect-ratio: 1;
 
   flex: 0 0 auto;
 
   border-radius: 50%;
 
-  background:
-    var(--cyan-dark);
+  background: #49ad8b;
 
   box-shadow:
-    0 0 0 0.23rem
-      rgba(89, 197, 211, 0.09);
+    0 0 0 0.24rem
+      rgba(
+        73,
+        173,
+        139,
+        0.09
+      );
 }
 
 .statusText {
@@ -327,9 +584,8 @@
 
 .expanded {
   padding:
-    1rem
-    0.8rem
-    0.8rem;
+    0.75rem
+    0.72rem;
 }
 
 .expanded .brandArea {
@@ -337,7 +593,7 @@
     space-between;
 
   padding-inline:
-    0.4rem;
+    0.25rem;
 }
 
 .expanded .brand {
@@ -345,8 +601,12 @@
     flex-start;
 }
 
+.expanded .compactBrand {
+  display: none;
+}
+
 .expanded .logo {
-  width: 7.8rem;
+  width: 7.4rem;
   height: auto;
 
   opacity: 1;
@@ -362,27 +622,22 @@
 
   display: grid;
 
-  gap: 0.08rem;
+  gap: 0.03rem;
 }
 
 .expanded .brandText strong {
-  color:
-    var(--cyan-dark);
+  color: #41575f;
 
-  font-size:
-    0.72rem;
-
+  font-size: 0.68rem;
   font-weight: 600;
 }
 
 .expanded .brandText span {
   overflow: hidden;
 
-  color:
-    #96a2a7;
+  color: #94a1a6;
 
-  font-size:
-    0.64rem;
+  font-size: 0.59rem;
 
   text-overflow:
     ellipsis;
@@ -396,38 +651,31 @@
 
   margin:
     0
-    0.65rem
-    0.55rem;
+    0.58rem
+    0.42rem;
 
-  color:
-    #9ca8ad;
+  color: #96a3a8;
 
-  font-size:
-    0.62rem;
-
-  font-weight: 600;
-
-  letter-spacing:
-    0.08em;
-
-  text-transform:
-    uppercase;
+  font-size: 0.57rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .expanded .navItem {
   grid-template-columns:
-    2rem
+    2.15rem
     minmax(0, 1fr)
     auto;
 
   justify-items:
     stretch;
 
-  gap: 0.55rem;
+  gap: 0.52rem;
 
   padding:
-    0.35rem
-    0.55rem;
+    0.38rem
+    0.5rem;
 }
 
 .expanded .navLabel {
@@ -437,6 +685,11 @@
 
   overflow: hidden;
 
+  color: inherit;
+
+  font-size: 0.69rem;
+  font-weight: 600;
+
   text-overflow:
     ellipsis;
 
@@ -445,7 +698,7 @@
 }
 
 .expanded .activeDot {
-  width: 0.34rem;
+  width: 0.36rem;
   aspect-ratio: 1;
 
   display: block;
@@ -459,18 +712,23 @@
 
   box-shadow:
     0 0 0 0.2rem
-      rgba(89, 197, 211, 0.09);
+      rgba(
+        89,
+        197,
+        211,
+        0.08
+      );
 }
 
 .expanded .status {
   justify-content:
     flex-start;
 
-  gap: 0.6rem;
+  gap: 0.58rem;
 
   padding:
-    0.55rem
-    0.65rem;
+    0.5rem
+    0.6rem;
 }
 
 .expanded .statusText {
@@ -478,27 +736,22 @@
 
   display: grid;
 
-  gap: 0.04rem;
+  gap: 0.01rem;
 }
 
 .expanded .statusText strong {
-  color:
-    #4b5d64;
+  color: #465b63;
 
-  font-size:
-    0.68rem;
-
+  font-size: 0.65rem;
   font-weight: 600;
 }
 
 .expanded .statusText p {
   margin: 0;
 
-  color:
-    #96a2a7;
+  color: #94a1a6;
 
-  font-size:
-    0.62rem;
+  font-size: 0.57rem;
 }
 
 /* =========================================================
@@ -515,7 +768,7 @@
       );
 
     position: fixed;
-    z-index: 90;
+    z-index: 100;
 
     inset:
       0
@@ -527,13 +780,26 @@
       translateX(-105%);
 
     padding:
-      1rem
       0.8rem
-      0.85rem;
+      0.72rem;
+
+    border-right:
+      1px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.9
+        );
 
     box-shadow:
-      1.5rem 0 4rem
-        rgba(16, 27, 32, 0.14);
+      1.4rem 0 3.5rem
+        rgba(
+          16,
+          27,
+          32,
+          0.16
+        );
   }
 
   .mobileOpen {
@@ -549,7 +815,7 @@
       space-between;
 
     padding-inline:
-      0.45rem;
+      0.3rem;
   }
 
   .brand,
@@ -558,9 +824,14 @@
       flex-start;
   }
 
+  .compactBrand,
+  .expanded .compactBrand {
+    display: none;
+  }
+
   .logo,
   .expanded .logo {
-    width: 7.8rem;
+    width: 7.3rem;
     height: auto;
 
     opacity: 1;
@@ -577,17 +848,14 @@
 
     display: grid;
 
-    gap: 0.08rem;
+    gap: 0.03rem;
   }
 
   .brandText strong,
   .expanded .brandText strong {
-    color:
-      var(--cyan-dark);
+    color: #41575f;
 
-    font-size:
-      0.72rem;
-
+    font-size: 0.68rem;
     font-weight: 600;
   }
 
@@ -595,11 +863,9 @@
   .expanded .brandText span {
     overflow: hidden;
 
-    color:
-      #96a2a7;
+    color: #94a1a6;
 
-    font-size:
-      0.64rem;
+    font-size: 0.59rem;
 
     text-overflow:
       ellipsis;
@@ -609,7 +875,7 @@
   }
 
   .mobileClose {
-    width: 2.3rem;
+    width: 2.2rem;
     aspect-ratio: 1;
 
     display: grid;
@@ -617,20 +883,36 @@
 
     flex: 0 0 auto;
 
-    color:
-      #65777e;
+    color: #65777e;
 
     border:
-      1px solid var(--line);
+      1px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.92
+        );
 
-    border-radius:
-      50%;
+    border-radius: 0.72rem;
 
     background:
-      #ffffff;
+      linear-gradient(
+        145deg,
+        #fff,
+        #edf3f4
+      );
 
-    cursor:
-      pointer;
+    box-shadow:
+      0.22rem 0.22rem 0.52rem
+        rgba(
+          42,
+          86,
+          98,
+          0.06
+        );
+
+    cursor: pointer;
   }
 
   .sectionLabel,
@@ -639,39 +921,32 @@
 
     margin:
       0
-      0.65rem
-      0.55rem;
+      0.58rem
+      0.42rem;
 
-    color:
-      #9ca8ad;
+    color: #96a3a8;
 
-    font-size:
-      0.62rem;
-
-    font-weight: 600;
-
-    letter-spacing:
-      0.08em;
-
-    text-transform:
-      uppercase;
+    font-size: 0.57rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
   .navItem,
   .expanded .navItem {
     grid-template-columns:
-      2rem
+      2.15rem
       minmax(0, 1fr)
       auto;
 
     justify-items:
       stretch;
 
-    gap: 0.55rem;
+    gap: 0.52rem;
 
     padding:
-      0.35rem
-      0.55rem;
+      0.38rem
+      0.5rem;
   }
 
   .navLabel,
@@ -682,6 +957,9 @@
 
     overflow: hidden;
 
+    font-size: 0.69rem;
+    font-weight: 600;
+
     text-overflow:
       ellipsis;
 
@@ -691,7 +969,7 @@
 
   .activeDot,
   .expanded .activeDot {
-    width: 0.34rem;
+    width: 0.36rem;
     aspect-ratio: 1;
 
     display: block;
@@ -705,7 +983,12 @@
 
     box-shadow:
       0 0 0 0.2rem
-        rgba(89, 197, 211, 0.09);
+        rgba(
+          89,
+          197,
+          211,
+          0.08
+        );
   }
 
   .status,
@@ -713,11 +996,11 @@
     justify-content:
       flex-start;
 
-    gap: 0.6rem;
+    gap: 0.58rem;
 
     padding:
-      0.55rem
-      0.65rem;
+      0.5rem
+      0.6rem;
   }
 
   .statusText,
@@ -726,17 +1009,14 @@
 
     display: grid;
 
-    gap: 0.04rem;
+    gap: 0.01rem;
   }
 
   .statusText strong,
   .expanded .statusText strong {
-    color:
-      #4b5d64;
+    color: #465b63;
 
-    font-size:
-      0.68rem;
-
+    font-size: 0.65rem;
     font-weight: 600;
   }
 
@@ -744,11 +1024,9 @@
   .expanded .statusText p {
     margin: 0;
 
-    color:
-      #96a2a7;
+    color: #94a1a6;
 
-    font-size:
-      0.62rem;
+    font-size: 0.57rem;
   }
 }
 

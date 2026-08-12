@@ -397,6 +397,12 @@ export function AdminInicioPage() {
 
   return (
     <section className={styles.page}>
+      <div
+        className={
+          styles.stickyControls
+        }
+      >
+
       <header className={styles.header}>
         <div className={styles.headerCopy}>
           <span className={styles.eyebrow}>
@@ -470,6 +476,7 @@ export function AdminInicioPage() {
           </button>
         </div>
       </header>
+      </div>
 
       {!hasDocument ? (
         <div
