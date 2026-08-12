@@ -1,5 +1,7 @@
-import { AdminCursosPage } from "@/modules/admin/cursos/AdminCursosPage";
+import {
+  redirect,
+} from "next/navigation";
 
-export default function Page() {
-  return <AdminCursosPage />;
+export default function CursosAdminLegacyRoute() {
+  redirect("/admin/servicios");
 }

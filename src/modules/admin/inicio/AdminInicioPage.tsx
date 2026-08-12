@@ -43,7 +43,7 @@ const CURRENT_HOME: HomeContent = {
     highlightedText: "Licencia",
     description:
       "Formación completa para conductores responsables. Teoría, práctica y acompañamiento en cada etapa de tu proceso.",
-    primaryCtaLabel: "Conocer cursos",
+    primaryCtaLabel: "Conocer servicios",
     secondaryCtaLabel: "Cómo funciona",
     heroImageUrl:
       "/assets/images/home/hero-driving-lesson.jpg",
@@ -70,13 +70,13 @@ const CURRENT_HOME: HomeContent = {
   },
 
   coursesSection: {
-    eyebrow: "Nuestros cursos",
+    eyebrow: "Nuestros servicios",
     title:
       "¿Qué quieres lograr con ReyCars?",
     highlightedText: "ReyCars?",
     description:
       "Elige una opción y descubre la formación indicada para ti.",
-    ctaLabel: "Explorar cursos",
+    ctaLabel: "Explorar servicios",
   },
 
   processSection: {
@@ -241,7 +241,7 @@ export function AdminInicioPage() {
         case "hero":
           return "Hero";
         case "courses":
-          return "Cursos";
+          return "Servicios";
         case "process":
           return "Proceso";
         case "faq":
@@ -390,7 +390,7 @@ export function AdminInicioPage() {
 
           <p>
             Edita únicamente el contenido
-            propio de la Home. Cursos,
+            propio de la Home. Servicios,
             Proceso y FAQ mantienen sus
             datos en sus módulos.
           </p>
@@ -477,7 +477,7 @@ export function AdminInicioPage() {
           />
 
           <NavButton
-            label="Cursos"
+            label="Servicios"
             description="Encabezado"
             active={
               activeSection === "courses"

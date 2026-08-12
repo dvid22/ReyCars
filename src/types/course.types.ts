@@ -1,13 +1,15 @@
 export type CourseGroup =
   | "Licencias de conducción"
-  | "Formación complementaria";
+  | "Formación complementaria"
+  | "Otros servicios";
 
 export type CourseIconType =
   | "car"
   | "motorcycle"
   | "steering"
   | "shield"
-  | "id";
+  | "id"
+  | "soat";
 
 export interface Course {
   id: string;

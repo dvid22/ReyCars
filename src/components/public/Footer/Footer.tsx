@@ -16,7 +16,7 @@ import styles from "./Footer.module.css";
 const navigation = [
   { label: "Inicio", href: "/" },
   { label: "Nosotros", href: "/nosotros" },
-  { label: "Cursos", href: "/cursos" },
+  { label: "Servicios", href: "/servicios" },
   { label: "Proceso", href: "/proceso" },
   { label: "Contacto", href: "/contacto" },
 ];
@@ -138,17 +138,17 @@ export function Footer() {
                 ¿Listo para comenzar?
                 <span>
                   {" "}
-                  Conoce nuestros cursos.
+                  Conoce nuestros servicios.
                 </span>
               </h2>
             </div>
 
             <Link
-              href="/cursos"
+              href="/servicios"
               className={styles.topCtaButton}
             >
               <span>
-                Explorar cursos
+                Explorar servicios
               </span>
 
               <i>

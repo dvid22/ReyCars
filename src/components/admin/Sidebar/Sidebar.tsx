@@ -38,8 +38,8 @@ const items = [
     icon: Building2,
   },
   {
-    label: "Cursos",
-    href: "/admin/cursos",
+    label: "Servicios",
+    href: "/admin/servicios",
     icon: GraduationCap,
   },
   {
@@ -138,8 +138,13 @@ export function Sidebar({
               styles.brandText
             }
           >
-           
-            
+            <strong>
+              Administrador
+            </strong>
+
+            <span>
+              Gestión de contenido
+            </span>
           </div>
         </Link>
 

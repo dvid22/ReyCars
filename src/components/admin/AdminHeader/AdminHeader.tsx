@@ -40,8 +40,8 @@ const routeLabels = [
     "Nosotros",
   ],
   [
-    "/admin/cursos",
-    "Cursos",
+    "/admin/servicios",
+    "Servicios",
   ],
   [
     "/admin/proceso",
@@ -157,7 +157,7 @@ export function AdminHeader({
           }
         >
           <span>
-            REY CAR'S- ADMINISTRADOR
+            REYCARS ADMIN
           </span>
 
           <strong>

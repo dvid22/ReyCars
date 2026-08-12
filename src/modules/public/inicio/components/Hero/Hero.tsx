@@ -16,79 +16,34 @@ import {
   useReducedMotion,
 } from "motion/react";
 
-import { useHomeContent } from "@/hooks/useHomeContent";
-
 import styles from "./Hero.module.css";
 
-const benefitIcons = [
-  ShieldCheck,
-  UsersRound,
-  CalendarCheck2,
+const corporatePoints = [
+  {
+    icon: ShieldCheck,
+    title: "Formación responsable",
+    description: "Aprende con una metodología clara y enfocada en la seguridad.",
+  },
+  {
+    icon: UsersRound,
+    title: "Acompañamiento cercano",
+    description: "Te guiamos durante cada etapa de tu proceso.",
+  },
+  {
+    icon: CalendarCheck2,
+    title: "Proceso claro y organizado",
+    description: "Una ruta de formación pensada para avanzar con confianza.",
+  },
 ];
 
-function splitHighlighted(
-  title: string,
-  highlighted: string
-) {
-  if (
-    !highlighted ||
-    !title.includes(highlighted)
-  ) {
-    return {
-      before: title,
-      highlighted: "",
-      after: "",
-    };
-  }
-
-  const index =
-    title.indexOf(highlighted);
-
-  return {
-    before:
-      title.slice(0, index),
-    highlighted,
-    after:
-      title.slice(
-        index + highlighted.length
-      ),
-  };
-}
-
 export function Hero() {
-  const reduceMotion =
-    useReducedMotion();
-
-  const {
-    content,
-    isLoading,
-  } = useHomeContent();
-
-  if (isLoading) {
-    return null;
-  }
-
-  if (!content) {
-    return null;
-  }
-
-  const hero = content.hero;
-
-  const titleParts =
-    splitHighlighted(
-      hero.title,
-      hero.highlightedText
-    );
+  const reduceMotion = useReducedMotion();
 
   const scrollToContent = () => {
     document
-      .getElementById(
-        "inicio-contenido"
-      )
+      .getElementById("inicio-contenido")
       ?.scrollIntoView({
-        behavior: reduceMotion
-          ? "auto"
-          : "smooth",
+        behavior: reduceMotion ? "auto" : "smooth",
         block: "start",
       });
   };
@@ -99,6 +54,9 @@ export function Hero() {
       aria-labelledby="home-hero-title"
     >
       <div className={styles.shell}>
+        {/* ======================================
+            CORPORATE COPY
+            ====================================== */}
         <motion.div
           className={styles.content}
           initial={
@@ -119,18 +77,12 @@ export function Hero() {
           }}
         >
           <div
-            className={
-              styles.corporateShape
-            }
+            className={styles.corporateShape}
             aria-hidden="true"
           />
 
           <div className={styles.eyebrow}>
-            <span
-              className={
-                styles.eyebrowIcon
-              }
-            >
+            <span className={styles.eyebrowIcon}>
               <Route
                 size={15}
                 strokeWidth={1.7}
@@ -138,7 +90,7 @@ export function Hero() {
             </span>
 
             <span>
-              {hero.eyebrow}
+              CENTRO DE ENSEÑANZA AUTOMOVILÍSTICA
             </span>
           </div>
 
@@ -151,121 +103,65 @@ export function Hero() {
             id="home-hero-title"
             className={styles.title}
           >
-            <span>
-              {titleParts.before}
-            </span>
-
-            {titleParts.highlighted ? (
-              <strong>
-                {
-                  titleParts.highlighted
-                }
-              </strong>
-            ) : null}
-
-            <span>
-              {titleParts.after}
-            </span>
+            <span>Tramita tu </span>
+            <strong>Licencia</strong>
+            <span> con nosotros.</span>
           </h1>
 
-          <p
-            className={
-              styles.description
-            }
-          >
-            {hero.description}
+          <p className={styles.description}>
+            Formación completa para conductores responsables.
+            Teoría, práctica y acompañamiento en cada etapa de
+            tu proceso.
           </p>
 
-          <div
-            className={
-              styles.corporatePoints
-            }
-          >
-            {hero.benefits.map(
-              (point, index) => {
-                const Icon =
-                  benefitIcons[
-                    index %
-                      benefitIcons.length
-                  ];
+          <div className={styles.corporatePoints}>
+            {corporatePoints.map((point, index) => {
+              const Icon = point.icon;
 
-                return (
-                  <motion.div
-                    key={`${point.title}-${index}`}
-                    className={
-                      styles.corporatePoint
-                    }
-                    initial={
-                      reduceMotion
-                        ? false
-                        : {
-                            opacity: 0,
-                            x: -12,
-                          }
-                    }
-                    animate={{
-                      opacity: 1,
-                      x: 0,
-                    }}
-                    transition={{
-                      duration: 0.42,
-                      delay:
-                        0.14 +
-                        index * 0.07,
-                      ease: [
-                        0.16,
-                        1,
-                        0.3,
-                        1,
-                      ],
-                    }}
-                  >
-                    <span
-                      className={
-                        styles.pointIcon
-                      }
-                    >
-                      <Icon
-                        size={16}
-                        strokeWidth={
-                          1.65
+              return (
+                <motion.div
+                  key={point.title}
+                  className={styles.corporatePoint}
+                  initial={
+                    reduceMotion
+                      ? false
+                      : {
+                          opacity: 0,
+                          x: -12,
                         }
-                      />
-                    </span>
+                  }
+                  animate={{
+                    opacity: 1,
+                    x: 0,
+                  }}
+                  transition={{
+                    duration: 0.42,
+                    delay: 0.14 + index * 0.07,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                >
+                  <span className={styles.pointIcon}>
+                    <Icon
+                      size={16}
+                      strokeWidth={1.65}
+                    />
+                  </span>
 
-                    <div>
-                      <strong>
-                        {
-                          point.title
-                        }
-                      </strong>
-
-                      <p>
-                        {
-                          point.description
-                        }
-                      </p>
-                    </div>
-                  </motion.div>
-                );
-              }
-            )}
+                  <div>
+                    <strong>{point.title}</strong>
+                    <p>{point.description}</p>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
 
-          <div
-            className={styles.actions}
-          >
+          <div className={styles.actions}>
             <Link
-              href="/cursos"
-              className={
-                styles.primaryAction
-              }
+              href="/servicios"
+              className={styles.primaryAction}
             >
-              <span>
-                {
-                  hero.primaryCtaLabel
-                }
-              </span>
+              <span>Conocer servicios</span>
 
               <ArrowUpRight
                 size={16}
@@ -275,15 +171,9 @@ export function Hero() {
 
             <Link
               href="/proceso"
-              className={
-                styles.secondaryAction
-              }
+              className={styles.secondaryAction}
             >
-              <span>
-                {
-                  hero.secondaryCtaLabel
-                }
-              </span>
+              <span>Cómo funciona</span>
 
               <ArrowUpRight
                 size={15}
@@ -292,14 +182,8 @@ export function Hero() {
             </Link>
           </div>
 
-          <div
-            className={styles.location}
-          >
-            <span
-              className={
-                styles.locationIcon
-              }
-            >
+          <div className={styles.location}>
+            <span className={styles.locationIcon}>
               <MapPin
                 size={17}
                 strokeWidth={1.6}
@@ -307,25 +191,17 @@ export function Hero() {
             </span>
 
             <div>
-              <strong>
-                UBATÉ · COLOMBIA
-              </strong>
-
+              <strong>UBATÉ · COLOMBIA</strong>
               <span>
-                Centro de Enseñanza
-                Automovilística ReyCars
+                Centro de Enseñanza Automovilística ReyCars
               </span>
             </div>
           </div>
 
           <button
             type="button"
-            className={
-              styles.scrollCue
-            }
-            onClick={
-              scrollToContent
-            }
+            className={styles.scrollCue}
+            onClick={scrollToContent}
             aria-label="Ver siguiente sección"
           >
             <span>Explorar</span>
@@ -337,6 +213,9 @@ export function Hero() {
           </button>
         </motion.div>
 
+        {/* ======================================
+            MEDIA
+            ====================================== */}
         <motion.div
           className={styles.media}
           initial={
@@ -358,28 +237,18 @@ export function Hero() {
           }}
         >
           <div
-            className={
-              styles.mediaEdge
-            }
+            className={styles.mediaEdge}
             aria-hidden="true"
           />
 
-          <div
-            className={
-              styles.mediaInner
-            }
-          >
+          <div className={styles.mediaInner}>
             <Image
-              src={
-                hero.heroImageUrl
-              }
+              src="/assets/images/home/hero-driving-lesson.jpg"
               alt="Sede del Centro de Enseñanza Automovilística ReyCars en Ubaté"
               fill
               priority
               sizes="(max-width: 860px) 100vw, 60vw"
-              className={
-                styles.mediaImage
-              }
+              className={styles.mediaImage}
             />
           </div>
         </motion.div>

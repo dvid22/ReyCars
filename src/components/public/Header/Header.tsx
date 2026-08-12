@@ -36,12 +36,16 @@ const navigation = [
     href: "/nosotros",
   },
   {
-    label: "Cursos",
-    href: "/cursos",
+    label: "Servicios",
+    href: "/servicios",
   },
   {
     label: "Proceso",
     href: "/proceso",
+  },
+  {
+    label: "Contacto",
+    href: "/contacto",
   },
 ];
 
@@ -254,31 +258,6 @@ export function Header() {
               styles.actions
             }
           >
-            <Link
-              href="/contacto"
-              className={
-                styles.contactLink
-              }
-            >
-              Contacto
-            </Link>
-
-            <Link
-              href="/cursos"
-              className={
-                styles.courseLink
-              }
-            >
-              <span>
-                Ver cursos
-              </span>
-
-              <ArrowUpRight
-                size={16}
-                strokeWidth={1.7}
-              />
-            </Link>
-
             <button
               type="button"
               className={
@@ -538,7 +517,7 @@ export function Header() {
                       y: 0,
                     }}
                     transition={{
-                      delay: 0.18,
+                      delay: 0.225,
                       duration: 0.4,
                     }}
                   >
@@ -559,7 +538,7 @@ export function Header() {
                           styles.mobileNumber
                         }
                       >
-                        05
+                        06
                       </span>
 
                       <strong>

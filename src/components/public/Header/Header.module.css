@@ -192,7 +192,26 @@
    ========================================================= */
 
 .desktopNav {
+  width: max-content;
+  max-width:
+    calc(
+      100% -
+      clamp(
+        410px,
+        30vw,
+        500px
+      )
+    );
+
   min-width: 0;
+
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+  left: 50%;
+
+  z-index: 2;
 
   display: flex;
   align-items: center;
@@ -207,6 +226,11 @@
 
   margin: 0;
   padding: 0;
+
+  transform:
+    translateX(
+      -50%
+    );
 }
 
 
@@ -1160,20 +1184,30 @@ span:last-child {
   }
 
   .desktopNav {
+    max-width:
+      calc(
+        100% -
+        clamp(
+          350px,
+          31vw,
+          420px
+        )
+      );
+
     gap:
       clamp(
-        12px,
-        1.3vw,
-        18px
+        10px,
+        1.1vw,
+        16px
       );
   }
 
   .navLink {
     font-size:
       clamp(
-        11.8px,
-        0.94vw,
-        12.8px
+        11.4px,
+        0.9vw,
+        12.6px
       );
   }
 
@@ -1367,5 +1401,19 @@ span:last-child {
   .mobileNavLink,
   .mobileNavLink svg {
     transition: none;
+  }
+}
+
+/* =========================================================
+   REYCARS · AJUSTE FINAL DE CENTRADO
+   El nav desktop se centra respecto al viewport/header,
+   independientemente del ancho del logo.
+   ========================================================= */
+
+@media (min-width: 981px) {
+  .actions {
+    width: 0;
+    min-width: 0;
+    gap: 0;
   }
 }

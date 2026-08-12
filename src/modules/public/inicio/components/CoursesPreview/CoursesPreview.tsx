@@ -11,8 +11,6 @@ import {
   useReducedMotion,
 } from "motion/react";
 
-import { useHomeContent } from "@/hooks/useHomeContent";
-
 import styles from "./CoursesPreview.module.css";
 
 type PathCard = {
@@ -40,8 +38,8 @@ const paths: PathCard[] = [
       "Formación para categorías B1, C1 y servicio particular o público.",
     image: "/assets/images/cursos/c1.png",
     imageAlt: "Automóvil de formación ReyCars",
-    cta: "Explorar cursos",
-    href: "/cursos",
+    cta: "Explorar servicios",
+    href: "/servicios",
     type: "car",
   },
   {
@@ -54,8 +52,8 @@ const paths: PathCard[] = [
       "Formación para categoría A2 y todo lo que necesitas para comenzar.",
     image: "/assets/images/cursos/a2.png",
     imageAlt: "Motocicleta de formación ReyCars",
-    cta: "Explorar cursos",
-    href: "/cursos",
+    cta: "Explorar servicios",
+    href: "/servicios",
     type: "motorcycle",
   },
   {
@@ -65,11 +63,11 @@ const paths: PathCard[] = [
     title: "Quiero fortalecer",
     accent: "mi conducción",
     description:
-      "Refuerzos, manejo defensivo, refrendación y más opciones de formación.",
+      "Refuerzos, manejo defensivo, refrendación, SOAT y otros servicios para conductores.",
     image: "/assets/images/cursos/manejo-defensivo.png",
     imageAlt: "Formación complementaria ReyCars",
     cta: "Ver opciones",
-    href: "/cursos",
+    href: "/servicios",
     type: "other",
   },
 ];
@@ -159,13 +157,6 @@ function PathIcon({
 
 export function CoursesPreview() {
   const reduceMotion = useReducedMotion();
-  const { content, isLoading } = useHomeContent();
-
-  if (isLoading || !content) {
-    return null;
-  }
-
-  const sectionContent = content.coursesSection;
 
   return (
     <section
@@ -202,21 +193,16 @@ export function CoursesPreview() {
           }}
         >
           <span className={styles.eyebrow}>
-            {sectionContent.eyebrow}
+            Nuestros servicios
           </span>
 
           <h2 id="courses-preview-title">
-            {sectionContent.title.replace(
-              sectionContent.highlightedText,
-              ""
-            )}
-            <strong>
-              {sectionContent.highlightedText}
-            </strong>
+            ¿Qué quieres lograr con{" "}
+            <strong>ReyCars?</strong>
           </h2>
 
           <p>
-            {sectionContent.description}
+            Elige una opción y descubre la formación indicada para ti.
           </p>
 
           <span
@@ -329,7 +315,7 @@ export function CoursesPreview() {
                 className={styles.cardAction}
               >
                 <span>
-                  {sectionContent.ctaLabel || path.cta}
+                  {path.cta}
                 </span>
 
                 <ArrowRight

@@ -43,9 +43,15 @@ function asNumberOrNull(value: unknown) {
 }
 
 function normalizeGroup(value: unknown): CourseGroup {
-  return value === "Licencias de conducción"
-    ? "Licencias de conducción"
-    : "Formación complementaria";
+  if (value === "Licencias de conducción") {
+    return "Licencias de conducción";
+  }
+
+  if (value === "Otros servicios") {
+    return "Otros servicios";
+  }
+
+  return "Formación complementaria";
 }
 
 function normalizeIcon(value: unknown): CourseIconType {
@@ -53,7 +59,8 @@ function normalizeIcon(value: unknown): CourseIconType {
     value === "motorcycle" ||
     value === "steering" ||
     value === "shield" ||
-    value === "id"
+    value === "id" ||
+    value === "soat"
   ) {
     return value;
   }
