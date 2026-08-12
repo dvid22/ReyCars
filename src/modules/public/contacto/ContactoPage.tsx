@@ -961,10 +961,10 @@ export function ContactoPage() {
 
           <div className={styles.bottomCtaActions}>
             <Link
-              href="/cursos"
+              href="/servicios"
               className={styles.primaryCta}
             >
-              Ver cursos
+              Ver servicios
               <ArrowUpRight
                 size={15}
                 strokeWidth={1.7}
