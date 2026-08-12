@@ -2,25 +2,24 @@
 
 import {
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
 import {
-  recruitmentService,
-} from "@/firebase/firestore/recruitment.service";
+  recruitmentApplicationService,
+} from "@/firebase/firestore/recruitmentApplication.service";
 
 import type {
-  RecruitmentContent,
-} from "@/types/recruitment.types";
+  RecruitmentApplication,
+} from "@/types/recruitmentApplication.types";
 
-export function useRecruitment() {
+export function useRecruitmentApplications() {
   const [
-    content,
-    setContent,
+    applications,
+    setApplications,
   ] =
-    useState<RecruitmentContent | null>(
-      null
-    );
+    useState<RecruitmentApplication[]>([]);
 
   const [
     isLoading,
@@ -38,12 +37,12 @@ export function useRecruitment() {
 
   useEffect(() => {
     const unsubscribe =
-      recruitmentService.subscribe(
+      recruitmentApplicationService.subscribe(
         (
-          nextContent
+          nextApplications
         ) => {
-          setContent(
-            nextContent
+          setApplications(
+            nextApplications
           );
 
           setError(
@@ -61,12 +60,12 @@ export function useRecruitment() {
             error
           );
 
-          setContent(
-            null
+          setApplications(
+            []
           );
 
           setError(
-            "No fue posible cargar Trabaja con nosotros."
+            "No fue posible cargar las postulaciones."
           );
 
           setIsLoading(
@@ -78,14 +77,21 @@ export function useRecruitment() {
     return unsubscribe;
   }, []);
 
+  const newCount =
+    useMemo(
+      () =>
+        applications.filter(
+          (item) =>
+            item.status ===
+            "new"
+        ).length,
+      [applications]
+    );
+
   return {
-    content,
+    applications,
     isLoading,
     error,
-
-    isEnabled:
-      Boolean(
-        content?.enabled
-      ),
+    newCount,
   };
 }

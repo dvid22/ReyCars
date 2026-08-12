@@ -20,6 +20,10 @@ import {
   useState,
 } from "react";
 
+import {
+  RecruitmentNavLink,
+} from "@/components/public/RecruitmentNavLink";
+
 import styles from "./Header.module.css";
 
 const navigation = [
@@ -114,6 +118,11 @@ export function Header() {
     );
   };
 
+  const recruitmentActive =
+    isActive(
+      "/trabaja-con-nosotros"
+    );
+
   return (
     <>
       <header
@@ -206,6 +215,35 @@ export function Header() {
                 );
               }
             )}
+
+            <RecruitmentNavLink
+              className={`${styles.navLink} ${
+                recruitmentActive
+                  ? styles.navLinkActive
+                  : ""
+              }`}
+            >
+              <span>
+                Trabaja con nosotros
+              </span>
+
+              {recruitmentActive && (
+                <motion.i
+                  layoutId="reycars-nav-active"
+                  className={
+                    styles.navIndicator
+                  }
+                  transition={{
+                    type:
+                      "spring",
+                    stiffness:
+                      380,
+                    damping:
+                      32,
+                  }}
+                />
+              )}
+            </RecruitmentNavLink>
           </nav>
 
           {/* ============================
@@ -485,6 +523,55 @@ export function Header() {
                       );
                     }
                   )}
+
+                  <motion.div
+                    initial={
+                      reduceMotion
+                        ? false
+                        : {
+                            opacity: 0,
+                            y: 20,
+                          }
+                    }
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                    }}
+                    transition={{
+                      delay: 0.18,
+                      duration: 0.4,
+                    }}
+                  >
+                    <RecruitmentNavLink
+                      className={`${styles.mobileNavLink} ${
+                        recruitmentActive
+                          ? styles.mobileNavLinkActive
+                          : ""
+                      }`}
+                      onClick={() =>
+                        setMobileMenuOpen(
+                          false
+                        )
+                      }
+                    >
+                      <span
+                        className={
+                          styles.mobileNumber
+                        }
+                      >
+                        05
+                      </span>
+
+                      <strong>
+                        Trabaja con nosotros
+                      </strong>
+
+                      <ArrowUpRight
+                        size={18}
+                        strokeWidth={1.5}
+                      />
+                    </RecruitmentNavLink>
+                  </motion.div>
                 </nav>
               </div>
 

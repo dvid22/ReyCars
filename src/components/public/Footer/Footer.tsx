@@ -1,16 +1,15 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
   ArrowUpRight,
-  Mail,
   MapPin,
   Phone,
 } from "lucide-react";
 
-import { useSiteConfig } from "@/hooks/useSiteConfig";
+import {
+  RecruitmentNavLink,
+} from "@/components/public/RecruitmentNavLink";
 
 import styles from "./Footer.module.css";
 
@@ -22,10 +21,26 @@ const navigation = [
   { label: "Contacto", href: "/contacto" },
 ];
 
+const socialLinks = [
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/reycars_ubate?igsh=Y3hxZW1rNWsxcmVt",
+    icon: "instagram",
+  },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/share/18ye5QQfPU/?mibextid=wwXIfr",
+    icon: "facebook",
+  },
+  {
+    label: "TikTok",
+    href: "https://www.tiktok.com/@reycars_ubate?_r=1&_t=ZS-98kig2MXwVI",
+    icon: "tiktok",
+  },
+] as const;
+
 type SocialIconName =
-  | "instagram"
-  | "facebook"
-  | "tiktok";
+  (typeof socialLinks)[number]["icon"];
 
 function SocialIcon({
   name,
@@ -99,72 +114,9 @@ function SocialIcon({
   );
 }
 
-function onlyDigits(
-  value: string
-) {
-  return value.replace(
-    /\D/g,
-    ""
-  );
-}
-
 export function Footer() {
   const currentYear =
     new Date().getFullYear();
-
-  const {
-    config,
-    isLoading,
-  } = useSiteConfig();
-
-  if (
-    isLoading ||
-    !config
-  ) {
-    return null;
-  }
-
-  const phoneDigits =
-    onlyDigits(
-      config.phone
-    );
-
-  const phoneLink =
-    `tel:+${phoneDigits}`;
-
-  const mapQuery =
-    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-      config.address
-    )}`;
-
-  const socialLinks = [
-    {
-      label: "Instagram",
-      href:
-        config.instagramUrl,
-      icon:
-        "instagram" as const,
-    },
-    {
-      label: "Facebook",
-      href:
-        config.facebookUrl,
-      icon:
-        "facebook" as const,
-    },
-    {
-      label: "TikTok",
-      href:
-        config.tiktokUrl,
-      icon:
-        "tiktok" as const,
-    },
-  ].filter(
-    (social) =>
-      Boolean(
-        social.href
-      )
-  );
 
   return (
     <footer
@@ -267,7 +219,7 @@ export function Footer() {
                 <span />
 
                 <strong>
-                  {config.slogan}
+                  Atrévete a rodar con nosotros.
                 </strong>
               </div>
             </section>
@@ -296,6 +248,17 @@ export function Footer() {
                     />
                   </Link>
                 ))}
+
+                <RecruitmentNavLink>
+                  <span>
+                    Trabaja con nosotros
+                  </span>
+
+                  <ArrowUpRight
+                    size={13}
+                    strokeWidth={1.6}
+                  />
+                </RecruitmentNavLink>
               </nav>
             </section>
 
@@ -388,7 +351,7 @@ export function Footer() {
 
               <div className={styles.contactDetails}>
                 <a
-                  href={phoneLink}
+                  href="tel:+573102062512"
                   className={styles.detailLink}
                 >
                   <Phone
@@ -397,28 +360,12 @@ export function Footer() {
                   />
 
                   <span>
-                    {config.phone}
+                    +57 310 2062512
                   </span>
                 </a>
 
-                {config.email ? (
-                  <a
-                    href={`mailto:${config.email}`}
-                    className={styles.detailLink}
-                  >
-                    <Mail
-                      size={15}
-                      strokeWidth={1.65}
-                    />
-
-                    <span>
-                      {config.email}
-                    </span>
-                  </a>
-                ) : null}
-
                 <a
-                  href={mapQuery}
+                  href="https://www.google.com/maps/search/?api=1&query=Calle%2015%20%23%205%20-%2068%20Ubat%C3%A9"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.detailLink}
@@ -429,7 +376,7 @@ export function Footer() {
                   />
 
                   <span>
-                    {config.address}
+                    Calle 15 # 5 - 68, Ubaté
                   </span>
                 </a>
               </div>
@@ -446,7 +393,7 @@ export function Footer() {
               </span>
 
               <strong>
-                {config.name.toUpperCase()}
+                REYCARS
               </strong>
 
               <span>
@@ -455,12 +402,12 @@ export function Footer() {
             </div>
 
             <span className={styles.bottomCenter}>
-              {config.legalName}
+              Centro de Enseñanza Automovilística
             </span>
 
             <div className={styles.bottomRight}>
-              <a href={phoneLink}>
-                {config.phone}
+              <a href="tel:+573102062512">
+                +57 310 2062512
               </a>
 
               <i />

@@ -1,14 +1,27 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import type { User } from "firebase/auth";
+import {
+  useMemo,
+  useState,
+} from "react";
+
+import {
+  usePathname,
+  useRouter,
+} from "next/navigation";
+
+import type {
+  User,
+} from "firebase/auth";
+
 import {
   LogOut,
   Menu,
 } from "lucide-react";
 
-import { authService } from "@/firebase/auth/auth.service";
+import {
+  authService,
+} from "@/firebase/auth/auth.service";
 
 import styles from "./AdminHeader.module.css";
 
@@ -18,61 +31,118 @@ type AdminHeaderProps = {
 };
 
 const routeLabels = [
-  ["/admin/inicio", "Inicio"],
-  ["/admin/nosotros", "Nosotros"],
-  ["/admin/cursos", "Cursos"],
-  ["/admin/proceso", "Proceso"],
-  ["/admin/equipo", "Equipo"],
-  ["/admin/instalaciones", "Instalaciones"],
-  ["/admin/testimonios", "Testimonios"],
-  ["/admin/faq", "Preguntas frecuentes"],
-  ["/admin/contacto", "Contacto"],
-  ["/admin/recruitment", "Trabaja con nosotros"],
-  ["/admin/configuracion", "Configuración"],
+  [
+    "/admin/inicio",
+    "Inicio",
+  ],
+  [
+    "/admin/nosotros",
+    "Nosotros",
+  ],
+  [
+    "/admin/cursos",
+    "Cursos",
+  ],
+  [
+    "/admin/proceso",
+    "Proceso",
+  ],
+  [
+    "/admin/equipo",
+    "Equipo",
+  ],
+  [
+    "/admin/faq",
+    "Preguntas frecuentes",
+  ],
+  [
+    "/admin/contacto",
+    "Contacto",
+  ],
+  [
+    "/admin/recruitment",
+    "Trabaja con nosotros",
+  ],
 ] as const;
 
 export function AdminHeader({
   user,
   onOpenMenu,
 }: AdminHeaderProps) {
-  const router = useRouter();
-  const pathname = usePathname();
+  const router =
+    useRouter();
 
-  const [isSigningOut, setIsSigningOut] =
+  const pathname =
+    usePathname();
+
+  const [
+    isSigningOut,
+    setIsSigningOut,
+  ] =
     useState(false);
 
-  const sectionTitle = useMemo(() => {
-    if (pathname === "/admin") return "Dashboard";
-
-    return (
-      routeLabels.find(([route]) =>
-        pathname.startsWith(route)
-      )?.[1] ?? "Administrador"
-    );
-  }, [pathname]);
+  const sectionTitle =
+    useMemo(() => {
+      return (
+        routeLabels.find(
+          (
+            [route]
+          ) =>
+            pathname.startsWith(
+              route
+            )
+        )?.[1] ??
+        "Administrador"
+      );
+    }, [
+      pathname,
+    ]);
 
   async function handleLogout() {
-    if (isSigningOut) return;
+    if (
+      isSigningOut
+    ) {
+      return;
+    }
 
     try {
-      setIsSigningOut(true);
+      setIsSigningOut(
+        true
+      );
 
       await authService.logout();
 
-      router.replace("/admin/login");
+      router.replace(
+        "/admin/login"
+      );
+
       router.refresh();
     } finally {
-      setIsSigningOut(false);
+      setIsSigningOut(
+        false
+      );
     }
   }
 
   return (
-    <header className={styles.header}>
-      <div className={styles.left}>
+    <header
+      className={
+        styles.header
+      }
+    >
+      <div
+        className={
+          styles.left
+        }
+      >
         <button
           type="button"
-          className={styles.menuButton}
-          onClick={onOpenMenu}
+          className={
+            styles.menuButton
+          }
+          onClick={
+            onOpenMenu
+          }
           aria-label="Abrir menú"
         >
           <Menu
@@ -81,15 +151,37 @@ export function AdminHeader({
           />
         </button>
 
-        <div className={styles.section}>
-          <span>REYCARS ADMIN</span>
-          <strong>{sectionTitle}</strong>
+        <div
+          className={
+            styles.section
+          }
+        >
+          <span>
+            REY CAR'S- ADMINISTRADOR
+          </span>
+
+          <strong>
+            {
+              sectionTitle
+            }
+          </strong>
         </div>
       </div>
 
-      <div className={styles.account}>
-        <div className={styles.accountText}>
-          <strong>Administrador</strong>
+      <div
+        className={
+          styles.account
+        }
+      >
+        <div
+          className={
+            styles.accountText
+          }
+        >
+          <strong>
+            Administrador
+          </strong>
+
           <span>
             {user.email ??
               "Cuenta administrativa"}
@@ -97,18 +189,28 @@ export function AdminHeader({
         </div>
 
         <div
-          className={styles.avatar}
+          className={
+            styles.avatar
+          }
           aria-hidden="true"
         >
-          {(user.email?.charAt(0) ?? "A")
+          {(user.email?.charAt(
+            0
+          ) ?? "A")
             .toUpperCase()}
         </div>
 
         <button
           type="button"
-          className={styles.logout}
-          onClick={handleLogout}
-          disabled={isSigningOut}
+          className={
+            styles.logout
+          }
+          onClick={
+            handleLogout
+          }
+          disabled={
+            isSigningOut
+          }
         >
           <LogOut
             size={16}
