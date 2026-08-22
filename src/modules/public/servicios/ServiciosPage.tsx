@@ -23,6 +23,7 @@ import {
 import {
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
@@ -74,7 +75,10 @@ function displayPrice(course: Course) {
     typeof course.price !== "number" ||
     course.price <= 0
   ) {
-    return "Consultar precio en oficina";
+    return (
+      course.priceText ||
+      "Consultar precio en oficina"
+    );
   }
 
   // Refrendación solo cambia la forma visual
@@ -218,9 +222,42 @@ export function ServiciosPage() {
   ] =
     useState("");
 
+  const initialServiceFromUrlApplied =
+    useRef(false);
+
   useEffect(() => {
     if (courses.length === 0) {
       return;
+    }
+
+    if (!initialServiceFromUrlApplied.current) {
+      initialServiceFromUrlApplied.current = true;
+
+      const requestedSlug =
+        new URLSearchParams(
+          window.location.search
+        )
+          .get("servicio")
+          ?.trim()
+          .toLowerCase();
+
+      if (requestedSlug) {
+        const requestedCourse =
+          courses.find(
+            (course) =>
+              course.slug
+                .trim()
+                .toLowerCase() ===
+              requestedSlug
+          );
+
+        if (requestedCourse) {
+          setActiveSlug(
+            requestedCourse.slug
+          );
+          return;
+        }
+      }
     }
 
     const stillExists =
@@ -304,6 +341,9 @@ export function ServiciosPage() {
   const practice =
     displayPractice(activeCourse);
 
+  const duration =
+    activeCourse.durationLabel || "";
+
   const price =
     displayPrice(activeCourse);
 
@@ -327,6 +367,47 @@ export function ServiciosPage() {
 
   const whatsappUrl =
     `https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMessage}`;
+
+  const isSoatService =
+    activeCourse.icon === "soat" ||
+    activeCourse.slug
+      .toLowerCase()
+      .includes("soat") ||
+    activeCourse.badge
+      .toLowerCase()
+      .includes("soat");
+
+  const isTransitAdvisory =
+    activeCourse.slug
+      .toLowerCase()
+      .includes("asesoria") ||
+    activeCourse.name
+      .toLowerCase()
+      .includes("asesoría") ||
+    activeCourse.name
+      .toLowerCase()
+      .includes("asesoria");
+
+  const isPesvService =
+    activeCourse.slug
+      .toLowerCase()
+      .includes("pesv") ||
+    activeCourse.badge
+      .toLowerCase()
+      .includes("pesv");
+
+  const isStructuredService =
+    isTransitAdvisory ||
+    isPesvService;
+
+  const detailButtonLabel =
+    isSoatService
+      ? "Cotiza tu SOAT aquí"
+      : isTransitAdvisory
+        ? "Solicitar asesoría"
+        : isPesvService
+          ? "Cotizar PESV"
+          : "Solicitar información";
 
   return (
     <section
@@ -725,6 +806,51 @@ export function ServiciosPage() {
                         activeCourse.description
                       }
                     </p>
+
+                    {isStructuredService &&
+                    details.length > 0 ? (
+                      <div
+                        aria-label="Detalles del servicio"
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns:
+                            "repeat(auto-fit, minmax(185px, 1fr))",
+                          gap: "8px 14px",
+                          marginTop: "16px",
+                          maxWidth: "560px",
+                        }}
+                      >
+                        {details.map(
+                          (detail) => (
+                            <span
+                              key={detail}
+                              style={{
+                                display: "flex",
+                                alignItems: "flex-start",
+                                gap: "8px",
+                                color: "#4f6268",
+                                fontSize:
+                                  "clamp(12.5px, 0.86vw, 14px)",
+                                lineHeight: 1.38,
+                              }}
+                            >
+                              <CheckCircle2
+                                size={15}
+                                strokeWidth={1.9}
+                                style={{
+                                  flex: "0 0 auto",
+                                  marginTop: "2px",
+                                  color:
+                                    "var(--reycars-cyan-dark, #209aaa)",
+                                }}
+                              />
+
+                              {detail}
+                            </span>
+                          )
+                        )}
+                      </div>
+                    ) : null}
                   </div>
 
                   <motion.div
@@ -904,6 +1030,22 @@ export function ServiciosPage() {
                         label="Modalidad"
                       />
                     ) : null}
+
+                    {activeCourse.slug === "refrendacion" &&
+                    duration ? (
+                      <Stat
+                        icon={
+                          <Clock3
+                            size={20}
+                            strokeWidth={
+                              1.65
+                            }
+                          />
+                        }
+                        value={duration}
+                        label="Tiempo estimado"
+                      />
+                    ) : null}
                   </div>
 
                   <div
@@ -931,24 +1073,37 @@ export function ServiciosPage() {
                         styles.includes
                       }
                     >
-                      {details.map(
-                        (detail) => (
-                          <span
-                            key={
-                              detail
-                            }
-                          >
-                            <CheckCircle2
-                              size={
-                                13
-                              }
-                              strokeWidth={
-                                1.8
-                              }
-                            />
+                      {isStructuredService ? (
+                        <span>
+                          <CheckCircle2
+                            size={13}
+                            strokeWidth={1.8}
+                          />
 
-                            {detail}
-                          </span>
+                          {isTransitAdvisory
+                            ? "Atención y acompañamiento según el trámite requerido"
+                            : "Implementación ajustada al tamaño y necesidades de la organización"}
+                        </span>
+                      ) : (
+                        details.map(
+                          (detail) => (
+                            <span
+                              key={
+                                detail
+                              }
+                            >
+                              <CheckCircle2
+                                size={
+                                  13
+                                }
+                                strokeWidth={
+                                  1.8
+                                }
+                              />
+
+                              {detail}
+                            </span>
+                          )
                         )
                       )}
                     </div>
@@ -962,11 +1117,10 @@ export function ServiciosPage() {
                       className={
                         styles.detailButton
                       }
-                      aria-label={`Solicitar información sobre ${whatsappLabel} por WhatsApp`}
+                      aria-label={`${detailButtonLabel} sobre ${whatsappLabel} por WhatsApp`}
                     >
                       <span>
-                        Solicitar
-                        información
+                        {detailButtonLabel}
                       </span>
 
                       <i>

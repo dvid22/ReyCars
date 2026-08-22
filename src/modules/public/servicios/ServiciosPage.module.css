@@ -1683,3 +1683,1022 @@
     font-size: 11.4px;
   }
 }
+
+/* =========================================================
+   SERVICIOS · LEGIBILIDAD FINAL V1
+   Jerarquía:
+   categoría > nombre > subtítulo > descripción
+   + datos, detalles y beneficios mucho más visibles
+   ========================================================= */
+
+/* CATEGORÍA / BADGE */
+.badge {
+  margin-bottom: 10px;
+
+  color: var(--cyan-dark);
+
+  font-size: clamp(20px, 1.55vw, 26px);
+  font-weight: 700;
+
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+
+  text-transform: none;
+}
+
+/* NOMBRE PRINCIPAL DEL SERVICIO */
+.visualCopy h2 {
+  font-size: clamp(34px, 2.75vw, 46px);
+  font-weight: 500;
+
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+}
+
+/* SUBTÍTULO */
+.visualCopy > strong {
+  margin-top: 11px;
+
+  color: #25373d;
+
+  font-size: clamp(17px, 1.15vw, 20px);
+  font-weight: 650;
+
+  line-height: 1.28;
+}
+
+/* DESCRIPCIÓN */
+.visualCopy p {
+  max-width: 455px;
+
+  margin-top: 13px;
+
+  color: #5f7076;
+
+  font-size: clamp(14.5px, 1vw, 16.5px);
+
+  line-height: 1.62;
+}
+
+/* CONTADOR */
+.counter {
+  margin-bottom: 17px;
+
+  padding: 7px 13px;
+
+  font-size: 13px;
+  font-weight: 650;
+}
+
+/* HORAS / VEHÍCULO / MODALIDAD */
+.stat {
+  gap: 12px;
+
+  padding: 16px 16px;
+}
+
+.statIcon {
+  width: 41px;
+
+  border-radius: 12px;
+}
+
+.statIcon svg {
+  width: 21px;
+  height: 21px;
+}
+
+.stat > div {
+  gap: 4px;
+}
+
+.stat strong {
+  color: #152126;
+
+  font-size: clamp(16px, 1.05vw, 18px);
+  font-weight: 700;
+
+  line-height: 1.12;
+}
+
+.stat > div > span {
+  color: #718086;
+
+  font-size: clamp(12px, 0.82vw, 13.5px);
+  font-weight: 500;
+}
+
+/* PRECIO */
+.price {
+  min-width: 185px;
+
+  gap: 5px;
+}
+
+.price span {
+  color: #5e7279;
+
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.price strong {
+  font-size: clamp(25px, 2vw, 34px);
+  font-weight: 650;
+
+  line-height: 1.08;
+}
+
+/* DETALLES INCLUIDOS */
+.includes {
+  gap: 10px 15px;
+}
+
+.includes span {
+  gap: 8px;
+
+  color: #4f6268;
+
+  font-size: clamp(12.5px, 0.86vw, 14px);
+
+  line-height: 1.4;
+}
+
+.includes svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* CTA WHATSAPP */
+.detailButton {
+  min-height: 49px;
+
+  padding:
+    4px
+    4px
+    4px
+    19px;
+
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.detailButton i {
+  width: 41px;
+}
+
+/* KPIs / BENEFICIOS INFERIORES */
+.trustStrip {
+  gap: clamp(18px, 2.4vw, 36px);
+
+  margin-top: 18px;
+  padding-top: 17px;
+}
+
+.trustItem {
+  grid-template-columns:
+    46px
+    minmax(0, 1fr);
+
+  gap: 13px;
+}
+
+.trustItem > span {
+  width: 46px;
+}
+
+.trustItem > span svg {
+  width: 21px;
+  height: 21px;
+}
+
+.trustItem div {
+  gap: 4px;
+}
+
+.trustItem strong {
+  color: #1f3036;
+
+  font-size: clamp(14px, 0.98vw, 16px);
+  font-weight: 700;
+
+  line-height: 1.22;
+}
+
+.trustItem p {
+  max-width: 340px;
+
+  color: #687a80;
+
+  font-size: clamp(12.5px, 0.85vw, 14px);
+
+  line-height: 1.48;
+}
+
+/* SELECTOR LATERAL */
+.groupTitle {
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.courseItemText small {
+  font-size: 11.5px;
+  font-weight: 650;
+}
+
+.courseItemText strong {
+  font-size: clamp(13.5px, 0.92vw, 15px);
+  font-weight: 650;
+}
+
+.courseItemText em {
+  font-size: 12px;
+}
+
+.courseNumber {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+/* LOW HEIGHT DESKTOP */
+@media (max-height: 850px) and (min-width: 901px) {
+  .badge {
+    font-size: clamp(18px, 1.35vw, 22px);
+  }
+
+  .visualCopy h2 {
+    font-size: clamp(31px, 2.35vw, 40px);
+  }
+
+  .visualCopy > strong {
+    font-size: clamp(15.5px, 1vw, 18px);
+  }
+
+  .visualCopy p {
+    font-size: clamp(13.5px, 0.9vw, 15px);
+  }
+
+  .stat {
+    padding: 13px 14px;
+  }
+
+  .statIcon {
+    width: 37px;
+  }
+
+  .stat strong {
+    font-size: clamp(14px, 0.9vw, 16px);
+  }
+
+  .stat > div > span {
+    font-size: 12px;
+  }
+
+  .includes span {
+    font-size: 12px;
+  }
+
+  .trustItem {
+    grid-template-columns:
+      41px
+      minmax(0, 1fr);
+  }
+
+  .trustItem > span {
+    width: 41px;
+  }
+
+  .trustItem strong {
+    font-size: 13px;
+  }
+
+  .trustItem p {
+    font-size: 12px;
+  }
+}
+
+/* TABLET */
+@media (max-width: 900px) {
+  .badge {
+    font-size: clamp(20px, 4vw, 25px);
+  }
+
+  .visualCopy h2 {
+    font-size: clamp(33px, 6vw, 44px);
+  }
+
+  .visualCopy > strong {
+    font-size: clamp(16px, 2.5vw, 19px);
+  }
+
+  .visualCopy p {
+    font-size: 15px;
+  }
+
+  .stat strong {
+    font-size: 16px;
+  }
+
+  .stat > div > span {
+    font-size: 12.5px;
+  }
+
+  .includes span {
+    font-size: 13px;
+  }
+
+  .trustItem strong {
+    font-size: 14.5px;
+  }
+
+  .trustItem p {
+    font-size: 13px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 620px) {
+  .visualArea {
+    min-height: 555px;
+  }
+
+  .counter {
+    margin-bottom: 13px;
+
+    font-size: 12.5px;
+  }
+
+  .badge {
+    margin-bottom: 8px;
+
+    font-size: clamp(21px, 6.2vw, 25px);
+
+    line-height: 1.08;
+  }
+
+  .visualCopy h2 {
+    font-size: clamp(29px, 8.6vw, 36px);
+
+    line-height: 1.02;
+  }
+
+  .visualCopy > strong {
+    margin-top: 9px;
+
+    font-size: clamp(16px, 4.5vw, 18px);
+
+    line-height: 1.3;
+  }
+
+  .visualCopy p {
+    margin-top: 11px;
+
+    font-size: 14px;
+
+    line-height: 1.55;
+  }
+
+  .stat {
+    gap: 10px;
+
+    padding: 14px 12px;
+  }
+
+  .statIcon {
+    width: 38px;
+  }
+
+  .stat strong {
+    font-size: 15px;
+  }
+
+  .stat > div > span {
+    font-size: 12px;
+  }
+
+  .price span {
+    font-size: 12.5px;
+  }
+
+  .price strong {
+    font-size: clamp(24px, 7vw, 31px);
+  }
+
+  .includes span {
+    font-size: 12.8px;
+  }
+
+  .detailButton {
+    min-height: 50px;
+
+    font-size: 13.5px;
+  }
+
+  .trustStrip {
+    gap: 14px;
+
+    margin-top: 16px;
+    padding-top: 14px;
+  }
+
+  .trustItem {
+    grid-template-columns:
+      43px
+      minmax(0, 1fr);
+
+    gap: 11px;
+  }
+
+  .trustItem > span {
+    width: 43px;
+  }
+
+  .trustItem strong {
+    font-size: 14px;
+  }
+
+  .trustItem p {
+    font-size: 12.8px;
+  }
+
+  .mobileChip strong {
+    font-size: 12.5px;
+  }
+
+  .mobileChip small {
+    font-size: 11.5px;
+  }
+}
+
+/* =========================================================
+   SERVICIOS · JERARQUÍA FINAL V2
+   Categoría > nombre > subtítulo > descripción
+   Texto alineado hacia la parte superior de la card
+   ========================================================= */
+
+/* Subir todo el bloque textual dentro de la card */
+.visualArea {
+  align-items: flex-start;
+
+  padding:
+    clamp(24px, 2vw, 30px)
+    clamp(24px, 2.2vw, 34px)
+    clamp(22px, 1.8vw, 28px);
+}
+
+.visualCopy {
+  align-self: flex-start;
+
+  padding-top: clamp(2px, 0.25vw, 5px);
+}
+
+/* Contador: informativo, no protagonista */
+.counter {
+  margin-bottom: 14px;
+
+  font-size: 12.5px;
+}
+
+/* CATEGORÍA: elemento tipográfico principal */
+.badge {
+  margin-bottom: 7px;
+
+  color: var(--cyan-dark);
+
+  font-size: clamp(34px, 2.8vw, 44px);
+  font-weight: 700;
+
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+
+  text-transform: none;
+}
+
+/* NOMBRE DEL SERVICIO: segundo nivel */
+.visualCopy h2 {
+  margin: 0;
+
+  color: #111719;
+
+  font-size: clamp(28px, 2.2vw, 36px);
+  font-weight: 500;
+
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+
+/* SUBTÍTULO: tercer nivel */
+.visualCopy > strong {
+  margin-top: 10px;
+
+  color: #26373d;
+
+  font-size: clamp(17px, 1.15vw, 20px);
+  font-weight: 650;
+
+  line-height: 1.28;
+}
+
+/* DESCRIPCIÓN: cuarto nivel */
+.visualCopy p {
+  max-width: 500px;
+
+  margin-top: 11px;
+
+  color: #5f7076;
+
+  font-size: clamp(14.5px, 0.98vw, 16px);
+
+  line-height: 1.58;
+}
+
+/* Dar más aire entre copy e imagen en desktop */
+@media (min-width: 901px) {
+  .visualCopy {
+    width: min(46%, 500px);
+  }
+
+  .visual {
+    width: 56%;
+  }
+}
+
+/* No dejar que el media query de baja altura invierta la jerarquía */
+@media (max-height: 850px) and (min-width: 901px) {
+  .visualArea {
+    padding-top: 18px;
+  }
+
+  .visualCopy {
+    padding-top: 0;
+  }
+
+  .badge {
+    font-size: clamp(30px, 2.35vw, 38px);
+  }
+
+  .visualCopy h2 {
+    font-size: clamp(25px, 1.95vw, 32px);
+  }
+
+  .visualCopy > strong {
+    font-size: clamp(15.5px, 1vw, 18px);
+  }
+
+  .visualCopy p {
+    font-size: clamp(13.5px, 0.9vw, 15px);
+  }
+}
+
+/* TABLET */
+@media (max-width: 900px) {
+  .visualArea {
+    padding:
+      20px
+      18px
+      0;
+  }
+
+  .visualCopy {
+    padding-top: 0;
+  }
+
+  .badge {
+    font-size: clamp(31px, 5.7vw, 40px);
+  }
+
+  .visualCopy h2 {
+    font-size: clamp(27px, 4.8vw, 34px);
+  }
+
+  .visualCopy > strong {
+    font-size: clamp(16px, 2.5vw, 19px);
+  }
+
+  .visualCopy p {
+    font-size: 15px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 620px) {
+  .visualArea {
+    min-height: 555px;
+
+    padding:
+      16px
+      14px
+      0;
+  }
+
+  .counter {
+    margin-bottom: 11px;
+
+    font-size: 12px;
+  }
+
+  .badge {
+    margin-bottom: 6px;
+
+    font-size: clamp(28px, 8.2vw, 34px);
+
+    line-height: 1;
+  }
+
+  .visualCopy h2 {
+    font-size: clamp(24px, 7.2vw, 30px);
+
+    line-height: 1.03;
+  }
+
+  .visualCopy > strong {
+    margin-top: 8px;
+
+    font-size: clamp(15.5px, 4.4vw, 18px);
+  }
+
+  .visualCopy p {
+    margin-top: 9px;
+
+    font-size: 14px;
+
+    line-height: 1.52;
+  }
+}
+
+/* =========================================================
+   SERVICIOS · CENTRADO VERTICAL FINAL V3
+   Solo reposiciona el bloque de texto.
+   Mantiene intacta toda la jerarquía tipográfica V2.
+   ========================================================= */
+
+.visualArea {
+  align-items: center;
+}
+
+.visualCopy {
+  align-self: center;
+  padding-top: 0;
+}
+
+/* Escritorio de poca altura: también centrado */
+@media (max-height: 850px) and (min-width: 901px) {
+  .visualArea {
+    align-items: center;
+  }
+
+  .visualCopy {
+    align-self: center;
+    padding-top: 0;
+  }
+}
+
+/* Tablet mantiene el layout apilado actual */
+@media (max-width: 900px) {
+  .visualCopy {
+    align-self: auto;
+  }
+}
+
+/* Mobile mantiene el layout apilado actual */
+@media (max-width: 620px) {
+  .visualCopy {
+    align-self: auto;
+  }
+}
+
+/* =========================================================
+   SERVICIOS ESPECIALES · ASESORÍAS + PESV · ORDEN FINAL V1
+   - Más aire entre títulos y textos
+   - Viñetas en una sola columna
+   - Mejor lectura sin afectar licencias normales
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   JERARQUÍA GENERAL · más respiración entre niveles
+   --------------------------------------------------------- */
+
+.visualCopy .badge {
+  margin-bottom: 12px;
+}
+
+.visualCopy h2 {
+  margin-bottom: 0;
+}
+
+.visualCopy > strong {
+  margin-top: 14px;
+}
+
+.visualCopy > p {
+  margin-top: 15px;
+}
+
+/* ---------------------------------------------------------
+   BLOQUE ESPECIAL DE VIÑETAS
+   El JSX actual lo identifica con aria-label.
+   --------------------------------------------------------- */
+
+.visualCopy > div[aria-label="Detalles del servicio"] {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+
+  gap: 9px !important;
+
+  width: min(100%, 500px);
+  max-width: 500px !important;
+
+  margin-top: 20px !important;
+  padding-top: 17px;
+
+  border-top: 1px solid rgba(16, 46, 55, 0.08);
+}
+
+/* Cada viñeta */
+.visualCopy
+  > div[aria-label="Detalles del servicio"]
+  > span {
+  min-width: 0;
+
+  display: grid !important;
+  grid-template-columns:
+    18px
+    minmax(0, 1fr);
+
+  align-items: start !important;
+
+  gap: 10px !important;
+
+  padding: 1px 0;
+
+  color: #50646b !important;
+
+  font-size: clamp(13px, 0.9vw, 14.5px) !important;
+  font-weight: 500;
+
+  line-height: 1.45 !important;
+}
+
+/* Icono de check */
+.visualCopy
+  > div[aria-label="Detalles del servicio"]
+  > span
+  > svg {
+  width: 16px;
+  height: 16px;
+
+  margin-top: 2px !important;
+
+  color: var(--cyan-dark) !important;
+}
+
+/* ---------------------------------------------------------
+   ESCRITORIO · servicios con contenido largo
+   --------------------------------------------------------- */
+
+@media (min-width: 901px) {
+  .visualCopy:has(
+      > div[aria-label="Detalles del servicio"]
+    ) {
+    width: min(45%, 520px);
+    max-width: 520px;
+  }
+
+  .visualCopy:has(
+      > div[aria-label="Detalles del servicio"]
+    )
+    .badge {
+    margin-bottom: 11px;
+  }
+
+  .visualCopy:has(
+      > div[aria-label="Detalles del servicio"]
+    )
+    h2 {
+    max-width: 500px;
+
+    font-size: clamp(27px, 2vw, 34px);
+
+    line-height: 1.08;
+  }
+
+  .visualCopy:has(
+      > div[aria-label="Detalles del servicio"]
+    )
+    > strong {
+    max-width: 500px;
+
+    margin-top: 14px;
+
+    line-height: 1.35;
+  }
+
+  .visualCopy:has(
+      > div[aria-label="Detalles del servicio"]
+    )
+    > p {
+    max-width: 500px;
+
+    margin-top: 14px;
+
+    line-height: 1.6;
+  }
+
+  /* La imagen conserva presencia, pero deja más espacio al contenido */
+  .visualArea:has(
+      .visualCopy
+        > div[aria-label="Detalles del servicio"]
+    )
+    .visual {
+    width: 55%;
+  }
+}
+
+/* ---------------------------------------------------------
+   PANTALLAS BAJAS · evitar amontonamiento
+   --------------------------------------------------------- */
+
+@media (max-height: 850px) and (min-width: 901px) {
+  .visualCopy:has(
+      > div[aria-label="Detalles del servicio"]
+    )
+    .badge {
+    font-size: clamp(27px, 2.15vw, 34px);
+  }
+
+  .visualCopy:has(
+      > div[aria-label="Detalles del servicio"]
+    )
+    h2 {
+    font-size: clamp(24px, 1.8vw, 30px);
+  }
+
+  .visualCopy:has(
+      > div[aria-label="Detalles del servicio"]
+    )
+    > strong {
+    margin-top: 11px;
+
+    font-size: clamp(14.5px, 0.95vw, 17px);
+  }
+
+  .visualCopy:has(
+      > div[aria-label="Detalles del servicio"]
+    )
+    > p {
+    margin-top: 11px;
+
+    font-size: clamp(13px, 0.88vw, 14.5px);
+  }
+
+  .visualCopy > div[aria-label="Detalles del servicio"] {
+    gap: 6px !important;
+
+    margin-top: 14px !important;
+    padding-top: 12px;
+  }
+
+  .visualCopy
+    > div[aria-label="Detalles del servicio"]
+    > span {
+    font-size: 12.5px !important;
+
+    line-height: 1.35 !important;
+  }
+}
+
+/* ---------------------------------------------------------
+   TABLET
+   --------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .visualCopy:has(
+      > div[aria-label="Detalles del servicio"]
+    ) {
+    max-width: 100%;
+  }
+
+  .visualCopy:has(
+      > div[aria-label="Detalles del servicio"]
+    )
+    h2 {
+    max-width: 620px;
+  }
+
+  .visualCopy:has(
+      > div[aria-label="Detalles del servicio"]
+    )
+    > strong,
+  .visualCopy:has(
+      > div[aria-label="Detalles del servicio"]
+    )
+    > p {
+    max-width: 620px;
+  }
+
+  .visualCopy > div[aria-label="Detalles del servicio"] {
+    width: 100%;
+    max-width: 620px !important;
+
+    gap: 8px !important;
+
+    margin-top: 18px !important;
+  }
+
+  /* Servicios con muchas viñetas necesitan más altura antes de la imagen */
+  .visualArea:has(
+      .visualCopy
+        > div[aria-label="Detalles del servicio"]
+    ) {
+    min-height: 720px;
+  }
+
+  .visualArea:has(
+      .visualCopy
+        > div[aria-label="Detalles del servicio"]
+    )
+    .visual {
+    height: 330px;
+  }
+}
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 620px) {
+  .visualCopy .badge {
+    margin-bottom: 10px;
+  }
+
+  .visualCopy > strong {
+    margin-top: 11px;
+  }
+
+  .visualCopy > p {
+    margin-top: 11px;
+  }
+
+  .visualCopy:has(
+      > div[aria-label="Detalles del servicio"]
+    )
+    h2 {
+    font-size: clamp(23px, 7vw, 29px);
+
+    line-height: 1.08;
+  }
+
+  .visualCopy:has(
+      > div[aria-label="Detalles del servicio"]
+    )
+    > strong {
+    font-size: clamp(15px, 4.2vw, 17px);
+
+    line-height: 1.35;
+  }
+
+  .visualCopy:has(
+      > div[aria-label="Detalles del servicio"]
+    )
+    > p {
+    font-size: 13.5px;
+
+    line-height: 1.55;
+  }
+
+  .visualCopy > div[aria-label="Detalles del servicio"] {
+    gap: 8px !important;
+
+    margin-top: 16px !important;
+    padding-top: 14px;
+  }
+
+  .visualCopy
+    > div[aria-label="Detalles del servicio"]
+    > span {
+    grid-template-columns:
+      17px
+      minmax(0, 1fr);
+
+    gap: 9px !important;
+
+    font-size: 13px !important;
+
+    line-height: 1.4 !important;
+  }
+
+  .visualArea:has(
+      .visualCopy
+        > div[aria-label="Detalles del servicio"]
+    ) {
+    min-height: 760px;
+  }
+
+  .visualArea:has(
+      .visualCopy
+        > div[aria-label="Detalles del servicio"]
+    )
+    .visual {
+    height: 285px;
+  }
+}

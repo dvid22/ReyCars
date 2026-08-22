@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import {
   ChevronRight,
 } from "lucide-react";
@@ -21,6 +22,24 @@ import {
 } from "@/components/process/ProcessIcon";
 
 import styles from "./ProcesoPage.module.css";
+
+const FORMATION_CATEGORIES = [
+  {
+    label: "A2",
+    slug: "a2",
+    ariaLabel: "Ver servicio de categoría A2",
+  },
+  {
+    label: "B1",
+    slug: "b1",
+    ariaLabel: "Ver servicio de categoría B1",
+  },
+  {
+    label: "C1",
+    slug: "c1",
+    ariaLabel: "Ver servicio de categoría C1",
+  },
+] as const;
 
 function renderHighlightedTitle(
   title: string,
@@ -88,6 +107,10 @@ export function ProcesoPage() {
     visibleSteps.findIndex(
       (step) => step.id === activeStep.id
     );
+
+  const isFormationStep =
+    activeStep.id === "elige-formacion" ||
+    activeIndex === 0;
 
   return (
     <section className={styles.page}>
@@ -226,6 +249,36 @@ export function ProcesoPage() {
 
                   <h2>{activeStep.title}</h2>
                   <p>{activeStep.description}</p>
+
+                  {isFormationStep ? (
+                    <div
+                      className={styles.categoryChoices}
+                      aria-label="Categorías de licencia disponibles"
+                    >
+                      <span
+                        className={styles.categoryChoicesLabel}
+                      >
+                        Elige tu categoría
+                      </span>
+
+                      <div
+                        className={styles.categoryButtons}
+                      >
+                        {FORMATION_CATEGORIES.map(
+                          (category) => (
+                            <Link
+                              key={category.slug}
+                              href={`/servicios?servicio=${category.slug}`}
+                              className={styles.categoryButton}
+                              aria-label={category.ariaLabel}
+                            >
+                              {category.label}
+                            </Link>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
 
                 <motion.div

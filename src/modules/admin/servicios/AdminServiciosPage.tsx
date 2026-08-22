@@ -33,7 +33,9 @@ type CourseKind =
   | "reinforcement"
   | "defensive"
   | "renewal"
-  | "soat";
+  | "soat"
+  | "transit_advisory"
+  | "pesv";
 
 type WizardStep = 1 | 2 | 3;
 
@@ -42,6 +44,8 @@ type CourseDraft = {
 
   name: string;
   categoryCode: string;
+  badge: string;
+  subtitle: string;
   description: string;
 
   vehicle: "Automóvil" | "Motocicleta" | "";
@@ -58,6 +62,7 @@ type CourseDraft = {
 
   renewalSinglePrice: number | null;
   renewalComboPrice: number | null;
+  renewalDuration: string;
 
   imageUrl: string;
   active: boolean;
@@ -71,6 +76,8 @@ const EMPTY_DRAFT: CourseDraft = {
 
   name: "",
   categoryCode: "",
+  badge: "",
+  subtitle: "",
   description: "",
 
   vehicle: "Automóvil",
@@ -87,6 +94,7 @@ const EMPTY_DRAFT: CourseDraft = {
 
   renewalSinglePrice: 0,
   renewalComboPrice: 0,
+  renewalDuration: "",
 
   imageUrl: "",
   active: true,
@@ -124,6 +132,16 @@ const COURSE_KINDS: Array<{
     value: "soat",
     title: "SOAT",
     description: "Seguro obligatorio para carro o motocicleta.",
+  },
+  {
+    value: "transit_advisory",
+    title: "Asesorías de tránsito",
+    description: "Trámites y acompañamiento de tránsito a nivel nacional.",
+  },
+  {
+    value: "pesv",
+    title: "PESV",
+    description: "Diseño e implementación del Plan Estratégico de Seguridad Vial.",
   },
 ];
 
@@ -169,6 +187,27 @@ function toSlug(value: string) {
 function inferKind(course: Course): CourseKind {
   const slug = course.slug.toLowerCase();
   const badge = course.badge.toLowerCase();
+
+  if (
+    slug.includes("asesoria") ||
+    slug.includes("transito") ||
+    badge.includes("asesoría") ||
+    badge.includes("asesoria") ||
+    course.name.toLowerCase().includes("asesoría") ||
+    course.name.toLowerCase().includes("asesoria")
+  ) {
+    return "transit_advisory";
+  }
+
+  if (
+    slug.includes("pesv") ||
+    badge.includes("pesv") ||
+    course.name.toLowerCase().includes("pesv") ||
+    course.name.toLowerCase().includes("plan estratégico") ||
+    course.name.toLowerCase().includes("plan estrategico")
+  ) {
+    return "pesv";
+  }
 
   if (
     slug.includes("soat") ||
@@ -271,6 +310,8 @@ function courseToDraft(course: Course): CourseDraft {
       kind === "license"
         ? course.badge.replace(/categoría/gi, "").trim()
         : "",
+    badge: course.badge,
+    subtitle: course.subtitle,
     description: course.description,
 
     vehicle:
@@ -315,6 +356,11 @@ function courseToDraft(course: Course): CourseDraft {
         "combo"
       ) ?? 0,
 
+    renewalDuration:
+      kind === "renewal"
+        ? course.durationLabel || ""
+        : "",
+
     imageUrl: course.imageUrl,
     active: course.active,
     order: course.order,
@@ -335,7 +381,11 @@ function getGroup(kind: CourseKind): CourseGroup {
     return "Licencias de conducción";
   }
 
-  if (kind === "soat") {
+  if (
+    kind === "soat" ||
+    kind === "transit_advisory" ||
+    kind === "pesv"
+  ) {
     return "Otros servicios";
   }
 
@@ -347,6 +397,8 @@ function getIcon(
   vehicle: CourseDraft["vehicle"]
 ): CourseIconType {
   if (kind === "soat") return "soat";
+  if (kind === "transit_advisory") return "id";
+  if (kind === "pesv") return "shield";
   if (kind === "renewal") return "id";
   if (kind === "defensive") return "shield";
   if (kind === "reinforcement") {
@@ -363,6 +415,13 @@ function getIcon(
 function buildGeneratedIncludes(
   draft: CourseDraft
 ) {
+  if (
+    draft.kind === "transit_advisory" ||
+    draft.kind === "pesv"
+  ) {
+    return [];
+  }
+
   if (draft.kind === "license") {
     return [
       draft.theoryHours != null
@@ -457,8 +516,8 @@ function buildPayload(
   const group = getGroup(draft.kind);
   const icon = getIcon(draft.kind, draft.vehicle);
 
-  let badge = "";
-  let subtitle = "";
+  let generatedBadge = "";
+  let generatedSubtitle = "";
   let category = "";
   let slugBase = draft.name;
   let price: number | null = null;
@@ -474,8 +533,8 @@ function buildPayload(
   if (draft.kind === "license") {
     const code = draft.categoryCode.trim().toUpperCase();
 
-    badge = code ? `Categoría ${code}` : "Licencia";
-    subtitle =
+    generatedBadge = code ? `Categoría ${code}` : "Licencia";
+    generatedSubtitle =
       draft.vehicle === "Motocicleta"
         ? "Formación para motocicleta"
         : draft.name.toLowerCase().includes("particular")
@@ -500,8 +559,8 @@ function buildPayload(
   }
 
   if (draft.kind === "reinforcement") {
-    badge = "Refuerzo";
-    subtitle = draft.vehicle || "Práctica personalizada";
+    generatedBadge = "Refuerzo";
+    generatedSubtitle = draft.vehicle || "Práctica personalizada";
     category = draft.vehicle || "Refuerzo";
     slugBase = `refuerzo-${draft.vehicle}`;
 
@@ -532,8 +591,8 @@ function buildPayload(
   }
 
   if (draft.kind === "defensive") {
-    badge = "Certificado";
-    subtitle = "Formación complementaria";
+    generatedBadge = "Certificado";
+    generatedSubtitle = "Formación complementaria";
     category = "Manejo defensivo";
     slugBase = "manejo-defensivo";
 
@@ -555,8 +614,8 @@ function buildPayload(
   }
 
   if (draft.kind === "soat") {
-    badge = "SOAT";
-    subtitle =
+    generatedBadge = "SOAT";
+    generatedSubtitle =
       draft.vehicle === "Motocicleta"
         ? "Seguro obligatorio para motocicleta"
         : draft.vehicle === "Automóvil"
@@ -578,12 +637,49 @@ function buildPayload(
     }
   }
 
+  if (draft.kind === "transit_advisory") {
+    generatedBadge = "Asesorías";
+    generatedSubtitle = "Trámites de tránsito a nivel nacional";
+    category = "Trámites";
+    slugBase = "asesorias-transito";
+    modality = "Nacional";
+    priceLabel = "Asesoría";
+
+    price =
+      typeof draft.price === "number"
+        ? draft.price
+        : 0;
+
+    if (price <= 0) {
+      priceText = "Solicitar cotización";
+    }
+  }
+
+  if (draft.kind === "pesv") {
+    generatedBadge = "PESV";
+    generatedSubtitle = "Plan Estratégico de Seguridad Vial";
+    category = "Seguridad vial";
+    slugBase = "pesv";
+    modality = "Empresarial";
+    priceLabel = "Servicio";
+
+    price =
+      typeof draft.price === "number"
+        ? draft.price
+        : 0;
+
+    if (price <= 0) {
+      priceText = "Solicitar cotización";
+    }
+  }
+
   if (draft.kind === "renewal") {
-    badge = "Refrendación";
-    subtitle = "Categoría individual o combo";
+    generatedBadge = "Refrendación";
+    generatedSubtitle = "Categoría individual o combo";
     category = "Trámite";
     slugBase = "refrendacion";
     modality = "Trámite";
+    durationLabel = draft.renewalDuration.trim();
     priceLabel = "Valor";
 
     // Un solo origen de verdad:
@@ -603,13 +699,21 @@ function buildPayload(
     draft.name.trim() ||
     getKindLabel(draft.kind);
 
+  const finalBadge =
+    draft.badge.trim() ||
+    generatedBadge;
+
+  const finalSubtitle =
+    draft.subtitle.trim() ||
+    generatedSubtitle;
+
   return {
     slug: toSlug(slugBase),
     group,
     category,
-    badge,
+    badge: finalBadge,
     name: finalName,
-    subtitle,
+    subtitle: finalSubtitle,
     description: draft.description.trim(),
 
     imageUrl: draft.imageUrl,
@@ -634,7 +738,7 @@ function buildPayload(
     audience: "",
 
     icon,
-    whatsappLabel: `${badge} - ${finalName}`,
+    whatsappLabel: `${finalBadge} - ${finalName}`,
 
     features: [],
     includes: buildIncludes(draft),
@@ -657,11 +761,66 @@ function getDraftPreview(draft: CourseDraft) {
   };
 }
 
+
+function getSpecialServiceDrafts(
+  startOrder: number
+): CourseDraft[] {
+  return [
+    {
+      ...EMPTY_DRAFT,
+      kind: "transit_advisory",
+      name: "Asesorías de tránsito",
+      badge: "Asesorías",
+      subtitle: "Trámites de tránsito a nivel nacional",
+      description:
+        "Acompañamiento y gestión para diferentes trámites de tránsito a nivel nacional.",
+      vehicle: "",
+      price: 0,
+      imageUrl: "",
+      active: true,
+      order: startOrder,
+      includes: [
+        "Traspasos",
+        "Liquidación de impuestos",
+        "Duplicados de licencia de conducción y de tránsito",
+        "SOAT",
+        "Traslado de cuenta",
+        "Certificado de libertad y tradición",
+        "Duplicado de placas",
+        "Levantamiento de prenda",
+      ],
+    },
+    {
+      ...EMPTY_DRAFT,
+      kind: "pesv",
+      name: "Diseño e implementación del PESV",
+      badge: "PESV",
+      subtitle: "Plan Estratégico de Seguridad Vial",
+      description:
+        "Diseño e implementación del PESV de acuerdo con el tamaño y las necesidades de la organización.",
+      vehicle: "",
+      price: 0,
+      imageUrl: "",
+      active: true,
+      order: startOrder + 1,
+      includes: [
+        "Resolución 40595 del 2022",
+        "Básico: 18 pasos",
+        "Estándar: 22 pasos",
+        "Avanzado: 24 pasos",
+        "Acompañamiento profesional técnico en seguridad vial",
+      ],
+    },
+  ];
+}
+
 export function AdminServiciosPage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
+  const [isAddingSpecialServices, setIsAddingSpecialServices] =
+    useState(false);
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -691,6 +850,28 @@ export function AdminServiciosPage() {
     () => courses.filter((course) => course.active).length,
     [courses]
   );
+
+  const missingSpecialServices = useMemo(() => {
+    const existingSlugs = new Set(
+      courses.map((course) =>
+        course.slug.toLowerCase()
+      )
+    );
+
+    return [
+      {
+        kind: "transit_advisory" as const,
+        slug: "asesorias-transito",
+      },
+      {
+        kind: "pesv" as const,
+        slug: "pesv",
+      },
+    ].filter(
+      (item) =>
+        !existingSlugs.has(item.slug)
+    );
+  }, [courses]);
 
   async function loadCourses() {
     try {
@@ -758,6 +939,13 @@ export function AdminServiciosPage() {
     if (step === 1) {
       if (!draft.name.trim()) {
         setError("Escribe el nombre del servicio.");
+        return false;
+      }
+
+      if (!draft.badge.trim()) {
+        setError(
+          "Escribe la categoría o etiqueta visible del servicio."
+        );
         return false;
       }
 
@@ -861,6 +1049,64 @@ export function AdminServiciosPage() {
       );
     } finally {
       setIsImporting(false);
+    }
+  }
+
+
+  async function handleAddSpecialServices() {
+    if (
+      isAddingSpecialServices ||
+      missingSpecialServices.length === 0
+    ) {
+      return;
+    }
+
+    try {
+      setIsAddingSpecialServices(true);
+      setError("");
+      setSuccess("");
+
+      const drafts =
+        getSpecialServiceDrafts(
+          courses.length + 1
+        );
+
+      const missingKinds =
+        new Set(
+          missingSpecialServices.map(
+            (item) => item.kind
+          )
+        );
+
+      const draftsToCreate =
+        drafts.filter((draft) =>
+          missingKinds.has(
+            draft.kind as
+              | "transit_advisory"
+              | "pesv"
+          )
+        );
+
+      for (const draft of draftsToCreate) {
+        await coursesService.createCourse(
+          buildPayload(draft)
+        );
+      }
+
+      await loadCourses();
+
+      setSuccess(
+        draftsToCreate.length === 2
+          ? "Asesorías de tránsito y PESV fueron agregados correctamente."
+          : `${draftsToCreate.length} servicio nuevo fue agregado correctamente.`
+      );
+    } catch (error) {
+      console.error(error);
+      setError(
+        "No fue posible agregar los nuevos servicios a Firestore."
+      );
+    } finally {
+      setIsAddingSpecialServices(false);
     }
   }
 
@@ -1072,6 +1318,28 @@ export function AdminServiciosPage() {
             <p>Ocultos</p>
           </div>
         </div>
+
+        {missingSpecialServices.length > 0 ? (
+          <button
+            type="button"
+            className={styles.primaryButton}
+            onClick={() =>
+              void handleAddSpecialServices()
+            }
+            disabled={isAddingSpecialServices}
+          >
+            <Plus size={15} strokeWidth={1.9} />
+            {isAddingSpecialServices
+              ? "Agregando..."
+              : `Agregar ${
+                  missingSpecialServices.length
+                } ${
+                  missingSpecialServices.length === 1
+                    ? "servicio nuevo"
+                    : "servicios nuevos"
+                }`}
+          </button>
+        ) : null}
 
         <button
           type="button"
@@ -1568,6 +1836,115 @@ function StepOne({
               onClick={() => {
                 updateDraft("kind", kind.value);
 
+                if (!draft.badge.trim()) {
+                  if (kind.value === "license") {
+                    updateDraft("badge", "Categoría");
+                  }
+
+                  if (kind.value === "reinforcement") {
+                    updateDraft("badge", "Refuerzo");
+                  }
+
+                  if (kind.value === "defensive") {
+                    updateDraft("badge", "Certificado");
+                  }
+
+                  if (kind.value === "renewal") {
+                    updateDraft("badge", "Refrendación");
+                  }
+
+                  if (kind.value === "soat") {
+                    updateDraft("badge", "SOAT");
+                  }
+
+                  if (kind.value === "transit_advisory") {
+                    updateDraft("badge", "Asesorías");
+                  }
+
+                  if (kind.value === "pesv") {
+                    updateDraft("badge", "PESV");
+                  }
+                }
+
+                if (
+                  kind.value === "transit_advisory"
+                ) {
+                  if (!draft.name) {
+                    updateDraft(
+                      "name",
+                      "Asesorías de tránsito"
+                    );
+                  }
+
+                  if (!draft.subtitle) {
+                    updateDraft(
+                      "subtitle",
+                      "Trámites de tránsito a nivel nacional"
+                    );
+                  }
+
+                  if (!draft.description) {
+                    updateDraft(
+                      "description",
+                      "Acompañamiento y gestión para diferentes trámites de tránsito."
+                    );
+                  }
+
+                  if (draft.includes.length === 0) {
+                    updateDraft(
+                      "includes",
+                      [
+                        "Traspasos",
+                        "Liquidación de impuestos",
+                        "Duplicados de licencia de conducción y de tránsito",
+                        "SOAT",
+                        "Traslado de cuenta",
+                        "Certificado de libertad y tradición",
+                        "Duplicado de placas",
+                        "Levantamiento de prenda",
+                      ]
+                    );
+                  }
+                }
+
+                if (
+                  kind.value === "pesv"
+                ) {
+                  if (!draft.name) {
+                    updateDraft(
+                      "name",
+                      "Diseño e implementación del PESV"
+                    );
+                  }
+
+                  if (!draft.subtitle) {
+                    updateDraft(
+                      "subtitle",
+                      "Plan Estratégico de Seguridad Vial"
+                    );
+                  }
+
+                  if (!draft.description) {
+                    updateDraft(
+                      "description",
+                      "Diseño e implementación del PESV de acuerdo con el tamaño y las necesidades de la organización."
+                    );
+                  }
+
+                  if (draft.includes.length === 0) {
+                    updateDraft(
+                      "includes",
+                      [
+                        "Resolución 40595 del 2022",
+                        "Básico: 18 pasos",
+                        "Estándar: 22 pasos",
+                        "Avanzado: 24 pasos",
+                        "Acompañamiento profesional técnico en seguridad vial",
+                      ]
+                    );
+                  }
+                }
+
                 if (
                   kind.value === "reinforcement" &&
                   !draft.name
@@ -1607,6 +1984,26 @@ function StepOne({
                     "SOAT"
                   );
                 }
+
+                if (
+                  kind.value === "transit_advisory" &&
+                  !draft.name
+                ) {
+                  updateDraft(
+                    "name",
+                    "Asesorías de tránsito"
+                  );
+                }
+
+                if (
+                  kind.value === "pesv" &&
+                  !draft.name
+                ) {
+                  updateDraft(
+                    "name",
+                    "Diseño e implementación del PESV"
+                  );
+                }
               }}
             >
               <span className={styles.kindCheck}>
@@ -1626,8 +2023,75 @@ function StepOne({
       </div>
 
       <div className={styles.simpleGrid}>
+        {draft.kind === "license" ? (
+          <label>
+            <span>Código de categoría</span>
+            <input
+              value={draft.categoryCode}
+              onChange={(event) => {
+                const nextCode =
+                  event.target.value.toUpperCase();
+
+                const previousAutoBadge =
+                  draft.categoryCode.trim()
+                    ? `Categoría ${draft.categoryCode
+                        .trim()
+                        .toUpperCase()}`
+                    : "Categoría";
+
+                updateDraft(
+                  "categoryCode",
+                  nextCode
+                );
+
+                if (
+                  !draft.badge.trim() ||
+                  draft.badge.trim() ===
+                    previousAutoBadge
+                ) {
+                  updateDraft(
+                    "badge",
+                    nextCode.trim()
+                      ? `Categoría ${nextCode.trim()}`
+                      : "Categoría"
+                  );
+                }
+              }}
+              placeholder="Ej. A2"
+            />
+
+            <small className={styles.fieldHelp}>
+              Se usa internamente para identificar la licencia.
+            </small>
+          </label>
+        ) : null}
+
         <label>
-          <span>Nombre del servicio</span>
+          <span>Categoría / etiqueta visible</span>
+          <input
+            value={draft.badge}
+            onChange={(event) =>
+              updateDraft(
+                "badge",
+                event.target.value
+              )
+            }
+            placeholder={
+              draft.kind === "license"
+                ? "Ej. Categoría A2"
+                : draft.kind === "soat"
+                  ? "Ej. SOAT"
+                  : "Texto que aparecerá arriba"
+            }
+          />
+
+          <small className={styles.fieldHelp}>
+            Es el texto grande en color turquesa de la ficha pública.
+          </small>
+        </label>
+
+        <label>
+          <span>Nombre principal</span>
           <input
             value={draft.name}
             onChange={(event) =>
@@ -1638,27 +2102,37 @@ function StepOne({
             }
             placeholder={
               draft.kind === "license"
-                ? "Ej. Automóvil particular"
+                ? "Ej. Motocicleta"
                 : "Nombre del servicio"
             }
           />
+
+          <small className={styles.fieldHelp}>
+            Es el título principal que aparece debajo de la categoría.
+          </small>
         </label>
 
-        {draft.kind === "license" ? (
-          <label>
-            <span>Categoría</span>
-            <input
-              value={draft.categoryCode}
-              onChange={(event) =>
-                updateDraft(
-                  "categoryCode",
-                  event.target.value.toUpperCase()
-                )
-              }
-              placeholder="Ej. B1"
-            />
-          </label>
-        ) : null}
+        <label>
+          <span>Subtítulo</span>
+          <input
+            value={draft.subtitle}
+            onChange={(event) =>
+              updateDraft(
+                "subtitle",
+                event.target.value
+              )
+            }
+            placeholder={
+              draft.kind === "license"
+                ? "Ej. Formación para motocicleta"
+                : "Texto corto debajo del nombre"
+            }
+          />
+
+          <small className={styles.fieldHelp}>
+            Si lo dejas vacío, el sistema conserva el texto automático.
+          </small>
+        </label>
 
         <label className={styles.full}>
           <span>Descripción</span>
@@ -1673,6 +2147,10 @@ function StepOne({
             }
             placeholder="Explica brevemente qué ofrece este servicio."
           />
+
+          <small className={styles.fieldHelp}>
+            Es el párrafo que aparece debajo del subtítulo en la web.
+          </small>
         </label>
       </div>
     </div>
@@ -1734,6 +2212,24 @@ function StepTwo({
         <SoatFields
           draft={draft}
           updateDraft={updateDraft}
+        />
+      ) : null}
+
+      {draft.kind === "transit_advisory" ? (
+        <SpecialServiceFields
+          draft={draft}
+          updateDraft={updateDraft}
+          title="Asesoría de tránsito"
+          help="Los trámites y servicios se editan como viñetas en el paso 3."
+        />
+      ) : null}
+
+      {draft.kind === "pesv" ? (
+        <SpecialServiceFields
+          draft={draft}
+          updateDraft={updateDraft}
+          title="Servicio PESV"
+          help="Los niveles, pasos y alcance del PESV se editan como viñetas en el paso 3."
         />
       ) : null}
     </div>
@@ -2212,11 +2708,62 @@ function RenewalFields({
         </div>
       </label>
 
+      <label>
+        <span>Tiempo estimado del trámite</span>
+        <input
+          type="text"
+          value={draft.renewalDuration}
+          onChange={(event) =>
+            updateDraft(
+              "renewalDuration",
+              event.target.value
+            )
+          }
+          placeholder="Ej. 1 hora"
+        />
+
+        <small className={styles.fieldHelp}>
+          Se mostrará en la ficha pública de la refrendación.
+        </small>
+      </label>
+
       <div className={styles.infoNote}>
         <Check size={15} strokeWidth={2} />
         <span>
           Se mostrará automáticamente el precio
           “Desde {money(draft.renewalSinglePrice)}”.
+        </span>
+      </div>
+    </div>
+  );
+}
+
+
+function SpecialServiceFields({
+  draft,
+  updateDraft,
+  title,
+  help,
+}: {
+  draft: CourseDraft;
+  updateDraft: <K extends keyof CourseDraft>(
+    key: K,
+    value: CourseDraft[K]
+  ) => void;
+  title: string;
+  help: string;
+}) {
+  return (
+    <div className={styles.simpleGrid}>
+      <PriceField
+        draft={draft}
+        updateDraft={updateDraft}
+      />
+
+      <div className={styles.infoNote}>
+        <Check size={15} strokeWidth={2} />
+        <span>
+          <strong>{title}.</strong> {help}
         </span>
       </div>
     </div>

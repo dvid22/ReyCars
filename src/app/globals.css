@@ -67,6 +67,9 @@ body {
   margin: 0;
   min-width: 320px;
 
+  position: relative;
+  isolation: isolate;
+
   color: var(--reycars-black);
   background: var(--reycars-white);
 
@@ -157,4 +160,354 @@ select {
 img {
   display: block;
   max-width: 100%;
+}
+
+
+/* =========================================================
+   REYCARS · BACKGROUND CORPORATIVO GLOBAL V2
+   Inspirado en las franjas de los vehículos ReyCars
+   - No modifica tipografía
+   - No bloquea interacción
+   - No oscurece el contenido
+   ========================================================= */
+
+/*
+ * La capa principal se dibuja por encima del blanco
+ * con una opacidad muy baja y se concentra en los bordes.
+ * Así las líneas sí se perciben aunque los módulos usen
+ * superficies blancas, sin atravesar agresivamente el contenido.
+ */
+
+body::before {
+  content: "";
+
+  position: fixed;
+  inset: 0;
+
+  z-index: 9997;
+
+  pointer-events: none;
+  user-select: none;
+
+  opacity: 1;
+
+  background:
+
+    /* =====================================================
+       ESQUINA SUPERIOR DERECHA · FRANJA PRINCIPAL
+       ===================================================== */
+
+    linear-gradient(
+      136deg,
+      transparent 0%,
+      transparent 73.8%,
+      rgba(89, 197, 211, 0.055) 74%,
+      rgba(89, 197, 211, 0.055) 74.55%,
+      transparent 74.75%,
+      transparent 100%
+    ),
+
+    linear-gradient(
+      140deg,
+      transparent 0%,
+      transparent 79.2%,
+      rgba(32, 154, 170, 0.045) 79.38%,
+      rgba(32, 154, 170, 0.045) 79.88%,
+      transparent 80.08%,
+      transparent 100%
+    ),
+
+    linear-gradient(
+      145deg,
+      transparent 0%,
+      transparent 85.5%,
+      rgba(23, 25, 27, 0.018) 85.7%,
+      rgba(23, 25, 27, 0.018) 86.35%,
+      transparent 86.55%,
+      transparent 100%
+    ),
+
+
+    /* =====================================================
+       CURVAS SUPERIORES · EFECTO CARROCERÍA
+       ===================================================== */
+
+    radial-gradient(
+      ellipse 58% 47%
+        at 107% -8%,
+      transparent 0%,
+      transparent 62%,
+      rgba(89, 197, 211, 0.055) 62.35%,
+      rgba(89, 197, 211, 0.055) 62.8%,
+      transparent 63.15%
+    ),
+
+    radial-gradient(
+      ellipse 67% 55%
+        at 111% -10%,
+      transparent 0%,
+      transparent 69%,
+      rgba(32, 154, 170, 0.035) 69.3%,
+      rgba(32, 154, 170, 0.035) 69.75%,
+      transparent 70.1%
+    ),
+
+
+    /* =====================================================
+       ESQUINA INFERIOR IZQUIERDA · CONTRAPESO
+       ===================================================== */
+
+    linear-gradient(
+      320deg,
+      transparent 0%,
+      transparent 84.4%,
+      rgba(89, 197, 211, 0.036) 84.6%,
+      rgba(89, 197, 211, 0.036) 85.05%,
+      transparent 85.25%,
+      transparent 100%
+    ),
+
+    radial-gradient(
+      ellipse 62% 48%
+        at -12% 111%,
+      transparent 0%,
+      transparent 63%,
+      rgba(32, 154, 170, 0.038) 63.3%,
+      rgba(32, 154, 170, 0.038) 63.75%,
+      transparent 64.1%
+    ),
+
+
+    /* =====================================================
+       HALOS MUY SUAVES
+       ===================================================== */
+
+    radial-gradient(
+      circle at 96% 12%,
+      rgba(89, 197, 211, 0.032),
+      transparent 19%
+    ),
+
+    radial-gradient(
+      circle at 4% 88%,
+      rgba(32, 154, 170, 0.022),
+      transparent 18%
+    );
+
+  background-repeat: no-repeat;
+}
+
+
+/* =========================================================
+   PUNTOS TÉCNICOS · FIRMA VISUAL REYCARS
+   ========================================================= */
+
+body::after {
+  content: "";
+
+  width: 170px;
+  height: 130px;
+
+  position: fixed;
+
+  top: 96px;
+  right: 1.8vw;
+
+  z-index: 9997;
+
+  pointer-events: none;
+  user-select: none;
+
+  opacity: 0.085;
+
+  background-image:
+    radial-gradient(
+      circle,
+      var(--reycars-cyan-dark) 1.05px,
+      transparent 1.2px
+    );
+
+  background-size:
+    13px
+    13px;
+
+  -webkit-mask-image:
+    linear-gradient(
+      135deg,
+      #000 0%,
+      rgba(0, 0, 0, 0.9) 45%,
+      transparent 88%
+    );
+
+  mask-image:
+    linear-gradient(
+      135deg,
+      #000 0%,
+      rgba(0, 0, 0, 0.9) 45%,
+      transparent 88%
+    );
+}
+
+
+/* =========================================================
+   HOVER / INTERACCIÓN
+   La decoración jamás captura clicks
+   ========================================================= */
+
+body::before,
+body::after {
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+  body::before {
+    background:
+
+      linear-gradient(
+        138deg,
+        transparent 0%,
+        transparent 76.8%,
+        rgba(89, 197, 211, 0.045) 77%,
+        rgba(89, 197, 211, 0.045) 77.55%,
+        transparent 77.78%,
+        transparent 100%
+      ),
+
+      linear-gradient(
+        143deg,
+        transparent 0%,
+        transparent 84%,
+        rgba(32, 154, 170, 0.032) 84.2%,
+        rgba(32, 154, 170, 0.032) 84.7%,
+        transparent 84.9%,
+        transparent 100%
+      ),
+
+      radial-gradient(
+        ellipse 72% 52%
+          at 116% -7%,
+        transparent 0%,
+        transparent 66%,
+        rgba(89, 197, 211, 0.045) 66.35%,
+        rgba(89, 197, 211, 0.045) 66.8%,
+        transparent 67.1%
+      ),
+
+      radial-gradient(
+        ellipse 72% 52%
+          at -18% 108%,
+        transparent 0%,
+        transparent 68%,
+        rgba(32, 154, 170, 0.03) 68.3%,
+        rgba(32, 154, 170, 0.03) 68.7%,
+        transparent 69%
+      ),
+
+      radial-gradient(
+        circle at 96% 10%,
+        rgba(89, 197, 211, 0.025),
+        transparent 21%
+      );
+  }
+
+  body::after {
+    width: 125px;
+    height: 100px;
+
+    top: 82px;
+    right: -8px;
+
+    opacity: 0.065;
+
+    background-size:
+      12px
+      12px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 620px) {
+  body::before {
+    background:
+
+      linear-gradient(
+        145deg,
+        transparent 0%,
+        transparent 82.4%,
+        rgba(89, 197, 211, 0.036) 82.65%,
+        rgba(89, 197, 211, 0.036) 83.15%,
+        transparent 83.35%,
+        transparent 100%
+      ),
+
+      radial-gradient(
+        ellipse 86% 55%
+          at 126% -8%,
+        transparent 0%,
+        transparent 69%,
+        rgba(32, 154, 170, 0.032) 69.35%,
+        rgba(32, 154, 170, 0.032) 69.8%,
+        transparent 70.1%
+      ),
+
+      radial-gradient(
+        ellipse 90% 58%
+          at -30% 112%,
+        transparent 0%,
+        transparent 72%,
+        rgba(89, 197, 211, 0.026) 72.25%,
+        rgba(89, 197, 211, 0.026) 72.7%,
+        transparent 73%
+      );
+  }
+
+  body::after {
+    width: 96px;
+    height: 76px;
+
+    top: 72px;
+    right: -18px;
+
+    opacity: 0.052;
+
+    background-size:
+      10px
+      10px;
+  }
+}
+
+
+/* =========================================================
+   PANTALLAS MUY GRANDES
+   Un poco más de presencia sin perder sutileza
+   ========================================================= */
+
+@media (min-width: 1600px) {
+  body::after {
+    width: 190px;
+    height: 145px;
+
+    right: 2.5vw;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   No hay animación decorativa por diseño.
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }

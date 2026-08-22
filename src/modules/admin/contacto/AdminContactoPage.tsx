@@ -8,7 +8,9 @@ import {
 import {
   Check,
   ImagePlus,
+  Plus,
   Save,
+  Trash2,
 } from "lucide-react";
 
 import {
@@ -103,6 +105,148 @@ const CURRENT_CONFIG: SiteConfig = {
     },
   ],
 };
+
+const WEEK_DAYS = [
+  {
+    value: 1,
+    label: "Lunes",
+    short: "LUN",
+  },
+  {
+    value: 2,
+    label: "Martes",
+    short: "MAR",
+  },
+  {
+    value: 3,
+    label: "Miércoles",
+    short: "MIÉ",
+  },
+  {
+    value: 4,
+    label: "Jueves",
+    short: "JUE",
+  },
+  {
+    value: 5,
+    label: "Viernes",
+    short: "VIE",
+  },
+  {
+    value: 6,
+    label: "Sábado",
+    short: "SÁB",
+  },
+  {
+    value: 0,
+    label: "Domingo",
+    short: "DOM",
+  },
+] as const;
+
+function getDayPosition(
+  day: number
+) {
+  return WEEK_DAYS.findIndex(
+    (item) =>
+      item.value === day
+  );
+}
+
+function buildDayRange(
+  startDay: number,
+  endDay: number
+) {
+  const startIndex =
+    getDayPosition(startDay);
+
+  const endIndex =
+    getDayPosition(endDay);
+
+  if (
+    startIndex < 0 ||
+    endIndex < 0
+  ) {
+    return [startDay];
+  }
+
+  const days: number[] = [];
+  let index = startIndex;
+
+  while (true) {
+    days.push(
+      WEEK_DAYS[index].value
+    );
+
+    if (index === endIndex) {
+      break;
+    }
+
+    index =
+      (index + 1) %
+      WEEK_DAYS.length;
+  }
+
+  return days;
+}
+
+function getRangeLabels(
+  startDay: number,
+  endDay: number
+) {
+  const start =
+    WEEK_DAYS.find(
+      (item) =>
+        item.value === startDay
+    ) ?? WEEK_DAYS[0];
+
+  const end =
+    WEEK_DAYS.find(
+      (item) =>
+        item.value === endDay
+    ) ?? start;
+
+  if (startDay === endDay) {
+    return {
+      label: start.label,
+      short: start.short,
+    };
+  }
+
+  return {
+    label:
+      `${start.label} a ${end.label.toLowerCase()}`,
+    short:
+      `${start.short} – ${end.short}`,
+  };
+}
+
+function getRangeEdges(
+  days: number[]
+) {
+  const safeDays =
+    days.length > 0
+      ? days
+      : [1];
+
+  return {
+    startDay:
+      safeDays[0],
+    endDay:
+      safeDays[
+        safeDays.length - 1
+      ],
+  };
+}
+
+function createScheduleId() {
+  return (
+    `schedule-${Date.now()}-` +
+    Math.random()
+      .toString(36)
+      .slice(2, 7)
+  );
+}
 
 function cloneConfig(
   value: SiteConfig
@@ -211,9 +355,18 @@ function validateConfig(
     return "Escribe el título de Contacto.";
   }
 
+  const usedActiveDays =
+    new Set<number>();
+
   for (
     const item of config.schedule
   ) {
+    if (
+      item.days.length === 0
+    ) {
+      return "Cada horario debe tener al menos un día.";
+    }
+
     if (
       item.active &&
       (
@@ -222,6 +375,25 @@ function validateConfig(
       )
     ) {
       return `Completa el horario de ${item.label}.`;
+    }
+
+    if (item.active) {
+      for (const day of item.days) {
+        if (
+          usedActiveDays.has(day)
+        ) {
+          return (
+            `El día ${
+              WEEK_DAYS.find(
+                (option) =>
+                  option.value === day
+              )?.label ?? day
+            } está incluido en más de un horario activo.`
+          );
+        }
+
+        usedActiveDays.add(day);
+      }
     }
   }
 
@@ -363,6 +535,84 @@ export function AdminContactoPage() {
           ),
       })
     );
+  }
+
+  function updateScheduleRange(
+    id: SiteScheduleItem["id"],
+    startDay: number,
+    endDay: number
+  ) {
+    const days =
+      buildDayRange(
+        startDay,
+        endDay
+      );
+
+    const labels =
+      getRangeLabels(
+        startDay,
+        endDay
+      );
+
+    updateSchedule(
+      id,
+      {
+        days,
+        label: labels.label,
+        short: labels.short,
+      }
+    );
+  }
+
+  function addSchedule() {
+    setConfig(
+      (current) => {
+        const id =
+          createScheduleId();
+
+        const labels =
+          getRangeLabels(1, 1);
+
+        return {
+          ...current,
+          schedule: [
+            ...current.schedule,
+            {
+              id,
+              short:
+                labels.short,
+              label:
+                labels.label,
+              open: "08:00",
+              close: "17:00",
+              days: [1],
+              active: true,
+            },
+          ],
+        };
+      }
+    );
+
+    setError("");
+    setSuccess("");
+  }
+
+  function removeSchedule(
+    id: SiteScheduleItem["id"]
+  ) {
+    setConfig(
+      (current) => ({
+        ...current,
+        schedule:
+          current.schedule.filter(
+            (item) =>
+              item.id !== id
+          ),
+      })
+    );
+
+    setError("");
+    setSuccess("");
   }
 
   async function handleImage(
@@ -764,10 +1014,44 @@ export function AdminContactoPage() {
         <section
           className={`${styles.card} ${styles.wideCard}`}
         >
-          <CardHeading
-            eyebrow="HORARIOS"
-            title="Horario de atención"
-          />
+          <div
+            className={
+              styles.scheduleSectionHeader
+            }
+          >
+            <CardHeading
+              eyebrow="HORARIOS"
+              title="Horario de atención"
+            />
+
+            <button
+              type="button"
+              className={
+                styles.addScheduleButton
+              }
+              onClick={
+                addSchedule
+              }
+            >
+              <Plus
+                size={15}
+                strokeWidth={1.9}
+              />
+
+              Nuevo horario
+            </button>
+          </div>
+
+          <p
+            className={
+              styles.scheduleHelp
+            }
+          >
+            Define libremente los rangos
+            de días y sus horas. Evita
+            repetir un mismo día en dos
+            horarios activos.
+          </p>
 
           <div
             className={
@@ -775,119 +1059,300 @@ export function AdminContactoPage() {
             }
           >
             {config.schedule.map(
-              (item) => (
-                <div
-                  key={item.id}
-                  className={
-                    styles.scheduleCard
-                  }
-                >
+              (item) => {
+                const {
+                  startDay,
+                  endDay,
+                } =
+                  getRangeEdges(
+                    item.days
+                  );
+
+                return (
                   <div
+                    key={item.id}
                     className={
-                      styles.scheduleHeader
+                      styles.scheduleCard
                     }
                   >
-                    <strong>
-                      {item.label}
-                    </strong>
-
-                    <label
+                    <div
                       className={
-                        styles.switch
+                        styles.scheduleHeader
                       }
                     >
-                      <input
-                        type="checkbox"
-                        checked={
-                          item.active
+                      <div>
+                        <span
+                          className={
+                            styles.scheduleShort
+                          }
+                        >
+                          {item.short}
+                        </span>
+
+                        <strong>
+                          {item.label}
+                        </strong>
+                      </div>
+
+                      <div
+                        className={
+                          styles.scheduleActions
                         }
-                        onChange={(
-                          event
-                        ) =>
-                          updateSchedule(
-                            item.id,
-                            {
-                              active:
+                      >
+                        <label
+                          className={
+                            styles.switch
+                          }
+                          aria-label={`${
+                            item.active
+                              ? "Desactivar"
+                              : "Activar"
+                          } ${item.label}`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={
+                              item.active
+                            }
+                            onChange={(
+                              event
+                            ) =>
+                              updateSchedule(
+                                item.id,
+                                {
+                                  active:
+                                    event
+                                      .target
+                                      .checked,
+                                }
+                              )
+                            }
+                          />
+
+                          <span>
+                            <i />
+                          </span>
+                        </label>
+
+                        <button
+                          type="button"
+                          className={
+                            styles.removeScheduleButton
+                          }
+                          onClick={() =>
+                            removeSchedule(
+                              item.id
+                            )
+                          }
+                          aria-label={`Eliminar horario ${item.label}`}
+                        >
+                          <Trash2
+                            size={15}
+                            strokeWidth={1.8}
+                          />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div
+                      className={
+                        styles.dayRangeGrid
+                      }
+                    >
+                      <label
+                        className={
+                          styles.selectField
+                        }
+                      >
+                        <span>
+                          Desde
+                        </span>
+
+                        <select
+                          value={
+                            startDay
+                          }
+                          onChange={(
+                            event
+                          ) =>
+                            updateScheduleRange(
+                              item.id,
+                              Number(
                                 event
                                   .target
-                                  .checked,
-                            }
-                          )
+                                  .value
+                              ),
+                              endDay
+                            )
+                          }
+                        >
+                          {WEEK_DAYS.map(
+                            (day) => (
+                              <option
+                                key={
+                                  day.value
+                                }
+                                value={
+                                  day.value
+                                }
+                              >
+                                {
+                                  day.label
+                                }
+                              </option>
+                            )
+                          )}
+                        </select>
+                      </label>
+
+                      <label
+                        className={
+                          styles.selectField
                         }
-                      />
-                      <span>
-                        <i />
-                      </span>
-                    </label>
+                      >
+                        <span>
+                          Hasta
+                        </span>
+
+                        <select
+                          value={
+                            endDay
+                          }
+                          onChange={(
+                            event
+                          ) =>
+                            updateScheduleRange(
+                              item.id,
+                              startDay,
+                              Number(
+                                event
+                                  .target
+                                  .value
+                              )
+                            )
+                          }
+                        >
+                          {WEEK_DAYS.map(
+                            (day) => (
+                              <option
+                                key={
+                                  day.value
+                                }
+                                value={
+                                  day.value
+                                }
+                              >
+                                {
+                                  day.label
+                                }
+                              </option>
+                            )
+                          )}
+                        </select>
+                      </label>
+                    </div>
+
+                    <div
+                      className={
+                        styles.timeGrid
+                      }
+                    >
+                      <label
+                        className={
+                          styles.timeField
+                        }
+                      >
+                        <span>
+                          Apertura
+                        </span>
+
+                        <input
+                          type="time"
+                          value={
+                            item.open
+                          }
+                          onChange={(
+                            event
+                          ) =>
+                            updateSchedule(
+                              item.id,
+                              {
+                                open:
+                                  event
+                                    .target
+                                    .value,
+                              }
+                            )
+                          }
+                        />
+                      </label>
+
+                      <label
+                        className={
+                          styles.timeField
+                        }
+                      >
+                        <span>
+                          Cierre
+                        </span>
+
+                        <input
+                          type="time"
+                          value={
+                            item.close
+                          }
+                          onChange={(
+                            event
+                          ) =>
+                            updateSchedule(
+                              item.id,
+                              {
+                                close:
+                                  event
+                                    .target
+                                    .value,
+                              }
+                            )
+                          }
+                        />
+                      </label>
+                    </div>
                   </div>
-
-                  <div
-                    className={
-                      styles.timeGrid
-                    }
-                  >
-                    <label
-                      className={
-                        styles.timeField
-                      }
-                    >
-                      <span>
-                        Apertura
-                      </span>
-                      <input
-                        type="time"
-                        value={
-                          item.open
-                        }
-                        onChange={(
-                          event
-                        ) =>
-                          updateSchedule(
-                            item.id,
-                            {
-                              open:
-                                event
-                                  .target
-                                  .value,
-                            }
-                          )
-                        }
-                      />
-                    </label>
-
-                    <label
-                      className={
-                        styles.timeField
-                      }
-                    >
-                      <span>
-                        Cierre
-                      </span>
-                      <input
-                        type="time"
-                        value={
-                          item.close
-                        }
-                        onChange={(
-                          event
-                        ) =>
-                          updateSchedule(
-                            item.id,
-                            {
-                              close:
-                                event
-                                  .target
-                                  .value,
-                            }
-                          )
-                        }
-                      />
-                    </label>
-                  </div>
-                </div>
-              )
+                );
+              }
             )}
           </div>
+
+          {config.schedule.length === 0 ? (
+            <div
+              className={
+                styles.emptySchedule
+              }
+            >
+              <strong>
+                Aún no hay horarios.
+              </strong>
+
+              <p>
+                Crea un rango para indicar
+                los días y horas de
+                atención.
+              </p>
+
+              <button
+                type="button"
+                onClick={
+                  addSchedule
+                }
+              >
+                <Plus
+                  size={15}
+                  strokeWidth={1.9}
+                />
+                Crear primer horario
+              </button>
+            </div>
+          ) : null}
         </section>
 
         <section

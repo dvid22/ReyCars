@@ -253,37 +253,32 @@ function normalizeProcessContent(
 
 function normalizeScheduleItem(
   item: Partial<SiteScheduleItem>,
-  fallbackId:
-    SiteScheduleItem["id"]
+  index: number
 ): SiteScheduleItem {
-  const id =
-    item.id === "weekdays" ||
-    item.id === "saturday" ||
-    item.id === "sunday"
-      ? item.id
-      : fallbackId;
-
-  const defaultDays =
-    id === "weekdays"
-      ? [1, 2, 3, 4, 5]
-      : id === "saturday"
-        ? [6]
-        : [0];
+  const validDays =
+    Array.isArray(item.days)
+      ? item.days.filter(
+          (day): day is number =>
+            typeof day === "number" &&
+            Number.isInteger(day) &&
+            day >= 0 &&
+            day <= 6
+        )
+      : [];
 
   return {
-    id,
+    id:
+      typeof item.id === "string" &&
+      item.id.trim()
+        ? item.id.trim()
+        : `schedule-${index + 1}`,
     short: item.short ?? "",
     label: item.label ?? "",
     open: item.open ?? "",
     close: item.close ?? "",
-    days:
-      Array.isArray(item.days) &&
-      item.days.every(
-        (day) =>
-          typeof day === "number"
-      )
-        ? item.days
-        : defaultDays,
+    days: Array.from(
+      new Set(validDays)
+    ),
     active:
       item.active !== false,
   };
@@ -303,22 +298,6 @@ function normalizeSiteConfig(
     return null;
   }
 
-  const scheduleById =
-    new Map(
-      data.schedule.map(
-        (item) => [
-          item.id,
-          item,
-        ]
-      )
-    );
-
-  const scheduleIds:
-    SiteScheduleItem["id"][] = [
-      "weekdays",
-      "saturday",
-      "sunday",
-    ];
 
   return {
     name: data.name ?? "",
@@ -357,13 +336,18 @@ function normalizeSiteConfig(
     },
 
     schedule:
-      scheduleIds.map(
-        (id) =>
-          normalizeScheduleItem(
-            scheduleById.get(id) ?? {},
-            id
-          )
-      ),
+      data.schedule
+        .map(
+          (item, index) =>
+            normalizeScheduleItem(
+              item,
+              index
+            )
+        )
+        .filter(
+          (item) =>
+            item.days.length > 0
+        ),
   };
 }
 

@@ -1355,3 +1355,143 @@ and
     overflow-y: hidden;
   }
 }
+
+/* =========================================================
+   PROCESO · PASO 01 · CATEGORÍAS A2 / B1 / C1
+   ========================================================= */
+
+.categoryChoices {
+  width: fit-content;
+
+  display: grid;
+  gap: 10px;
+
+  margin-top: 22px;
+}
+
+.categoryChoicesLabel {
+  color: #728187;
+
+  font-size: clamp(11.5px, 0.78vw, 12.5px);
+  font-weight: 600;
+
+  line-height: 1.25;
+}
+
+.categoryButtons {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.categoryButton {
+  width: clamp(50px, 3.8vw, 58px);
+  aspect-ratio: 1;
+
+  display: grid;
+  place-items: center;
+
+  flex: 0 0 auto;
+
+  color: var(--cyan-dark);
+
+  border: 1px solid rgba(32, 154, 170, 0.2);
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #f2fafb
+    );
+
+  box-shadow:
+    0 9px 22px rgba(24, 106, 118, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+
+  font-size: clamp(13px, 0.92vw, 15px);
+  font-weight: 700;
+
+  text-decoration: none;
+
+  transition:
+    color 0.22s ease,
+    border-color 0.22s ease,
+    background 0.22s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.categoryButton:hover {
+  color: #ffffff;
+
+  border-color: transparent;
+
+  background:
+    linear-gradient(
+      135deg,
+      #43c4d4,
+      #209aaa
+    );
+
+  box-shadow:
+    0 13px 26px rgba(32, 154, 170, 0.2);
+
+  transform: translateY(-3px);
+}
+
+.categoryButton:focus-visible {
+  outline: 3px solid rgba(89, 197, 211, 0.25);
+  outline-offset: 3px;
+}
+
+@media (max-height: 850px) and (min-width: 901px) {
+  .categoryChoices {
+    gap: 8px;
+
+    margin-top: 15px;
+  }
+
+  .categoryButton {
+    width: 48px;
+
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 900px) {
+  .categoryChoices {
+    margin-top: 18px;
+  }
+
+  .categoryButton {
+    width: 54px;
+
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 620px) {
+  .categoryChoices {
+    gap: 9px;
+
+    margin-top: 16px;
+  }
+
+  .categoryButtons {
+    gap: 9px;
+  }
+
+  .categoryButton {
+    width: 50px;
+
+    font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .categoryButton {
+    transition: none;
+  }
+}
